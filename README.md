@@ -94,14 +94,14 @@ Trivy, Critical/High/Medium/Low, same database for each before/after pair.
 | `python:3.13` | 0/2/7/0 | Highs fixed only in a `_git` snapshot |
 | `python:3.14` | 0/0/9/0 | |
 | `nginx:mainline` | 0/0/1/0 | zlib, as above |
-| `nginx:stable` | 0/6/7/0 | fixes name versions Wolfi hasn't published |
+| `nginx:stable` | 0/6/7/0 | 3 unique Highs (counted twice: nginx + mime-types); public Wolfi stopped at 1.30.2, fixes are in 1.30.3–1.30.5 builds that aren't published |
 
 | Consumer | Before | After | |
 |---|---|---|---|
 | trakt-clean (`python:3.12-slim` → `python:3.12`) | 0/44/63/62 | 0/0/1/0 | switched |
 | tailnet-egress-watcher (`distroless/static-debian12`) | 0/0/0/0 + 3 unrated Debian advisories | 0/0/0/0 | switched |
 | node-capacity-watcher (`distroless/static`) | 0/0/0/0 | 0/0/0/0 | switched |
-| atpass-web (`nginx:1.30-alpine-slim`) | 0/0/0/0 | — | **not switched**: both nginx lines scan worse today |
+| atpass-web (`nginx:1.30-alpine-slim` → `nginx:mainline`) | 0/0/0/0 | 0/0/1/0 | switched; the zlib Medium also affects Alpine's zlib 1.3.2-r1, but Alpine's feed only lists CVEs once fixed |
 
 ## Development
 
