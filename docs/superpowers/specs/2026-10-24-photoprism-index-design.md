@@ -172,9 +172,9 @@ workflow's SUMMARY parsing.
   `/etc/ImageMagick-7/`; the new image needs the same policy.
 - `heif-dec` is preferred by PhotoPrism (`HeifConvertBin` → `heif-dec`, `heif-convert`);
   the repo's `heif-convert.sh` wrapper is not used.
-- The fork's local branch is 9 commits ahead of `private/k8s-parallel-index`. The Go
+- The fork's local branch is 10 commits ahead of `private/k8s-parallel-index`. The Go
   rewrite reproduces the **local branch's** behaviour (skip-library-update, third-level
-  walking, `.heic` renames, cross-partition stealing, large-first pod start order);
+  walking, `.heic` renames, own-class work sharing, larger-first pod start order, the xl class and helper pods);
   push those commits first. (Builder's call, made in design.)
 - Deploy through Fleet/GitOps or the maintenance repo's own deploy, never ad-hoc helm.
 
