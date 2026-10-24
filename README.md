@@ -83,6 +83,26 @@ Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 signed packages (`packages/`) and public key (`melange.rsa.pub`); no private key
 is stored anywhere.
 
+## Results (2026-10-24)
+
+Trivy, Critical/High/Medium/Low, same database for each before/after pair.
+
+| Base image | C/H/M/L | Note |
+|---|---|---|
+| `static:latest` | 0/0/0/0 | |
+| `python:3.11`, `3.12`, `3.15` | 0/0/1/0 | zlib; fix only in a release candidate |
+| `python:3.13` | 0/2/7/0 | Highs fixed only in a `_git` snapshot |
+| `python:3.14` | 0/0/9/0 | |
+| `nginx:mainline` | 0/0/1/0 | zlib, as above |
+| `nginx:stable` | 0/6/7/0 | fixes name versions Wolfi hasn't published |
+
+| Consumer | Before | After | |
+|---|---|---|---|
+| trakt-clean (`python:3.12-slim` → `python:3.12`) | 0/44/63/62 | 0/0/1/0 | switched |
+| tailnet-egress-watcher (`distroless/static-debian12`) | 0/0/0/0 + 3 unrated Debian advisories | 0/0/0/0 | switched |
+| node-capacity-watcher (`distroless/static`) | 0/0/0/0 | 0/0/0/0 | switched |
+| atpass-web (`nginx:1.30-alpine-slim`) | 0/0/0/0 | — | **not switched**: both nginx lines scan worse today |
+
 ## Development
 
 ```bash
