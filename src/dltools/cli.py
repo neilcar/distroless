@@ -11,9 +11,11 @@ from pathlib import Path
 
 import yaml
 
-from dltools.gate import evaluate, load_ignore, summary_markdown
+from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_markdown
 from dltools.lines import discover, fetch_eol
+from dltools.notify import upsert_issue
 from dltools.render import load_catalog, render
+from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
@@ -63,6 +65,23 @@ def cmd_gate(args) -> int:
     return 0 if result.passed else 1
 
 
+def cmd_rescan_decide(args) -> int:
+    report = json.loads(Path(args.report).read_text())
+    prev_path = Path(args.previous)
+    previous = set(prev_path.read_text().split()) if prev_path.exists() else set()
+    ignore = load_ignore(args.ignore)
+    d = decide(report, ignore, previous)
+    ids = sorted({f.id for f in findings(report, ignore) if f.severity in BLOCKING})
+    print(json.dumps({"open_issue": d.open_issue, "rebuild": d.rebuild,
+                      "summary": d.summary, "ids": ids}))
+    return 0
+
+
+def cmd_notify(args) -> int:
+    upsert_issue(args.title, args.body)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -80,6 +99,17 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--ignore", default=".trivyignore")
     gate.add_argument("--label", default="")
     gate.set_defaults(func=cmd_gate)
+
+    rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")
+    rescan.add_argument("--report", required=True)
+    rescan.add_argument("--ignore", default=".trivyignore")
+    rescan.add_argument("--previous", required=True, help="file of previously seen IDs")
+    rescan.set_defaults(func=cmd_rescan_decide)
+
+    notify = sub.add_parser("notify", help="open or comment on an automation issue")
+    notify.add_argument("--title", required=True)
+    notify.add_argument("--body", required=True)
+    notify.set_defaults(func=cmd_notify)
     return parser
 
 
