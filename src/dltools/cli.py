@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
@@ -126,13 +127,14 @@ def cmd_vendor_check(args) -> int:
     vendor = json.loads(Path(args.vendor).read_text())
     try:
         messages = newer_releases(vendor, fetch_releases(vendor, token()))
-    except (OSError, ValueError) as exc:  # network or bad response: warn, don't fail the job
-        print(f"warning: could not check vendored releases: {exc}", file=sys.stderr)
-        return 0
-    if args.dry_run:
-        print("\n".join(messages) if messages else "no newer releases")
-    elif messages:
-        upsert_issue("Vendored tool updates available", "\n".join(f"- {m}" for m in messages))
+        if args.dry_run:
+            print("\n".join(messages) if messages else "no newer releases")
+        elif messages:
+            upsert_issue("Vendored tool updates available",
+                         "\n".join(f"- {m}" for m in messages), dedupe=True)
+    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+        # network, bad response or gh failure: warn, don't fail the job
+        print(f"warning: vendored release check failed: {exc}", file=sys.stderr)
     return 0
 
 
