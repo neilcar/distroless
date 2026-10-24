@@ -186,6 +186,9 @@ jobs:
           done
           # Compare against the published image; only a definite "not found" means
           # this is the line's first publish. Any other registry error fails the job.
+          # Signed in: GHCR answers an anonymous request for a never-published image
+          # with DENIED, not NAME_UNKNOWN.
+          crane auth login ghcr.io -u "$GITHUB_ACTOR" --password-stdin <<<"$GH_TOKEN"
           if out=$(crane digest "$REPO:$PRIMARY" 2>&1); then
             for pair in x86_64:amd64 aarch64:arm64; do
               a=${pair%%:*}; p=${pair##*:}
