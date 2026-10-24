@@ -1,0 +1,28 @@
+# Config-only package so nginx runs as non-root on port 8080. It provides the
+# virtual `nginx-config` that nginx-stable / nginx-mainline depend on, in place
+# of Wolfi's nginx-*-config packages (which listen on port 80).
+package:
+  name: distroless-nginx-config
+  version: 1.0.0
+  epoch: 0
+  description: nginx configuration for non-root distroless images (port 8080)
+  copyright:
+    - license: Apache-2.0
+  dependencies:
+    provides:
+      - nginx-config=1.0.0-r0
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+
+pipeline:
+  - runs: |
+      install -Dm644 nginx.conf "${{targets.destdir}}/etc/nginx/nginx.conf"
+      install -Dm644 default.conf "${{targets.destdir}}/etc/nginx/conf.d/default.conf"
+      install -Dm644 index.html "${{targets.destdir}}/usr/share/nginx/html/index.html"

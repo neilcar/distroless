@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import sys
@@ -13,10 +14,13 @@ import yaml
 
 from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_markdown
 from dltools.lines import discover, fetch_eol
+from dltools.lockcheck import check_lock
 from dltools.notify import upsert_issue
+from dltools.pinning import apply_pins, released_overrides
 from dltools.render import load_catalog, render
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
+from dltools.tags import tags
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
@@ -82,6 +86,66 @@ def cmd_notify(args) -> int:
     return 0
 
 
+GLOBAL_INPUTS = ("catalog.yaml", "melange/", "packages/", ".trivyignore", "melange.rsa.pub")
+
+
+def cmd_matrix(args) -> int:
+    locks = Path(args.locks)
+    entries = sorted(
+        (p.parts[-3], p.parts[-2], p.name.removesuffix(".apko.yaml"))
+        for p in locks.glob("*/*/*.apko.yaml")
+    )
+    changed = [c.strip() for c in Path(args.changed).read_text().splitlines()]
+    changed = [c for c in changed if c]
+    if not changed or any(c.startswith(GLOBAL_INPUTS) for c in changed):
+        selected = entries
+    else:
+        wanted = set()
+        for c in changed:
+            parts = Path(c).parts
+            if len(parts) == 4 and parts[0] == "locks":
+                wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
+        selected = [e for e in entries if e in wanted]
+    include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
+    print(json.dumps({"include": include}))
+    return 0
+
+
+def cmd_lock_check(args) -> int:
+    failed = False
+    for path in args.locks:
+        for violation in check_lock(json.loads(Path(path).read_text())):
+            print(f"{path}: {violation}")
+            failed = True
+    return 1 if failed else 0
+
+
+def cmd_tags(args) -> int:
+    line = next(
+        ln for ln in load_state(args.state) if ln.image == args.image and ln.name == args.line
+    )
+    lock_hash = hashlib.sha256(Path(args.lock).read_bytes()).hexdigest()
+    print("\n".join(tags(line, args.variant, lock_hash)))
+    return 0
+
+
+def cmd_pin_released(args) -> int:
+    """0: lock is released-only; 3: config re-pinned, re-lock needed; 2: unresolvable."""
+    lock = json.loads(Path(args.lock).read_text())
+    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    pins, missing = released_overrides(lock, indexes)
+    if missing:
+        print(f"no released version on every arch for: {', '.join(missing)}")
+        return 2
+    if not pins:
+        return 0
+    cfg_path = Path(args.config)
+    cfg = apply_pins(yaml.safe_load(cfg_path.read_text()), pins)
+    cfg_path.write_text(yaml.safe_dump(cfg, sort_keys=False))
+    print("pinned " + " ".join(f"{n}={v}" for n, v in sorted(pins.items())))
+    return 3
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -110,6 +174,28 @@ def build_parser() -> argparse.ArgumentParser:
     notify.add_argument("--title", required=True)
     notify.add_argument("--body", required=True)
     notify.set_defaults(func=cmd_notify)
+
+    matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
+    matrix.add_argument("--locks", default="locks")
+    matrix.add_argument("--changed", required=True, help="file listing changed paths")
+    matrix.set_defaults(func=cmd_matrix)
+
+    lockcheck = sub.add_parser("lock-check", help="fail on unreleased or single-arch locks")
+    lockcheck.add_argument("locks", nargs="+")
+    lockcheck.set_defaults(func=cmd_lock_check)
+
+    tag = sub.add_parser("tags", help="print the tags for one image/line/variant")
+    tag.add_argument("--state", default="state/lines.json")
+    tag.add_argument("--image", required=True)
+    tag.add_argument("--line", required=True)
+    tag.add_argument("--variant", required=True)
+    tag.add_argument("--lock", required=True)
+    tag.set_defaults(func=cmd_tags)
+
+    pin = sub.add_parser("pin-released", help="pin unreleased lock entries to their newest release")
+    pin.add_argument("--config", required=True)
+    pin.add_argument("--lock", required=True)
+    pin.set_defaults(func=cmd_pin_released)
     return parser
 
 

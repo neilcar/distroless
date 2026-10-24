@@ -34,7 +34,9 @@ def test_render_python_dev_adds_tools():
 
 def test_render_nginx_uses_local_config_package():
     cfg = render(CATALOG, NGINX, "runtime")
-    assert {"nginx-stable=1.30.2-r0", "distroless-nginx-config"} <= set(pkgs(cfg))
+    assert {
+        "nginx-stable=1.30.2-r0", "nginx-stable-mime-types", "distroless-nginx-config",
+    } <= set(pkgs(cfg))
     assert "nginx-stable-config" not in pkgs(cfg)
     assert "./packages" in cfg["contents"]["repositories"]
     assert "./melange.rsa.pub" in cfg["contents"]["keyring"]

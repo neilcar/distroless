@@ -31,7 +31,7 @@ images:
     extra_keyring: ["./melange.rsa.pub"]
     variants:
       runtime:
-        packages: ["{package}", "distroless-nginx-config"]
+        packages: ["{package}", "{package}-mime-types", "distroless-nginx-config"]
         entrypoint: "/usr/sbin/nginx"
         cmd: "-g 'daemon off;'"
     paths:
