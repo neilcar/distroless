@@ -1,0 +1,154 @@
+name: Build and publish
+
+on:
+  push:
+    branches: [main]
+    paths: ["locks/**", "catalog.yaml", "packages/**", ".trivyignore", "melange.rsa.pub"]
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: "Only build this image or image:line (empty = everything)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      any: ${{ steps.matrix.outputs.any }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - run: uv sync --locked
+      - id: matrix
+        env:
+          FILTER: ${{ inputs.filter }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            git diff --name-only HEAD~1 HEAD > changed.txt
+          else
+            : > changed.txt
+          fi
+          uv run dl matrix --changed changed.txt > m.json
+          if [[ -n "${FILTER:-}" ]]; then
+            jq --arg f "$FILTER" '{include: [.include[] | select(.image == $f or (.image + ":" + .line) == $f)]}' m.json > f.json && mv f.json m.json
+          fi
+          echo "matrix=$(jq -c . m.json)" >> "$GITHUB_OUTPUT"
+          echo "any=$(jq '.include | length > 0' m.json)" >> "$GITHUB_OUTPUT"
+          jq -r '.include[] | "\(.image):\(.line) \(.variant)"' m.json
+
+  build:
+    needs: plan
+    if: needs.plan.outputs.any == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      IMAGE: ${{ matrix.image }}
+      LINE: ${{ matrix.line }}
+      VARIANT: ${{ matrix.variant }}
+      REPO: ghcr.io/neilcar/distroless/${{ matrix.image }}
+      CFG: locks/${{ matrix.image }}/${{ matrix.line }}/${{ matrix.variant }}.apko.yaml
+      LOCK: locks/${{ matrix.image }}/${{ matrix.line }}/${{ matrix.variant }}.lock.json
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-tools
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Tags
+        run: |
+          uv run dl tags --image "$IMAGE" --line "$LINE" --variant "$VARIANT" --lock "$LOCK" > tags.txt
+          cat tags.txt
+          echo "PRIMARY=$(head -1 tags.txt)" >> "$GITHUB_ENV"
+          echo "HASHTAG=$(grep -E -- '-[0-9a-f]{8}(-dev)?$|^[0-9a-f]{8}$' tags.txt | head -1)" >> "$GITHUB_ENV"
+
+      - name: Build (both arches, plus per-arch tarballs for scanning)
+        run: |
+          set -euo pipefail
+          apko build --lockfile "$LOCK" --sbom-path sbom "$CFG" "$REPO:candidate" oci/
+          for a in x86_64 aarch64; do
+            apko build --lockfile "$LOCK" --sbom=false --arch "$a" "$CFG" "$REPO:candidate" "img-$a.tar"
+          done
+          ls sbom
+
+      - name: Smoke test (amd64)
+        run: |
+          set -euo pipefail
+          docker load -q < img-x86_64.tar
+          tests/smoke/test_images.sh "$REPO:candidate-amd64" "$IMAGE" "$VARIANT"
+
+      - name: Scan candidate and published image
+        run: |
+          set -euo pipefail
+          for a in x86_64 aarch64; do
+            trivy image --quiet --input "img-$a.tar" --format json --output "cand-$a.json"
+          done
+          if crane digest "$REPO:$PRIMARY" >/dev/null 2>&1; then
+            trivy image --quiet --platform linux/amd64 --format json --output pub-x86_64.json "$REPO:$PRIMARY"
+            trivy image --quiet --platform linux/arm64 --format json --output pub-aarch64.json "$REPO:$PRIMARY"
+          fi
+
+      - name: Gate
+        run: |
+          set -uo pipefail
+          rc=0
+          for a in x86_64 aarch64; do
+            pub=(); [[ -f "pub-$a.json" ]] && pub=(--published "pub-$a.json")
+            uv run dl gate --candidate "cand-$a.json" "${pub[@]}" --ignore .trivyignore \
+              --label "$IMAGE:$LINE $VARIANT ($a)" >> "$GITHUB_STEP_SUMMARY" || rc=1
+          done
+          exit $rc
+
+      - name: Push the scanned image
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          echo "${{ github.token }}" | crane auth login ghcr.io -u "${{ github.actor }}" --password-stdin
+          digest=$(crane push --index oci/ "$REPO:$HASHTAG")
+          digest=${digest##*@}
+          # The pushed per-arch manifests must be exactly the ones that were scanned.
+          jq -r '.manifests[].digest' oci/index.json | sort > local.txt
+          crane manifest "$REPO@$digest" | jq -r '.manifests[].digest' | sort > pushed.txt
+          diff local.txt pushed.txt
+          for a in x86_64 aarch64; do
+            crane digest --tarball "img-$a.tar" | grep -qxF -f pushed.txt \
+              || { echo "scanned $a image is not in the pushed index"; exit 1; }
+          done
+          while read -r t; do crane tag "$REPO@$digest" "$t"; done < tags.txt
+          echo "DIGEST=$digest" >> "$GITHUB_ENV"
+          echo "Published \`$REPO@$digest\` as: $(paste -sd' ' tags.txt)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Sign and attest
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          cosign sign --yes "$REPO@$DIGEST"
+          cosign attest --yes --type spdxjson --predicate sbom/sbom-index.spdx.json "$REPO@$DIGEST"
+          for a in x86_64 aarch64; do
+            d=$(crane digest --tarball "img-$a.tar")
+            cosign attest --yes --type spdxjson --predicate "sbom/sbom-$a.spdx.json" "$REPO@$d"
+          done
+
+      - name: Report failure
+        if: failure()
+        run: |
+          uv run dl notify --title "Build failed: $IMAGE:$LINE-$VARIANT" --body "$RUN_URL"

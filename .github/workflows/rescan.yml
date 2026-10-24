@@ -1,0 +1,68 @@
+name: Rescan published images
+
+# Daily: re-scan every current published image with a fresh Trivy database.
+# New Critical/High findings open an issue; fixable ones trigger a sync, which
+# re-locks to the fixed packages and then builds (rebuilding the same lock would
+# reproduce the same image).
+on:
+  schedule:
+    - cron: "47 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+jobs:
+  rescan:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-tools
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .rescan
+          key: rescan-ids-${{ github.run_id }}
+          restore-keys: rescan-ids-
+      - name: Rescan
+        run: |
+          set -euo pipefail
+          mkdir -p .rescan
+          rebuild=()
+          for cfg in locks/*/*/*.apko.yaml; do
+            IFS=/ read -r _ image line file <<<"$cfg"
+            variant=${file%.apko.yaml}
+            lock="${cfg%.apko.yaml}.lock.json"
+            tag=$(uv run dl tags --image "$image" --line "$line" --variant "$variant" --lock "$lock" | head -1)
+            ref="ghcr.io/neilcar/distroless/$image:$tag"
+            crane digest "$ref" >/dev/null 2>&1 || { echo "skip $ref (not published)"; continue; }
+            trivy image --quiet --platform linux/amd64 --format json --output a.json "$ref"
+            trivy image --quiet --platform linux/arm64 --format json --output b.json "$ref"
+            jq -s '{Results: (.[0].Results + .[1].Results)}' a.json b.json > report.json
+            prev=".rescan/${image}_${line}_${variant}.txt"
+            decision=$(uv run dl rescan-decide --report report.json --ignore .trivyignore --previous "$prev")
+            jq -r '.ids[]' <<<"$decision" > "$prev"
+            if [[ $(jq -r .open_issue <<<"$decision") == true ]]; then
+              uv run dl notify --title "New Critical/High in $image:$tag" \
+                --body "$(jq -r .summary <<<"$decision")
+
+          $RUN_URL"
+            fi
+            if [[ $(jq -r .rebuild <<<"$decision") == true ]]; then rebuild+=("$image:$line"); fi
+          done
+          if [[ ${#rebuild[@]} -gt 0 ]]; then
+            echo "fixable findings in: ${rebuild[*]}; triggering sync"
+            gh workflow run sync.yml
+          fi
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: always()
+        with:
+          path: .rescan
+          key: rescan-ids-${{ github.run_id }}
+      - name: Report failure
+        if: failure()
+        run: uv run dl notify --title "Rescan failed" --body "$RUN_URL"

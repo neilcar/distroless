@@ -1,0 +1,53 @@
+name: nginx config package
+
+# Builds distroless-nginx-config with a throwaway signing key and commits the
+# signed packages and public key. No private key is ever stored.
+on:
+  push:
+    branches: [main]
+    paths: ["melange/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+      - uses: ./.github/actions/setup-tools
+      - name: Build and sign
+        run: |
+          set -euo pipefail
+          key="$RUNNER_TEMP/melange.rsa"
+          melange keygen "$key"
+          rm -rf packages
+          melange build melange/nginx-config.yaml --source-dir melange/nginx-config \
+            --arch x86_64,aarch64 --signing-key "$key" --out-dir packages --runner docker
+          cp "$key.pub" melange.rsa.pub
+          rm -f "$key"
+          find packages -type f | sort
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages melange.rsa.pub
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(nginx-config): rebuild distroless-nginx-config package
+
+          Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+          git push
+          gh workflow run sync.yml
+      - name: Report failure
+        if: failure()
+        run: uv run dl notify --title "nginx config package build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
