@@ -46,7 +46,11 @@ jobs:
           git commit -m "chore(nginx-config): rebuild distroless-nginx-config package
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
-          git push
+          for attempt in 1 2 3; do
+            git push && break
+            [[ $attempt == 3 ]] && exit 1
+            git pull --rebase
+          done
           gh workflow run sync.yml
       - name: Report failure
         if: failure()

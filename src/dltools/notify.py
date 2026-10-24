@@ -17,6 +17,11 @@ def upsert_issue(title: str, body: str, label: str = "automation", runner=subpro
         runner(["gh", "issue", "comment", str(match["number"]), "--body", body], check=True)
     else:
         runner(
+            ["gh", "label", "create", label, "--force", "--color", "BFD4F2",
+             "--description", "Opened by the image automation"],
+            check=True,
+        )
+        runner(
             ["gh", "issue", "create", "--title", title, "--body", body, "--label", label],
             check=True,
         )

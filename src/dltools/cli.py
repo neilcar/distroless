@@ -24,6 +24,22 @@ from dltools.tags import tags
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
+def load_indexes(index_dir: str | None) -> dict:
+    """APKINDEX per arch, read from `index_dir` (written by `dl fetch-index`) when given."""
+    if index_dir:
+        return {arch: parse_apkindex((Path(index_dir) / f"APKINDEX.{arch}").read_text())
+                for arch in ARCHES}
+    return {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+
+
+def cmd_fetch_index(args) -> int:
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    for arch in ARCHES:
+        (out / f"APKINDEX.{arch}").write_text(fetch_index(arch))
+    return 0
+
+
 def _write_if_changed(path: Path, text: str) -> None:
     if not path.exists() or path.read_text() != text:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -33,7 +49,7 @@ def _write_if_changed(path: Path, text: str) -> None:
 def cmd_sync(args) -> int:
     catalog = load_catalog(args.catalog)
     today = date.fromisoformat(args.today) if args.today else date.today()
-    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    indexes = load_indexes(args.index_dir)
     current = load_state(args.state)
     lines, warnings = discover(indexes, fetch_eol(), today, current)
     events = diff(current, lines)
@@ -58,13 +74,15 @@ def cmd_sync(args) -> int:
         print(json.dumps(event.to_dict()))
     for warning in warnings:
         print(f"warning: {warning}", file=sys.stderr)
+    if args.warnings:
+        Path(args.warnings).write_text("".join(f"{w}\n" for w in warnings))
     return 0
 
 
 def cmd_gate(args) -> int:
     candidate = json.loads(Path(args.candidate).read_text())
     published = json.loads(Path(args.published).read_text()) if args.published else None
-    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    indexes = load_indexes(args.index_dir)
     result = evaluate(candidate, published, load_ignore(args.ignore), indexes)
     print(summary_markdown(result, args.label))
     return 0 if result.passed else 1
@@ -75,7 +93,7 @@ def cmd_rescan_decide(args) -> int:
     prev_path = Path(args.previous)
     previous = set(prev_path.read_text().split()) if prev_path.exists() else set()
     ignore = load_ignore(args.ignore)
-    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    indexes = load_indexes(args.index_dir)
     d = decide(report, ignore, previous, indexes)
     ids = sorted({f.id for f in findings(report, ignore) if f.severity in BLOCKING})
     print(json.dumps({"open_issue": d.open_issue, "rebuild": d.rebuild,
@@ -88,7 +106,11 @@ def cmd_notify(args) -> int:
     return 0
 
 
-GLOBAL_INPUTS = ("catalog.yaml", "melange/", "packages/", ".trivyignore", "melange.rsa.pub")
+# Inputs that change what sync renders/locks: building now would use stale configs,
+# so the build requests a sync instead (which re-locks, commits and builds).
+RESYNC_INPUTS = ("catalog.yaml", "melange/", "packages/", "melange.rsa.pub")
+# Inputs that only change how existing locks are judged: rebuild everything.
+REBUILD_INPUTS = (".trivyignore",)
 
 
 def cmd_matrix(args) -> int:
@@ -99,7 +121,10 @@ def cmd_matrix(args) -> int:
     )
     changed = [c.strip() for c in Path(args.changed).read_text().splitlines()]
     changed = [c for c in changed if c]
-    if not changed or any(c.startswith(GLOBAL_INPUTS) for c in changed):
+    if any(c.startswith(RESYNC_INPUTS) for c in changed):
+        print(json.dumps({"include": [], "resync": True}))
+        return 0
+    if not changed or any(c.startswith(REBUILD_INPUTS) for c in changed):
         selected = entries
     else:
         wanted = set()
@@ -109,7 +134,7 @@ def cmd_matrix(args) -> int:
                 wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
         selected = [e for e in entries if e in wanted]
     include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
-    print(json.dumps({"include": include}))
+    print(json.dumps({"include": include, "resync": False}))
     return 0
 
 
@@ -144,7 +169,7 @@ def cmd_tags(args) -> int:
 def cmd_pin_released(args) -> int:
     """0: lock is released-only; 3: config re-pinned, re-lock needed; 2: unresolvable."""
     lock = json.loads(Path(args.lock).read_text())
-    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    indexes = load_indexes(args.index_dir)
     pins, missing = released_overrides(lock, indexes)
     if missing:
         print(f"no released version on every arch for: {', '.join(missing)}")
@@ -158,6 +183,21 @@ def cmd_pin_released(args) -> int:
     return 3
 
 
+def cmd_state_revert(args) -> int:
+    """Put one line's state entry back to its previous value (or drop a new line)."""
+    current = load_state(args.state)
+    previous = {(ln.image, ln.name): ln for ln in load_state(args.previous)}
+    key = (args.image, args.line)
+    out = []
+    for ln in current:
+        if (ln.image, ln.name) != key:
+            out.append(ln)
+        elif key in previous:
+            out.append(previous[key])
+    save_state(args.state, out)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -167,6 +207,8 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--locks", default="locks")
     sync.add_argument("--catalog", default="catalog.yaml")
     sync.add_argument("--today", help="YYYY-MM-DD (default: today)")
+    sync.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
+    sync.add_argument("--warnings", help="also write warnings to this file")
     sync.set_defaults(func=cmd_sync)
 
     gate = sub.add_parser("gate", help="apply the scan gate to Trivy JSON reports")
@@ -174,12 +216,14 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--published")
     gate.add_argument("--ignore", default=".trivyignore")
     gate.add_argument("--label", default="")
+    gate.add_argument("--index-dir")
     gate.set_defaults(func=cmd_gate)
 
     rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")
     rescan.add_argument("--report", required=True)
     rescan.add_argument("--ignore", default=".trivyignore")
     rescan.add_argument("--previous", required=True, help="file of previously seen IDs")
+    rescan.add_argument("--index-dir")
     rescan.set_defaults(func=cmd_rescan_decide)
 
     notify = sub.add_parser("notify", help="open or comment on an automation issue")
@@ -209,7 +253,19 @@ def build_parser() -> argparse.ArgumentParser:
     pin = sub.add_parser("pin-released", help="pin unreleased lock entries to their newest release")
     pin.add_argument("--config", required=True)
     pin.add_argument("--lock", required=True)
+    pin.add_argument("--index-dir")
     pin.set_defaults(func=cmd_pin_released)
+
+    fetch = sub.add_parser("fetch-index", help="download APKINDEX for every arch once")
+    fetch.add_argument("--out", required=True)
+    fetch.set_defaults(func=cmd_fetch_index)
+
+    revert = sub.add_parser("state-revert", help="restore one line's previous state entry")
+    revert.add_argument("--state", default="state/lines.json")
+    revert.add_argument("--previous", required=True)
+    revert.add_argument("--image", required=True)
+    revert.add_argument("--line", required=True)
+    revert.set_defaults(func=cmd_state_revert)
     return parser
 
 

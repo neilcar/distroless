@@ -66,3 +66,33 @@ def test_cli_sync_removes_dropped_line(tmp_path, offline, capsys):
     _, events = run_sync(tmp_path, capsys)
     assert [e["kind"] for e in events] == ["line_removed"]
     assert not stale.exists()
+
+
+def test_cli_sync_writes_warnings_file(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "fetch_index", lambda arch: (FIXTURES / f"APKINDEX.{arch}").read_text())
+    monkeypatch.setattr(cli, "fetch_eol", lambda: None)
+    warnings = tmp_path / "warnings.txt"
+    assert cli.main(["sync", "--state", str(tmp_path / "s.json"), "--locks", str(tmp_path / "l"),
+                     "--catalog", str(ROOT / "catalog.yaml"), "--today", "2026-10-24",
+                     "--warnings", str(warnings)]) == 0
+    assert "endoflife.date" in warnings.read_text()
+
+
+def test_index_dir_avoids_network(tmp_path, monkeypatch, capsys):
+    idx = tmp_path / "idx"
+    idx.mkdir()
+    for arch in ("x86_64", "aarch64"):
+        (idx / f"APKINDEX.{arch}").write_text((FIXTURES / f"APKINDEX.{arch}").read_text())
+    def boom(arch):
+        raise AssertionError("network fetch")
+    monkeypatch.setattr(cli, "fetch_index", boom)
+    monkeypatch.setattr(cli, "fetch_eol", lambda: json.loads((FIXTURES / "python-eol.json").read_text()))
+    assert cli.main(["sync", "--state", str(tmp_path / "s.json"), "--locks", str(tmp_path / "l"),
+                     "--catalog", str(ROOT / "catalog.yaml"), "--today", "2026-10-24",
+                     "--index-dir", str(idx)]) == 0
+
+
+def test_fetch_index_command_writes_files(tmp_path, monkeypatch):
+    monkeypatch.setattr(cli, "fetch_index", lambda arch: f"P:x\nV:1-r0\n\n# {arch}")
+    assert cli.main(["fetch-index", "--out", str(tmp_path)]) == 0
+    assert (tmp_path / "APKINDEX.aarch64").read_text().endswith("# aarch64")

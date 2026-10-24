@@ -26,7 +26,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup-tools
       - name: Resolve lines and render configs
-        run: uv run dl sync > "$RUNNER_TEMP/events.jsonl" 2> "$RUNNER_TEMP/warnings.txt"
+        run: |
+          set -euo pipefail
+          uv run dl fetch-index --out "$RUNNER_TEMP/index"
+          uv run dl sync --index-dir "$RUNNER_TEMP/index" --warnings "$RUNNER_TEMP/warnings.txt" \
+            > "$RUNNER_TEMP/events.jsonl"
       - name: Lock (released versions only)
         run: .github/scripts/lock-all.sh
       - name: Commit
@@ -41,7 +45,11 @@ jobs:
           git commit -m "chore(sync): ${summary:-state}
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
-          git push
+          for attempt in 1 2 3; do
+            git push && break
+            [[ $attempt == 3 ]] && exit 1
+            git pull --rebase
+          done
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Trigger build
         if: steps.commit.outputs.changed == 'true'

@@ -17,6 +17,9 @@ class Finding:
     severity: str
     package: str
     fixed_version: str
+    installed: str = ""
+    kind: str = "os-pkgs"  # Trivy result Class
+    pkg_type: str = ""  # Trivy result Type, e.g. "wolfi", "python-pkg"
 
 
 @dataclass
@@ -52,28 +55,66 @@ def findings(report: dict, ignore: set[str]) -> list[Finding]:
                 v.get("Severity", "UNKNOWN").upper(),
                 v.get("PkgName", ""),
                 v.get("FixedVersion") or "",
+                v.get("InstalledVersion") or "",
+                result.get("Class") or "os-pkgs",
+                result.get("Type") or "",
             )
             seen.setdefault((f.id, f.package), f)
     return list(seen.values())
 
 
-def fix_available(finding: Finding, indexes) -> bool:
-    """A fix is available when a released Wolfi version (on every arch) is at or above one
-    of the advisory's fixed versions. Without indexes, any listed fixed version counts."""
+def fix_status(finding: Finding, indexes) -> str:
+    """One of: fixable, no-fix, no-release, not-wolfi, unparseable.
+
+    `fixable` means a released Wolfi version (on every arch) is at or above the
+    advisory's fix for the installed version's branch. Without indexes, any listed
+    fixed version counts as fixable."""
     if not finding.fixed_version:
-        return False
+        return "no-fix"
     if indexes is None:
-        return True
-    newest = newest_released_all_arches(indexes, finding.package)
-    if newest is None:
-        return False
-    for fixed in (v.strip() for v in finding.fixed_version.split(",")):
+        return "fixable"
+    if finding.kind != "os-pkgs":
+        return "not-wolfi"
+    fixes = []
+    for raw in (v.strip() for v in finding.fixed_version.split(",")):
         try:
-            if version_key(newest) >= version_key(fixed):
-                return True
+            fixes.append(version_key(raw))
         except ValueError:
             continue
-    return False
+    if not fixes:
+        return "unparseable"
+    try:
+        installed = version_key(finding.installed) if finding.installed else None
+    except ValueError:
+        installed = None
+    # Only fixes above the installed version are on its branch; a fix for an older
+    # branch (e.g. 3.11.20 when 3.12.15 is installed) says nothing about this one.
+    relevant = [f for f in fixes if installed is None or f > installed] or fixes
+    if not any(finding.package in idx for idx in indexes.values()):
+        return "not-wolfi"
+    newest = newest_released_all_arches(indexes, finding.package)
+    if newest is None:
+        return "no-release"
+    return "fixable" if version_key(newest) >= min(relevant) else "no-release"
+
+
+def fix_available(finding: Finding, indexes) -> bool:
+    return fix_status(finding, indexes) == "fixable"
+
+
+_NOTE = {
+    "no-fix": "no fix published",
+    "no-release": "no released fix in Wolfi",
+    "unparseable": "unparseable fixed version, not blocking",
+}
+
+
+def _note(f: Finding, status: str) -> str:
+    reason = (
+        f"not a Wolfi package ({f.pkg_type or f.kind})" if status == "not-wolfi" else _NOTE[status]
+    )
+    advisory = f" (advisory: {f.fixed_version})" if f.fixed_version else ""
+    return f"{f.severity} {f.id} in {f.package}: {reason}{advisory}"
 
 
 def counts(items: list[Finding]) -> dict[str, int]:
@@ -88,17 +129,13 @@ def evaluate(
 ) -> GateResult:
     cand = findings(candidate, ignore)
     serious = [f for f in cand if f.severity in BLOCKING]
+    statuses = [(f, fix_status(f, indexes)) for f in serious]
     reasons = [
         f"{f.severity} {f.id} in {f.package} has a fix ({f.fixed_version})"
-        for f in serious
-        if fix_available(f, indexes)
+        for f, st in statuses
+        if st == "fixable"
     ]
-    notes = [
-        f"{f.severity} {f.id} in {f.package}: no released fix in Wolfi"
-        + (f" (advisory: {f.fixed_version})" if f.fixed_version else "")
-        for f in serious
-        if not fix_available(f, indexes)
-    ]
+    notes = [_note(f, st) for f, st in statuses if st != "fixable"]
     cand_counts = counts(cand)
     pub_counts = None
     if published is not None:

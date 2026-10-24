@@ -113,3 +113,36 @@ def test_gate_unavailable_fixes_are_listed_but_not_blocking():
     rep = report_pkg("CVE-2026-42055", "HIGH", "nginx-stable", "1.30.3-r0")
     r = evaluate(rep, None, set(), INDEXES)
     assert any("CVE-2026-42055" in n and "no released fix" in n for n in r.notes)
+
+
+def report_typed(vid, sev, pkg, installed, fixed, rtype="wolfi", klass="os-pkgs"):
+    return {"Results": [{"Class": klass, "Type": rtype, "Vulnerabilities": [
+        {"VulnerabilityID": vid, "Severity": sev, "PkgName": pkg,
+         "InstalledVersion": installed, "FixedVersion": fixed}]}]}
+
+
+def test_gate_note_for_language_package_says_not_a_wolfi_package():
+    rep = report_typed("CVE-7", "HIGH", "pip", "24.0", "24.1", "python-pkg", "lang-pkgs")
+    r = evaluate(rep, None, set(), INDEXES)
+    assert r.passed
+    assert any("not a Wolfi package" in n and "python-pkg" in n for n in r.notes)
+
+
+def test_gate_multi_branch_fixed_versions_compare_against_installed_branch():
+    idx = {a: {"python-3.12": ["3.12.15-r6"]} for a in ("x86_64", "aarch64")}
+    # fixed on 3.11 (3.11.20) and on 3.12 (3.12.16); installed 3.12.15 is NOT fixed
+    rep = report_typed("CVE-8", "HIGH", "python-3.12", "3.12.15-r6", "3.11.20-r0, 3.12.16-r0")
+    r = evaluate(rep, None, set(), idx)
+    assert r.passed  # newest released 3.12.15 < 3.12.16: no available fix
+
+
+def test_gate_multi_branch_fix_available():
+    idx = {a: {"python-3.12": ["3.12.16-r0"]} for a in ("x86_64", "aarch64")}
+    rep = report_typed("CVE-8", "HIGH", "python-3.12", "3.12.15-r6", "3.11.20-r0, 3.12.16-r0")
+    assert not evaluate(rep, None, set(), idx).passed
+
+
+def test_gate_unparseable_fixed_version_noted():
+    rep = report_typed("CVE-9", "HIGH", "zlib", "1.3.2-r7", "not-a-version!")
+    r = evaluate(rep, None, set(), INDEXES)
+    assert r.passed and any("unparseable" in n for n in r.notes)

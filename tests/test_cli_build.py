@@ -31,12 +31,7 @@ def test_matrix_single_lock_change(locks, capsys, tmp_path):
     assert out == [{"image": "python", "line": "3.12", "variant": "dev"}]
 
 
-def test_matrix_catalog_change_builds_all(locks, capsys, tmp_path):
-    out = matrix(locks, ["catalog.yaml"], capsys, tmp_path)
-    assert len(out) == 4
-
-
-@pytest.mark.parametrize("path", ["packages/x86_64/APKINDEX.tar.gz", ".trivyignore", ""])
+@pytest.mark.parametrize("path", [".trivyignore", ""])
 def test_matrix_global_inputs_build_all(locks, capsys, tmp_path, path):
     assert len(matrix(locks, [path], capsys, tmp_path)) == 4
 
@@ -86,3 +81,37 @@ def test_lock_check_runtime_rejects_shell(tmp_path, capsys):
     assert cli.main(["lock-check", str(lock)]) == 0
     assert cli.main(["lock-check", "--runtime", str(lock)]) == 1
     assert "bash" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("path", ["catalog.yaml", "packages/x86_64/APKINDEX.tar.gz",
+                                  "melange/nginx-config.yaml", "melange.rsa.pub"])
+def test_matrix_config_inputs_request_resync_instead_of_build(locks, capsys, tmp_path, path):
+    f = tmp_path / "changed.txt"
+    f.write_text(path)
+    assert cli.main(["matrix", "--locks", str(locks), "--changed", str(f)]) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["resync"] is True and out["include"] == []
+
+
+def test_matrix_trivyignore_rebuilds_all_without_resync(locks, capsys, tmp_path):
+    f = tmp_path / "changed.txt"
+    f.write_text(".trivyignore")
+    cli.main(["matrix", "--locks", str(locks), "--changed", str(f)])
+    out = json.loads(capsys.readouterr().out)
+    assert out["resync"] is False and len(out["include"]) == 4
+
+
+def test_state_revert_restores_previous_entry(tmp_path):
+    cur = tmp_path / "lines.json"
+    prev = tmp_path / "prev.json"
+    entry = {"image": "python", "name": "3.12", "package": "python-3.12"}
+    cur.write_text(json.dumps({"lines": [dict(entry, version="3.12.16-r0"),
+                                         dict(entry, name="3.15", package="python-3.15",
+                                              version="3.15.1-r0")]}))
+    prev.write_text(json.dumps({"lines": [dict(entry, version="3.12.15-r6")]}))
+    assert cli.main(["state-revert", "--state", str(cur), "--previous", str(prev),
+                     "--image", "python", "--line", "3.12"]) == 0
+    assert cli.main(["state-revert", "--state", str(cur), "--previous", str(prev),
+                     "--image", "python", "--line", "3.15"]) == 0
+    lines = json.loads(cur.read_text())["lines"]
+    assert lines == [dict(entry, version="3.12.15-r6")]  # 3.15 was new: dropped
