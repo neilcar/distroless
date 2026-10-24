@@ -27,7 +27,8 @@ command, no options; `-dev` keeps busybox's env),
 so `#!/usr/bin/env perl` scripts such as exiftool run without coreutils. It is
 appended to the apko image before the scan, so the scanned digest is the pushed one.
 Trivy findings under `/opt/darktable`, `/opt/rawtherapee` and `/opt/yt-dlp` are
-listed in a separate *Vendored (not gated)* section of the gate summary, and the
+listed in a separate *Vendored (not gated)* section of the gate summary (Trivy cannot
+see inside those files, so it is normally empty; see [Scan gate](#scan-gate)), and the
 layer's contents are attested per arch (predicate type
 `https://github.com/neilcar/distroless/vendor-layer/v1`).
 
@@ -94,6 +95,10 @@ A build is published only if, per arch:
    for that tag.
 
 Findings in vendored files (`photoprism-base`'s `/opt/...`) count toward neither rule.
+In practice that section is empty: Trivy cannot see the libraries bundled inside the
+vendored AppImages and the PyInstaller yt-dlp binary, so their CVEs are not scanned at
+all. New upstream releases are tracked by the vendor release watcher instead, and the
+gate summary says so every time.
 
 Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 

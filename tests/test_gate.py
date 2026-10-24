@@ -189,3 +189,16 @@ def test_gate_vendor_prefix_matches_whole_path_components():
 def test_gate_without_vendor_prefixes_has_no_vendored_section():
     r = evaluate(report(("CVE-2", "LOW", "")), None, set())
     assert "Vendored" not in summary_markdown(r, "x")
+
+
+CAVEAT = ("Trivy cannot see the libraries bundled inside vendored files "
+          "(darktable 5.6.2, rawtherapee 5.13, yt-dlp 2026.10.21); "
+          "new upstream releases are tracked by the vendor release watcher.")
+
+
+def test_gate_vendored_section_states_trivy_blind_spot_even_when_empty():
+    r = evaluate(report(), None, set(), vendor_prefixes=VENDOR,
+                 vendor_components=["darktable 5.6.2", "rawtherapee 5.13", "yt-dlp 2026.10.21"])
+    md = summary_markdown(r, "x")
+    assert "Vendored (not gated)" in md and "| CRITICAL | 0 |" in md.split("Vendored", 1)[1]
+    assert CAVEAT in md

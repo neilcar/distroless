@@ -92,8 +92,13 @@ def cmd_gate(args) -> int:
     candidate = json.loads(Path(args.candidate).read_text())
     published = json.loads(Path(args.published).read_text()) if args.published else None
     indexes = load_indexes(args.index_dir)
+    prefixes, components = list(args.vendor_prefix), []
+    if args.vendor:
+        for v in json.loads(Path(args.vendor).read_text())["vendor"]:
+            prefixes.append(v["prefix"])
+            components.append(f"{v['name']} {v['version']}")
     result = evaluate(candidate, published, load_ignore(args.ignore), indexes,
-                      vendor_prefixes=args.vendor_prefix)
+                      vendor_prefixes=prefixes, vendor_components=components)
     print(summary_markdown(result, args.label))
     return 0 if result.passed else 1
 
@@ -243,6 +248,7 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--index-dir")
     gate.add_argument("--vendor-prefix", action="append", default=[],
                       help="path of vendored upstream files; findings under it are listed, not gated")
+    gate.add_argument("--vendor", help="vendor.json: its prefixes are vendored (as --vendor-prefix)")
     gate.set_defaults(func=cmd_gate)
 
     rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")

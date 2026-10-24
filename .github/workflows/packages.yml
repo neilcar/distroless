@@ -61,5 +61,5 @@ jobs:
           done
           gh workflow run sync.yml --ref "$GITHUB_REF_NAME"
       - name: Report failure
-        if: failure()
+        if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
         run: uv run dl notify --title "melange packages build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

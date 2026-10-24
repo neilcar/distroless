@@ -33,6 +33,7 @@ class GateResult:
     # Findings in vendored upstream files: reported, never gated. None = no vendored prefixes.
     vendored_counts: dict[str, int] | None = None
     vendored: list[Finding] = field(default_factory=list)
+    vendored_components: list[str] = field(default_factory=list)  # "name version"
 
 
 def load_ignore(path) -> set[str]:
@@ -153,7 +154,7 @@ def split_vendored(report: dict, prefixes: list[str]) -> tuple[dict, dict]:
 
 def evaluate(
     candidate: dict, published: dict | None, ignore: set[str], indexes=None,
-    vendor_prefixes: list[str] = (),
+    vendor_prefixes: list[str] = (), vendor_components: list[str] = (),
 ) -> GateResult:
     """Gate the candidate. Findings under `vendor_prefixes` (upstream files that are not
     Wolfi packages) are listed separately and count toward neither blocking nor the
@@ -183,7 +184,8 @@ def evaluate(
             if cand_counts[sev] > pub_counts[sev]
         ]
     return GateResult(not reasons, reasons, cand_counts, pub_counts, notes,
-                      counts(vendored) if vendor_prefixes else None, vendored)
+                      counts(vendored) if vendor_prefixes else None, vendored,
+                      list(vendor_components or vendor_prefixes))
 
 
 def summary_markdown(result: GateResult, label: str) -> str:
@@ -202,4 +204,7 @@ def summary_markdown(result: GateResult, label: str) -> str:
         for f in sorted(result.vendored, key=lambda f: (order.get(f.severity, 99), f.id, f.path)):
             fix = f" (fix: {f.fixed_version})" if f.fixed_version else ""
             rows.append(f"- {f.severity} {f.id} in {f.package} at {f.path}{fix}")
+        rows += ["", ("Trivy cannot see the libraries bundled inside vendored files "
+                 f"({', '.join(result.vendored_components)}); "
+                 "new upstream releases are tracked by the vendor release watcher.")]
     return "\n".join(rows) + "\n"
