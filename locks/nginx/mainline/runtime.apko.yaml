@@ -37,3 +37,18 @@ paths:
   permissions: 1023
   uid: 0
   gid: 0
+- path: /var/lib/nginx
+  type: directory
+  permissions: 493
+  uid: 65532
+  gid: 65532
+- path: /var/lib/nginx/logs
+  type: directory
+  permissions: 493
+  uid: 65532
+  gid: 65532
+- path: /var/lib/nginx/tmp
+  type: directory
+  permissions: 493
+  uid: 65532
+  gid: 65532

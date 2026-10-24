@@ -2,7 +2,7 @@
   "version": "v1",
   "config": {
     "name": "locks/nginx/stable/runtime.apko.yaml",
-    "checksum": "sha256-aGXbdmVfrD/3EpLI7BS47azuH8yaNC8CUHYEPNQQVgU="
+    "checksum": "sha256-T3oaCpx8qY3aiYfTVnt+wTJ/+z963FTZREGZmWRONuk="
   },
   "contents": {
     "keyring": [
