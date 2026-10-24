@@ -210,7 +210,8 @@ jobs:
             pub=(); [[ -f "pub-$a.json" ]] && pub=(--published "pub-$a.json")
             vendored=(); for v in ${VENDOR_PREFIXES:-}; do vendored+=(--vendor-prefix "$v"); done
             uv run dl gate --index-dir "$RUNNER_TEMP/index" --candidate "cand-$a.json" "${pub[@]}" "${vendored[@]}" \
-              --ignore .trivyignore --label "$IMAGE:$LINE $VARIANT ($a)" >> "$GITHUB_STEP_SUMMARY" || rc=1
+              --ignore .trivyignore --label "$IMAGE:$LINE $VARIANT ($a)" > "gate-$a.md" || rc=1
+            tee -a "$GITHUB_STEP_SUMMARY" < "gate-$a.md"   # also in the log, which the API can read
           done
           exit $rc
 
