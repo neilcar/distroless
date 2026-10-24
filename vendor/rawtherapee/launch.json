@@ -1,0 +1,12 @@
+{
+  "exec": "usr/bin/rawtherapee-cli",
+  "library_path": ["usr/lib"],
+  "env": {
+    "APPDIR": "${PREFIX}",
+    "XDG_DATA_DIRS": "${PREFIX}/usr/share:/usr/share",
+    "GSETTINGS_SCHEMA_DIR": "${PREFIX}/usr/share/glib-2.0/schemas",
+    "GDK_PIXBUF_MODULEDIR": "${PREFIX}/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders",
+    "GDK_PIXBUF_MODULE_FILE": "${PREFIX}/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+  },
+  "env_default": {"HOME": "/tmp"}
+}
