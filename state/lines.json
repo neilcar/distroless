@@ -38,12 +38,6 @@
     },
     {
       "image": "nginx",
-      "name": "stable",
-      "package": "nginx-stable",
-      "version": "1.30.2-r0"
-    },
-    {
-      "image": "nginx",
       "name": "mainline",
       "package": "nginx-mainline",
       "version": "1.31.8-r1"
