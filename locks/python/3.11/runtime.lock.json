@@ -276,22 +276,22 @@
       },
       {
         "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r26.apk",
-        "version": "1.0.8-r26",
+        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r27.apk",
+        "version": "1.0.8-r27",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-11074",
-          "checksum": "sha1-MAFOaqLSvepuQ2YZuIcGrg6Y9MY="
+          "range": "bytes=0-13239",
+          "checksum": "sha1-o3KuDmOmz1Y4E7TLE/CA3P8qmA0="
         },
         "data": {
-          "range": "bytes=11075-51688",
-          "checksum": "sha256-yjOkbkg7EShOAKtQ+yC4KX73Hxz1eMHGBH3wDjT0AS8="
+          "range": "bytes=13240-53856",
+          "checksum": "sha256-roZrhLiUVL8ESzn4lw+aS3CJXGz1DNg+AkVsxT7/ZII="
         },
-        "checksum": "Q1MAFOaqLSvepuQ2YZuIcGrg6Y9MY="
+        "checksum": "Q1o3KuDmOmz1Y4E7TLE/CA3P8qmA0="
       },
       {
         "name": "xz",
@@ -865,22 +865,22 @@
       },
       {
         "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r26.apk",
-        "version": "1.0.8-r26",
+        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r27.apk",
+        "version": "1.0.8-r27",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-11117",
-          "checksum": "sha1-byxaDeLS5YURZvLPs2Pm4tJqWl8="
+          "range": "bytes=0-13274",
+          "checksum": "sha1-k5xQYXhFaNkt579ZD5Mi/brVAYw="
         },
         "data": {
-          "range": "bytes=11118-53093",
-          "checksum": "sha256-bhsHcNpiYRzyi+djRCwkbEjSe6ob2ANejNtI58+Wmkg="
+          "range": "bytes=13275-55251",
+          "checksum": "sha256-QHqPKHQTyBp9ipp0LSO/XzgrHOY+kHqrnjEXe2L5RvQ="
         },
-        "checksum": "Q1byxaDeLS5YURZvLPs2Pm4tJqWl8="
+        "checksum": "Q1k5xQYXhFaNkt579ZD5Mi/brVAYw="
       },
       {
         "name": "xz",
