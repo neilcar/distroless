@@ -1,0 +1,2794 @@
+C:Q1YEWnDe92SzYcGOyJ4ubZ9knvp2c=
+P:ca-certificates-bundle
+V:20241121-r1
+A:aarch64
+S:135871
+I:270981
+T:
+
+C:Q1T6r4BsG2jDhylvuirKUri77ALKM=
+P:wolfi-baselayout
+V:20230201-r18
+A:aarch64
+S:13041
+I:131442
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-sbin
+
+C:Q18Jei+E3x6g5Cv67IhZ42a0adt1E=
+P:tzdata
+V:2025b-r0
+A:aarch64
+S:567350
+I:1984396
+T:Timezone data provided by IANA
+
+C:Q1IoUv4WYi990j+khdlm22kxjPwBk=
+P:nginx-stable
+V:1.26.3-r43
+A:aarch64
+S:561428
+I:1425046
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.26.3-r43 nginx=1.26.3-r43
+
+C:Q1xsDG8xPPueFMmbVmVRIC96V9ksI=
+P:nginx-mainline
+V:1.27.5-r3
+A:aarch64
+S:572554
+I:1494061
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.27.5-r3 nginx=1.27.5-r3
+
+C:Q1bkuEk6jvz21zeP+Tk3/hkvbi5D4=
+P:python-3.12
+V:3.12.11-r0
+A:aarch64
+S:9546
+I:44035
+T:the Python programming language
+D:python-3.12-base=3.12.11-r0
+p:python-3=3.12.11-r0 python3=3.12.11-r0
+
+C:Q1GvkfV7SWCXk60XLGaojwC3wmB7Q=
+P:wolfi-baselayout
+V:20230201-r21
+A:aarch64
+S:13231
+I:123188
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin
+
+C:Q1KGkKyjn0UIQlXd4QrYIjLZoOcdY=
+P:ca-certificates-bundle
+V:20250619-r0
+A:aarch64
+S:131257
+I:261469
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1snrMgWXIRuR8azidq2Nmgp9RSPY=
+P:tzdata
+V:2025b-r2
+A:aarch64
+S:567490
+I:1984825
+T:Timezone data provided by IANA
+
+C:Q13K5yODd0lPG1xLL8U+gpEmux5x4=
+P:ca-certificates-bundle
+V:20250619-r4
+A:aarch64
+S:131265
+I:261571
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1CTmNw7I4RiaTdhCHEjTikqzBCpg=
+P:python-3.13
+V:3.13.6-r0
+A:aarch64
+S:9792
+I:40385
+T:the Python programming language
+D:python-3.13-base=3.13.6-r0
+p:python-3=3.13.6-r0 python3=3.13.6-r0
+
+C:Q1ebTufeyXyggJ+m6ZdZkYn8AHJlw=
+P:python-3.12
+V:3.12.11-r6
+A:aarch64
+S:9895
+I:40396
+T:the Python programming language
+D:python-3.12-base=3.12.11-r6
+p:python-3=3.12.11-r6 python3=3.12.11-r6
+
+C:Q12zxMzA8v54Sl8Mde4JcR68noA7I=
+P:python-3.13
+V:3.13.7-r0
+A:aarch64
+S:9800
+I:40385
+T:the Python programming language
+D:python-3.13-base=3.13.7-r0
+p:python-3=3.13.7-r0 python3=3.13.7-r0
+
+C:Q1DaPaI56f+x/JfPgAnkpHc/fo/0U=
+P:nginx-mainline
+V:1.29.1-r3
+A:aarch64
+S:578941
+I:1496478
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.1-r3 nginx=1.29.1-r3
+
+C:Q1WURxf853ayYdIaImvZWK2x1EeA8=
+P:ca-certificates-bundle
+V:20250619-r6
+A:aarch64
+S:132045
+I:261571
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1Gphf+Rdii6FuTSLtvlPuOR/xIlI=
+P:wolfi-baselayout
+V:20230201-r24
+A:aarch64
+S:13353
+I:123638
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin
+
+C:Q1yw6rI62t45CTI7OlrOoeXQEzMuM=
+P:python-3.13
+V:3.13.8-r0
+A:aarch64
+S:10340
+I:40379
+T:the Python programming language
+D:python-3.13-base=3.13.8-r0
+p:python-3=3.13.8-r0 python3=3.13.8-r0
+
+C:Q1z8LaDWTOdYjCkWqLpFWdb5hjaf4=
+P:python-3.11
+V:3.11.14-r0
+A:aarch64
+S:9150
+I:40390
+T:the Python programming language
+D:python-3.11-base=3.11.14-r0
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1l6oW3QTI71NBQnVsOyMGCaJC+Cg=
+P:ca-certificates-bundle
+V:20250911-r0
+A:aarch64
+S:136221
+I:268384
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1xVBJVAxoPv6NhAOqdfTNJVrSytw=
+P:python-3.13
+V:3.13.9-r0
+A:aarch64
+S:10413
+I:40379
+T:the Python programming language
+D:python-3.13-base=3.13.9-r0
+p:python-3=3.13.9-r0 python3=3.13.9-r0
+
+C:Q14k9asfqo51y81hJyGTQufv5Xh+g=
+P:nginx-mainline
+V:1.29.3-r0
+A:aarch64
+S:583690
+I:1497824
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.3-r0 nginx=1.29.3-r0
+
+C:Q1g3pe+QYG4ISthpZzbnolf/zIPm0=
+P:ca-certificates-bundle
+V:20251003-r0
+A:aarch64
+S:138294
+I:271184
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q13sRPoQinXhUlR7hF8OYAsICSGxA=
+P:python-3.13
+V:3.13.9-r2
+A:aarch64
+S:10915
+I:40379
+T:the Python programming language
+D:python-3.13-base=3.13.9-r2
+p:python-3=3.13.9-r2 python3=3.13.9-r2
+
+C:Q13fd83sGaviJshXED0zChBW6sCf0=
+P:python-3.10
+V:3.10.19-r3
+A:aarch64
+S:9660
+I:40390
+T:the Python programming language
+D:python-3.10-base=3.10.19-r3
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1E88vQedfYDIlSFzX8xunuGUnaJA=
+P:python-3.11
+V:3.11.14-r3
+A:aarch64
+S:9671
+I:40390
+T:the Python programming language
+D:python-3.11-base=3.11.14-r3
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1tprm6Ijz8B6xxSRnJv19P+hQVUk=
+P:python-3.13
+V:3.13.11-r2
+A:aarch64
+S:11023
+I:40390
+T:the Python programming language
+D:python-3.13-base=3.13.11-r2
+p:python-3=3.13.11-r2 python3=3.13.11-r2
+
+C:Q1N91lZkZidpwrFR9OO+5WjouF5Ls=
+P:tzdata
+V:2025c-r0
+A:aarch64
+S:569367
+I:1988559
+T:Timezone data provided by IANA
+
+C:Q15ym3iNVlk2SCNXCnZ78JsjGhtlY=
+P:python-3.12
+V:3.12.12-r4
+A:aarch64
+S:11446
+I:46159
+T:the Python programming language
+D:python-3.12-base=3.12.12-r4
+p:python-3=3.12.12-r4 python3=3.12.12-r4
+
+C:Q1DuBkuqdOI2Lld7fZJ8z5PuTgWYw=
+P:wolfi-baselayout
+V:20230201-r25
+A:aarch64
+S:13489
+I:130592
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin
+
+C:Q1WA/pV7o6ei8VljkFksGMpZFMn+I=
+P:python-3.14
+V:3.14.2-r3
+A:aarch64
+S:12645
+I:46125
+T:the Python programming language
+D:python-3.14-base=3.14.2-r3
+
+C:Q1u3wPK9G3B/K9mwaStHcjaBVwnz8=
+P:ca-certificates-bundle
+V:20251003-r2
+A:aarch64
+S:138720
+I:274956
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1xNyQrJjyWOxWPpnAbGuLKsMxCEk=
+P:wolfi-baselayout
+V:20230201-r26
+A:aarch64
+S:13723
+I:138806
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin
+
+C:Q1c36ArXSOPNQ4YlHbB3/yDo8R3kQ=
+P:nginx-mainline
+V:1.29.4-r1
+A:aarch64
+S:594094
+I:1502911
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.4-r1 nginx=1.29.4-r1
+
+C:Q1naLmJeX8nmzmsp1CnhI41Fj8bSM=
+P:nginx-stable
+V:1.28.1-r1
+A:aarch64
+S:576666
+I:1497529
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.1-r1 nginx=1.28.1-r1
+
+C:Q1F2Jsd/5p9fFHXkyC9A7mW4QnEgc=
+P:nginx-stable
+V:1.28.1-r2
+A:aarch64
+S:577669
+I:1497537
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.1-r2 nginx=1.28.1-r2
+
+C:Q1GIySe4XEjpqP2LsgXgkFgO2Isiw=
+P:nginx-mainline
+V:1.29.4-r2
+A:aarch64
+S:595071
+I:1502919
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.4-r2 nginx=1.29.4-r2
+
+C:Q1G7xz+IpqOodJsLOa1ESW9gLsTo4=
+P:nginx-mainline
+V:1.29.4-r3
+A:aarch64
+S:595089
+I:1502919
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.4-r3 nginx=1.29.4-r3
+
+C:Q1vy8pnQXAheVK8I4eNp+cgeJWzx0=
+P:ca-certificates-bundle
+V:20251003-r3
+A:aarch64
+S:139325
+I:274964
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1xoYZDwD71CUs+Z7xLQ0HsD7pw5A=
+P:python-3.11
+V:3.11.14-r4
+A:aarch64
+S:11155
+I:46168
+T:the Python programming language
+D:python-3.11-base=3.11.14-r4
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1F2thWdERrTNBRlIhWQbw4jPXFAI=
+P:nginx-mainline
+V:1.29.4-r4
+A:aarch64
+S:595145
+I:1502951
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.4-r4 nginx=1.29.4-r4
+
+C:Q17gUsPFFZhCP9AonyK35eLbz4B/U=
+P:nginx-stable
+V:1.28.1-r3
+A:aarch64
+S:577738
+I:1497569
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.1-r3 nginx=1.28.1-r3
+
+C:Q1PYIrNcvI+zGpDr6028gW8A4AQac=
+P:python-3.11
+V:3.11.14-r5
+A:aarch64
+S:11386
+I:46168
+T:the Python programming language
+D:python-3.11-base=3.11.14-r5
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1Nb5nIKdokHti3PXOnsmgLTpIdT8=
+P:python-3.13
+V:3.13.12-r0
+A:aarch64
+S:12285
+I:46168
+T:the Python programming language
+D:python-3.13-base=3.13.12-r0
+p:python-3=3.13.12-r0 python3=3.13.12-r0
+
+C:Q1p65Jj1CTzQg0CRJGTs2lEhV8EHU=
+P:python-3.14
+V:3.14.3-r0
+A:aarch64
+S:13624
+I:46133
+T:the Python programming language
+D:python-3.14-base=3.14.3-r0
+
+C:Q1AKhWxSy61TmrQqIuXjEvT3AnsRg=
+P:nginx-mainline
+V:1.29.5-r0
+A:aarch64
+S:595485
+I:1503375
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.5-r0 nginx=1.29.5-r0
+
+C:Q1Bm7zeu3hjbj6U5tKZhyIZyxowwE=
+P:nginx-stable
+V:1.28.2-r0
+A:aarch64
+S:577129
+I:1497569
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.2-r0 nginx=1.28.2-r0
+
+C:Q1le+Z/+pK1dFw96mz1hUYepzbvGc=
+P:python-3.11
+V:3.11.14-r6
+A:aarch64
+S:11671
+I:46168
+T:the Python programming language
+D:python-3.11-base=3.11.14-r6
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q13b+u1q0UAQYWQ3yUMiwTdwWzpiM=
+P:python-3.12
+V:3.12.12-r5
+A:aarch64
+S:12806
+I:46168
+T:the Python programming language
+D:python-3.12-base=3.12.12-r5
+p:python-3=3.12.12-r5 python3=3.12.12-r5
+
+C:Q1Ot1vfm1tzjxrCdUGXwj/lz9UsR0=
+P:python-3.13
+V:3.13.12-r1
+A:aarch64
+S:12764
+I:46168
+T:the Python programming language
+D:python-3.13-base=3.13.12-r1
+p:python-3=3.13.12-r1 python3=3.13.12-r1
+
+C:Q1UKBGYq9+XIF+6w+tEIdXbfBmSOs=
+P:python-3.14
+V:3.14.3-r1
+A:aarch64
+S:14087
+I:46133
+T:the Python programming language
+D:python-3.14-base=3.14.3-r1
+
+C:Q13w5XjKTj0CLWVw9gRdvp1wLH14E=
+P:wolfi-baselayout
+V:20230201-r27
+A:aarch64
+S:13802
+I:138814
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin
+
+C:Q1KrgovzPvPynHVgzVkjK1Vw4i1So=
+P:tzdata
+V:2026a-r0
+A:aarch64
+S:569048
+I:1990593
+T:Timezone data provided by IANA
+
+C:Q1n4xA1Jg9t8XhPROt45YLbfKhU8g=
+P:wolfi-baselayout
+V:20230201-r28
+A:aarch64
+S:13921
+I:138905
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin merged-varrun
+
+C:Q1E5c0D8Yg5XYIJisV+VYf21pNC0s=
+P:python-3.12
+V:3.12.12-r7
+A:aarch64
+S:13056
+I:46312
+T:the Python programming language
+D:python-3.12-base=3.12.12-r7
+p:python-3=3.12.12-r7 python3=3.12.12-r7
+
+C:Q1JSn7cuW3LjWGmousOYKCHmsjvhw=
+P:python-3.13
+V:3.13.12-r2
+A:aarch64
+S:12945
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r2
+p:python-3=3.13.12-r2 python3=3.13.12-r2
+
+C:Q1r8yS2iEeXqFx4ZVK+DHMOmdyS2o=
+P:nginx-stable
+V:1.28.2-r2
+A:aarch64
+S:577675
+I:1496842
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.2-r2 nginx=1.28.2-r2
+
+C:Q1U7sexhW5WzzyvoDSkIHfEuBPWUA=
+P:python-3.12
+V:3.12.13-r0
+A:aarch64
+S:12451
+I:46312
+T:the Python programming language
+D:python-3.12-base=3.12.13-r0
+p:python-3=3.12.13-r0 python3=3.12.13-r0
+
+C:Q1jUJh0w5jrwgwowLptjgSMfJire8=
+P:python-3.11
+V:3.11.15-r0
+A:aarch64
+S:11274
+I:46312
+T:the Python programming language
+D:python-3.11-base=3.11.15-r0
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1ec6WTNgAxNG6j+aX24u0pwe17Qw=
+P:ca-certificates-bundle
+V:20251003-r4
+A:aarch64
+S:139883
+I:275106
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1aJwRiigc26n7dIX45HJAQ8vQW0M=
+P:nginx-mainline
+V:1.29.6-r0
+A:aarch64
+S:599448
+I:1505325
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.6-r0 nginx=1.29.6-r0
+
+C:Q10O8nKC1QC0l896LgEySMavp3jqY=
+P:python-3.13
+V:3.13.12-r3
+A:aarch64
+S:13031
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r3
+p:python-3=3.13.12-r3 python3=3.13.12-r3
+
+C:Q1+Z7aEe215m12yfgMzRVAsZe3eLs=
+P:python-3.14
+V:3.14.3-r3
+A:aarch64
+S:14664
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.3-r3
+
+C:Q1ZkWkZxgGLeJknogbXe7i5GCuV7A=
+P:python-3.13
+V:3.13.12-r4
+A:aarch64
+S:13301
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r4
+p:python-3=3.13.12-r4 python3=3.13.12-r4
+
+C:Q1I70cYIE75NAfDjqKgXDPWAMCfhE=
+P:python-3.14
+V:3.14.3-r4
+A:aarch64
+S:14951
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.3-r4
+
+C:Q1mELI/tMj9dJzPr29CyjoPA/nQP0=
+P:nginx-mainline
+V:1.29.7-r0
+A:aarch64
+S:600304
+I:1505405
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.7-r0 nginx=1.29.7-r0
+
+C:Q1cyyx9Lk+ZDS9hJcx3hTnSl7nmEw=
+P:nginx-stable
+V:1.28.3-r0
+A:aarch64
+S:577552
+I:1496842
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.3-r0 nginx=1.28.3-r0
+
+C:Q1lmkeOCX44k5DQPVe1sMxvr8nGm8=
+P:python-3.12
+V:3.12.13-r1
+A:aarch64
+S:12699
+I:46312
+T:the Python programming language
+D:python-3.12-base=3.12.13-r1
+p:python-3=3.12.13-r1 python3=3.12.13-r1
+
+C:Q1yqL3iKfK2e/1ti+C+NUpzGgJwa4=
+P:python-3.13
+V:3.13.12-r5
+A:aarch64
+S:13449
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r5
+p:python-3=3.13.12-r5 python3=3.13.12-r5
+
+C:Q1guo57PyrD/cbytSQYa1KNZxWZ8Q=
+P:python-3.13
+V:3.13.12-r6
+A:aarch64
+S:13450
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r6
+p:python-3=3.13.12-r6 python3=3.13.12-r6
+
+C:Q1SVGfKmt4t0Retmt7sv3179yNcvM=
+P:tzdata
+V:2026a-r1
+A:aarch64
+S:569345
+I:1990593
+T:Timezone data provided by IANA
+
+C:Q1/msZ7qIyuju6fnPdDSsRBGXeqQQ=
+P:nginx-mainline
+V:1.29.7-r1
+A:aarch64
+S:600659
+I:1505581
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.7-r1 nginx=1.29.7-r1
+
+C:Q18JlMNxjTCinFz3wKsiZe1gUdD3I=
+P:tzdata
+V:2026a-r2
+A:aarch64
+S:569344
+I:1990593
+T:Timezone data provided by IANA
+
+C:Q1HQhH5uH4APZjTKXpRXi6PhgInEI=
+P:python-3.10
+V:3.10.20-r1
+A:aarch64
+S:11340
+I:46312
+T:the Python programming language
+D:python-3.10-base=3.10.20-r1
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q16Uh1Pf56l3LRonK+RGqU9dV2V5I=
+P:python-3.14
+V:3.14.3-r5
+A:aarch64
+S:15121
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.3-r5
+
+C:Q17hl5XB+Y4QoN2DsUHgW56FRcip0=
+P:python-3.11
+V:3.11.15-r1
+A:aarch64
+S:11360
+I:46312
+T:the Python programming language
+D:python-3.11-base=3.11.15-r1
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1bIKopDv0Oixyd9Ej1OwsWFDkScU=
+P:python-3.13
+V:3.13.12-r7
+A:aarch64
+S:13550
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.12-r7
+p:python-3=3.13.12-r7 python3=3.13.12-r7
+
+C:Q1EMtWGk26iAY7agMKFHd+Vo3iI3U=
+P:python-3.14
+V:3.14.3-r6
+A:aarch64
+S:15229
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.3-r6
+
+C:Q1s7VTz6jm4Mt5ONHRmwmVKgbxzkE=
+P:python-3.10
+V:3.10.20-r2
+A:aarch64
+S:11299
+I:46312
+T:the Python programming language
+D:python-3.10-base=3.10.20-r2
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1DJCHCSvz6/FtvJzvUSgNBS3UFHA=
+P:nginx-mainline
+V:1.29.8-r0
+A:aarch64
+S:601213
+I:1505757
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.8-r0 nginx=1.29.8-r0
+
+C:Q1RZ6JmNmaCh3eHBRSqfvYXwbMdng=
+P:python-3.14
+V:3.14.4-r0
+A:aarch64
+S:14516
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.4-r0
+
+C:Q190z57I6BfKxs/0bWvxj/8kxaHM8=
+P:python-3.13
+V:3.13.13-r0
+A:aarch64
+S:12854
+I:46312
+T:the Python programming language
+D:python-3.13-base=3.13.13-r0
+p:python-3=3.13.13-r0 python3=3.13.13-r0
+
+C:Q1ua8AeHLbnT8a6z0mioEhkta5OXM=
+P:python-3.14
+V:3.14.4-r1
+A:aarch64
+S:14564
+I:46277
+T:the Python programming language
+D:python-3.14-base=3.14.4-r1
+p:python-3=0 python3=0
+
+C:Q1hF/hFp1ZLRICe/5hS6O+RorOjmc=
+P:nginx-mainline
+V:1.29.8-r1
+A:aarch64
+S:599092
+I:1505069
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.8-r1 nginx=1.29.8-r1
+
+C:Q1goGwCWIAe+l+KN3Yx7/TTSnNYdE=
+P:nginx-stable
+V:1.28.3-r1
+A:aarch64
+S:575868
+I:1496338
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.28.3-r1 nginx=1.28.3-r1
+
+C:Q1YLGEH8o/PNCjR8sxoxh//AGpOgQ=
+P:ca-certificates-bundle
+V:20260413-r0
+A:aarch64
+S:137553
+I:270708
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1FcjlR8BAUcyRjMQxsc/f5gWSv8I=
+P:wolfi-baselayout
+V:20230201-r29
+A:aarch64
+S:13981
+I:138937
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin merged-varrun
+
+C:Q18uaz8+7J3aukeF5c86Ed5CI++6Q=
+P:python-3.13
+V:3.13.13-r1
+A:aarch64
+S:12916
+I:46337
+T:the Python programming language
+D:python-3.13-base=3.13.13-r1
+p:python-3=3.13.13-r1 python3=3.13.13-r1
+
+C:Q1ficdu6w57JDanca9xWmpqsJQIGA=
+P:python-3.14
+V:3.14.4-r2
+A:aarch64
+S:14621
+I:46301
+T:the Python programming language
+D:python-3.14-base=3.14.4-r2
+p:python-3=0 python3=0
+
+C:Q1rOqVQghnnzgpJOzFFzBH1AbqWaM=
+P:python-3.12
+V:3.12.13-r2
+A:aarch64
+S:12772
+I:46337
+T:the Python programming language
+D:python-3.12-base=3.12.13-r2
+p:python-3=3.12.13-r2 python3=3.12.13-r2
+
+C:Q1lWFwihFZrZcfXCxaa3z/FoCmIbM=
+P:python-3.13
+V:3.13.13-r2
+A:aarch64
+S:13168
+I:46337
+T:the Python programming language
+D:python-3.13-base=3.13.13-r2
+p:python-3=3.13.13-r2 python3=3.13.13-r2
+
+C:Q13P/BQtP5JJjb/Zyq48u5mclpoEc=
+P:python-3.12
+V:3.12.13-r3
+A:aarch64
+S:12935
+I:46337
+T:the Python programming language
+D:python-3.12-base=3.12.13-r3
+p:python-3=3.12.13-r3 python3=3.12.13-r3
+
+C:Q13qCC07GsZDn7ZACPgHv2gEfCGGk=
+P:python-3.11
+V:3.11.15-r2
+A:aarch64
+S:11584
+I:46337
+T:the Python programming language
+D:python-3.11-base=3.11.15-r2
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1k+WYRKnk+OpPtIBVybGKh591ftY=
+P:python-3.14
+V:3.14.4-r3
+A:aarch64
+S:14886
+I:46301
+T:the Python programming language
+D:python-3.14-base=3.14.4-r3
+p:python-3=0 python3=0
+
+C:Q1k/BxrHQM+LbKCezvokTDnUIRPR8=
+P:python-3.10
+V:3.10.20-r3
+A:aarch64
+S:11583
+I:46337
+T:the Python programming language
+D:python-3.10-base=3.10.20-r3
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1yyT/D58O4t2lena7GdWWe3wxvgU=
+P:tzdata
+V:2026b-r0
+A:aarch64
+S:569030
+I:1989395
+T:Timezone data provided by IANA
+
+C:Q1B0JPgSyzHIZj7OdHQvqA6ya6G0o=
+P:nginx-mainline
+V:1.29.8-r2
+A:aarch64
+S:599327
+I:1505096
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.29.8-r2 nginx=1.29.8-r2
+
+C:Q1+oTO7IO+baud4A0Bjgoz0aTG87w=
+P:python-3.10
+V:3.10.20-r4
+A:aarch64
+S:11592
+I:46337
+T:the Python programming language
+D:python-3.10-base=3.10.20-r4
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1gX6dAugrEqTgE51MRgfeB2CqhtI=
+P:python-3.13
+V:3.13.13-r3
+A:aarch64
+S:13254
+I:46337
+T:the Python programming language
+D:python-3.13-base=3.13.13-r3
+p:python-3=3.13.13-r3 python3=3.13.13-r3
+
+C:Q1dIjgkGdgHuzJg32BWuoIZdwnrMA=
+P:python-3.14
+V:3.14.4-r4
+A:aarch64
+S:14950
+I:46301
+T:the Python programming language
+D:python-3.14-base=3.14.4-r4
+p:python-3=0 python3=0
+
+C:Q1qYPN87Ot6xAHUMULPuzDSEVAn5o=
+P:nginx-stable
+V:1.30.0-r0
+A:aarch64
+S:598134
+I:1504260
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre.so.1 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.30.0-r0 nginx=1.30.0-r0
+
+C:Q1Drud8Lz8qGKHuXA0e4tURbQabqE=
+P:python-3.14
+V:3.14.5-r0
+A:aarch64
+S:14948
+I:46301
+T:the Python programming language
+D:python-3.14-base=3.14.5-r0
+p:python-3=0 python3=0
+
+C:Q1bkL7Pms7czds7IhwhNgBU327ReY=
+P:python-3.10
+V:3.10.20-r5
+A:aarch64
+S:11596
+I:46337
+T:the Python programming language
+D:python-3.10-base=3.10.20-r5
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1G/aSAHSMSpS3axNVBDfZhfcaQ6I=
+P:python-3.13
+V:3.13.13-r4
+A:aarch64
+S:13252
+I:46337
+T:the Python programming language
+D:python-3.13-base=3.13.13-r4
+p:python-3=3.13.13-r4 python3=3.13.13-r4
+
+C:Q1TzttSdNkmKxTPAE/6qtbdW9e9eM=
+P:python-3.11
+V:3.11.15-r3
+A:aarch64
+S:11590
+I:46337
+T:the Python programming language
+D:python-3.11-base=3.11.15-r3
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1D4X/DeD+LlZuZ+DkvL4oe1uT9jM=
+P:python-3.12
+V:3.12.13-r4
+A:aarch64
+S:13162
+I:46337
+T:the Python programming language
+D:python-3.12-base=3.12.13-r4
+p:python-3=3.12.13-r4 python3=3.12.13-r4
+
+C:Q1dW2Wzq3gp2d5oncrr89TDXTQscE=
+P:python-3.14
+V:3.14.5-r1
+A:aarch64
+S:14954
+I:46301
+T:the Python programming language
+D:python-3.14-base=3.14.5-r1
+p:python-3=0 python3=0
+
+C:Q1IYZo1gu/CYqHRZneE9lhlOe129I=
+P:nginx-stable
+V:1.30.0-r1
+A:aarch64
+S:598402
+I:1505052
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.30.0-r1 nginx=1.30.0-r1
+
+C:Q1Al4959Pka/3VdY3R/lgJ/VBRQes=
+P:python-3.10
+V:3.10.20-r6
+A:aarch64
+S:11681
+I:46337
+T:the Python programming language
+D:python-3.10-base=3.10.20-r6
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1ykZX5KMWMusoNjqeomEVw5MHaqs=
+P:nginx-stable
+V:1.30.1-r0
+A:aarch64
+S:591954
+I:1505052
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.30.1-r0 nginx=1.30.1-r0
+
+C:Q1vB34zB0hez6Bfox5R6+8jV2iiwU=
+P:python-3.11
+V:3.11.15-r4
+A:aarch64
+S:11671
+I:46337
+T:the Python programming language
+D:python-3.11-base=3.11.15-r4
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1Rvs2S5uSv8fMICuQKquz4p3oL6E=
+P:python-3.13
+V:3.13.13-r5
+A:aarch64
+S:13331
+I:46337
+T:the Python programming language
+D:python-3.13-base=3.13.13-r5
+p:python-3=3.13.13-r5 python3=3.13.13-r5
+
+C:Q162v88duQu6alkII4tKAd9sGYKx4=
+P:nginx-mainline
+V:1.31.0-r0
+A:aarch64
+S:597760
+I:1508632
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.0-r0 nginx=1.31.0-r0
+
+C:Q1hJnSsCLX1k/kgVr5ywNGWdBjgUU=
+P:python-3.12
+V:3.12.13-r5
+A:aarch64
+S:13173
+I:46337
+T:the Python programming language
+D:python-3.12-base=3.12.13-r5
+p:python-3=3.12.13-r5 python3=3.12.13-r5
+
+C:Q1ADvzIDtU2XTZmpJhMRd0tDSBw/E=
+P:nginx-mainline
+V:1.31.1-r0
+A:aarch64
+S:600822
+I:1508632
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.1-r0 nginx=1.31.1-r0
+
+C:Q13nbc001QF777dZdm0rUw9khLG/A=
+P:nginx-mainline
+V:1.31.1-r1
+A:aarch64
+S:600898
+I:1508632
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.1-r1 nginx=1.31.1-r1
+
+C:Q1upP/rZ4Sfo8+xCgjbO3vazlRE5k=
+P:nginx-mainline
+V:1.31.1-r2
+A:aarch64
+S:600897
+I:1508632
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.1-r2 nginx=1.31.1-r2
+
+C:Q1aYTQlUosBepAig4I2q19ecVrqPk=
+P:python-3.14
+V:3.14.5-r2
+A:aarch64
+S:14792
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.5-r2
+p:python-3=0 python3=0
+
+C:Q1tlx6drPml583H2/dqgC8kG1bLos=
+P:nginx-stable
+V:1.30.2-r0
+A:aarch64
+S:591876
+I:1505052
+T:HTTP and reverse proxy server (stable version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.30.2-r0 nginx=1.30.2-r0
+
+C:Q1pBJert0XxMQLXBQ/MFwaL1tdrgw=
+P:python-3.13
+V:3.13.13-r6
+A:aarch64
+S:13329
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.13-r6
+p:python-3=3.13.13-r6 python3=3.13.13-r6
+
+C:Q1ePUuo3NErnZT8JCK0CBjwO4IWvQ=
+P:python-3.10
+V:3.10.20-r7
+A:aarch64
+S:11534
+I:42178
+T:the Python programming language
+D:python-3.10-base=3.10.20-r7
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1w4nXDS43UKUksxOZuE6JNf+kQLo=
+P:python-3.11
+V:3.11.15-r5
+A:aarch64
+S:11518
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.15-r5
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1cuX+dcJmdyEeEQkEoSnF1gnxNu8=
+P:python-3.12
+V:3.12.13-r6
+A:aarch64
+S:13104
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.13-r6
+p:python-3=3.12.13-r6 python3=3.12.13-r6
+
+C:Q1JldxdXRFKLO/dsupsi8DRMq6yOY=
+P:nginx-mainline
+V:1.31.1-r3
+A:aarch64
+S:602217
+I:1508600
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.1-r3 nginx=1.31.1-r3
+
+C:Q1IAon8kC0Fjx75OVxIYODTP6kvAA=
+P:python-3.14
+V:3.14.6-r0
+A:aarch64
+S:15174
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.6-r0
+p:python-3=0 python3=0
+
+C:Q1WNuaMqABM5gciOlZKhSy5TT9AEM=
+P:python-3.13
+V:3.13.14-r0
+A:aarch64
+S:13700
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.14-r0
+p:python-3=3.13.14-r0 python3=3.13.14-r0
+
+C:Q1/w3iiOnwsX/gXfgvTS0rhn9HWFA=
+P:python-3.14
+V:3.14.6-r1
+A:aarch64
+S:15255
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.6-r1
+p:python-3=0 python3=0
+
+C:Q1qRzN/ahDOTGttIqkFx5NzcpHTZI=
+P:python-3.12
+V:3.12.13-r7
+A:aarch64
+S:13608
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.13-r7
+p:python-3=3.12.13-r7 python3=3.12.13-r7
+
+C:Q1N547a8Aj5qjK7QKjRbmHomIe+A4=
+P:python-3.10
+V:3.10.20-r8
+A:aarch64
+S:11959
+I:42178
+T:the Python programming language
+D:python-3.10-base=3.10.20-r8
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1M9mziVdwbAbVx3fUqP/RwPMPkU4=
+P:python-3.11
+V:3.11.15-r6
+A:aarch64
+S:11940
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.15-r6
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1QFKHh9eLgG/gKOVmtqbITL9f+jY=
+P:python-3.12
+V:3.12.13-r8
+A:aarch64
+S:13615
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.13-r8
+p:python-3=3.12.13-r8 python3=3.12.13-r8
+
+C:Q1NCLiSP0MBnZgOF9mBk7rI9pvbFk=
+P:nginx-mainline
+V:1.31.1-r4
+A:aarch64
+S:603359
+I:1508600
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.1-r4 nginx=1.31.1-r4
+
+C:Q16ju9Df88Do8XbiI6I0QBomZ/WdU=
+P:nginx-mainline
+V:1.31.2-r0
+A:aarch64
+S:602795
+I:1508920
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.2-r0 nginx=1.31.2-r0
+
+C:Q1o97I4AgghjC9iwx9zEc7gcyFyRs=
+P:nginx-mainline
+V:1.31.2-r1
+A:aarch64
+S:602819
+I:1508944
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.2-r1 nginx=1.31.2-r1
+
+C:Q1lve/I2b+DtwlBgiwumn+UCbPFNQ=
+P:tzdata
+V:2026c-r0
+A:aarch64
+S:566971
+I:1982470
+T:Timezone data provided by IANA
+
+C:Q1zfLqg0PL7GJFHTa2v4Hrj+SNCy0=
+P:python-3.10
+V:3.10.20-r9
+A:aarch64
+S:12196
+I:42178
+T:the Python programming language
+D:python-3.10-base=3.10.20-r9
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1OnGOiTQg/RZWuJZ1KlEoZ/rCmSo=
+P:python-3.11
+V:3.11.15-r7
+A:aarch64
+S:12200
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.15-r7
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1dyt0/nLrEd9WKu8se+WbETk1Kas=
+P:python-3.12
+V:3.12.13-r9
+A:aarch64
+S:13854
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.13-r9
+p:python-3=3.12.13-r9 python3=3.12.13-r9
+
+C:Q1ug7twYUPUSCI0vHxNilTr4yfeWA=
+P:python-3.13
+V:3.13.14-r1
+A:aarch64
+S:14005
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.14-r1
+p:python-3=3.13.14-r1 python3=3.13.14-r1
+
+C:Q1r2n7ObwDgAPrBRU0N0V59y1zLtE=
+P:python-3.14
+V:3.14.6-r2
+A:aarch64
+S:15689
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.6-r2
+p:python-3=0 python3=0
+
+C:Q1h7Yt2OKma4YVNDPtdOuI7x8vtpk=
+P:python-3.10
+V:3.10.20-r10
+A:aarch64
+S:12303
+I:42189
+T:the Python programming language
+D:python-3.10-base=3.10.20-r10
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1zAKACfvo1C8lnhFP2bXxkRJ9y6E=
+P:python-3.11
+V:3.11.15-r8
+A:aarch64
+S:12407
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.15-r8
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1Uj06jnA53JLzEEeul7rUmvybZ5A=
+P:python-3.13
+V:3.13.14-r2
+A:aarch64
+S:14210
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.14-r2
+p:python-3=3.13.14-r2 python3=3.13.14-r2
+
+C:Q1ugYtSgMMb2bP9ilDvUMbi6nuKC8=
+P:python-3.12
+V:3.12.13-r10
+A:aarch64
+S:13885
+I:42189
+T:the Python programming language
+D:python-3.12-base=3.12.13-r10
+p:python-3=3.12.13-r10 python3=3.12.13-r10
+
+C:Q1CeDNDxwCZBF002NoGwlM7ZVInV0=
+P:python-3.14
+V:3.14.6-r3
+A:aarch64
+S:15979
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.6-r3
+p:python-3=0 python3=0
+
+C:Q1ubjYTP/iUe9p0lCwQufBxkfAZ6E=
+P:nginx-mainline
+V:1.31.3-r0
+A:aarch64
+S:604040
+I:1509928
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.3-r0 nginx=1.31.3-r0
+
+C:Q1aUQuA9xQD/wGUjyFrx7hJwNtZnw=
+P:nginx-mainline
+V:1.31.3-r1
+A:aarch64
+S:604045
+I:1509928
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.3-r1 nginx=1.31.3-r1
+
+C:Q1skVXms1gVabL6BChz3wk6BBTaPI=
+P:nginx-mainline
+V:1.31.3-r2
+A:aarch64
+S:604077
+I:1509928
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.3-r2 nginx=1.31.3-r2
+
+C:Q1qCRFFDd8Bzk5VbtKAafblKB9TkQ=
+P:python-3.11
+V:3.11.15-r9
+A:aarch64
+S:12804
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.15-r9
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q17FtF6hrCm57KHSDgE+OIbAIs2dM=
+P:python-3.13
+V:3.13.14-r3
+A:aarch64
+S:14252
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.14-r3
+p:python-3=3.13.14-r3 python3=3.13.14-r3
+
+C:Q1pFP5eN9zUKBYjXBHVQ3ox0jkL90=
+P:python-3.14
+V:3.14.6-r4
+A:aarch64
+S:16011
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.6-r4
+p:python-3=0 python3=0
+
+C:Q1ZlzCWnHB8fM86nr8rsi3qNCt0dc=
+P:python-3.13
+V:3.13.15-r0
+A:aarch64
+S:14266
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.15-r0
+p:python-3=3.13.15-r0 python3=3.13.15-r0
+
+C:Q1GS/y9AokEqAlbhhr+DFBv+u0QJc=
+P:python-3.14
+V:3.14.7-r0
+A:aarch64
+S:15986
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.7-r0
+p:python-3=0 python3=0
+
+C:Q130PaFA+RvZD2YLXY2QbAzVN5nnY=
+P:ca-certificates-bundle
+V:20260413-r1
+A:aarch64
+S:137920
+I:268597
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1JbHTSEeoV5nmUzgH+W8ej7WgN48=
+P:python-3.10
+V:3.10.20-r11
+A:aarch64
+S:11903
+I:42245
+T:the Python programming language
+D:python-3.10-base=3.10.20-r11
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1MYo6GEpJY0OCxMNXYB/bipWQw5c=
+P:python-3.11
+V:3.11.16-r0
+A:aarch64
+S:12729
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.16-r0
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1bl/qg7HjHs3isjskKd7jzTDYI/Q=
+P:python-3.12
+V:3.12.14-r0
+A:aarch64
+S:13767
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.14-r0
+p:python-3=3.12.14-r0 python3=3.12.14-r0
+
+C:Q1BE8R0RoI7ar5hllKHNGp3AwrXMs=
+P:python-3.10
+V:3.10.21-r0
+A:aarch64
+S:11824
+I:42178
+T:the Python programming language
+D:python-3.10-base=3.10.21-r0
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1R2cUnte9exS4YnUWDC4LdQBUI/Q=
+P:python-3.13
+V:3.13.15-r1
+A:aarch64
+S:13411
+I:42178
+T:the Python programming language
+D:python-3.13-base=3.13.15-r1
+p:python-3=3.13.15-r1 python3=3.13.15-r1
+
+C:Q1TLBzSCxEPrO4uwewiJFblj1CXZg=
+P:python-3.11
+V:3.11.16-r1
+A:aarch64
+S:11825
+I:42178
+T:the Python programming language
+D:python-3.11-base=3.11.16-r1
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1Pdyy5YCkkePzhErLaMmEw2vOCoc=
+P:python-3.12
+V:3.12.14-r1
+A:aarch64
+S:13384
+I:42178
+T:the Python programming language
+D:python-3.12-base=3.12.14-r1
+p:python-3=3.12.14-r1 python3=3.12.14-r1
+
+C:Q1DPJ325A2r8Vd0Qe1UDwWEQUbZIs=
+P:python-3.14
+V:3.14.7-r1
+A:aarch64
+S:15289
+I:42163
+T:the Python programming language
+D:python-3.14-base=3.14.7-r1
+p:python-3=0 python3=0
+
+C:Q17Mi5pfnNUA5KcERHBFfTb5nk/34=
+P:python-3.12
+V:3.12.14-r2
+A:aarch64
+S:13368
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r2
+p:python-3=3.12.14-r2 python3=3.12.14-r2
+
+C:Q1nOmyo/zrVFp9DtxJBIZCPPG9uGE=
+P:nginx-mainline
+V:1.31.4-r0
+A:aarch64
+S:611721
+I:1513119
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.4-r0 nginx=1.31.4-r0
+
+C:Q1gfeU4EIRcrfMQ1I/iyepMdwvw4E=
+P:nginx-mainline
+V:1.31.4-r1
+A:aarch64
+S:611716
+I:1513119
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.4-r1 nginx=1.31.4-r1
+
+C:Q1w6JPriVhm2I/bNnErNdhUzH2s3g=
+P:nginx-mainline
+V:1.31.4-r2
+A:aarch64
+S:613171
+I:1513119
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.4-r2 nginx=1.31.4-r2
+
+C:Q18Wwp5a6+dSt2WSrfoefvgyNqQbQ=
+P:ca-certificates-bundle
+V:20260611-r0
+A:aarch64
+S:116419
+I:230194
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1OEpbqM5HWqMR+SrOwr5KFe8mBRQ=
+P:python-3.14
+V:3.14.7-r2
+A:aarch64
+S:15966
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r2
+p:python-3=0 python3=0
+
+C:Q1MXL4uPl4AvZ+NTMhZvclS9fTMuc=
+P:python-3.10
+V:3.10.21-r1
+A:aarch64
+S:11817
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r1
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q15PALkiOM2uw9QKMq8EftTtjOGjU=
+P:python-3.13
+V:3.13.15-r2
+A:aarch64
+S:13395
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r2
+p:python-3=3.13.15-r2 python3=3.13.15-r2
+
+C:Q1WQoIJGmIhZ0U4otHT94hbMlxzc8=
+P:python-3.11
+V:3.11.16-r2
+A:aarch64
+S:11818
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r2
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1yLwg4LFxG4sbGfE/wA2pm/NjlQ4=
+P:python-3.12
+V:3.12.14-r3
+A:aarch64
+S:13369
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r3
+p:python-3=3.12.14-r3 python3=3.12.14-r3
+
+C:Q1vRBcm9OuR42+UUhIGwe04K8R5p8=
+P:python-3.14
+V:3.14.7-r3
+A:aarch64
+S:15965
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r3
+p:python-3=0 python3=0
+
+C:Q1z2kPIIYqdzYNITqvU+MZLQARcrk=
+P:python-3.14
+V:3.14.7-r4
+A:aarch64
+S:15971
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r4
+p:python-3=0 python3=0
+
+C:Q1evfdODoXCv3rqVXRySQ6Y3uRdto=
+P:python-3.10
+V:3.10.21-r2
+A:aarch64
+S:11822
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r2
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1B4sGN4WMFrOQtlnVVSmAxRsHYuQ=
+P:python-3.13
+V:3.13.15-r3
+A:aarch64
+S:13389
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r3
+p:python-3=3.13.15-r3 python3=3.13.15-r3
+
+C:Q1x6Ye3uk9RCK65Kr6NUqUkoxdtXI=
+P:python-3.13
+V:3.13.15-r4
+A:aarch64
+S:13406
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r4
+p:python-3=3.13.15-r4 python3=3.13.15-r4
+
+C:Q1eL3Uj6eFueWHc+1EOd4Ay+T/4+c=
+P:python-3.12
+V:3.12.14-r4
+A:aarch64
+S:13378
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r4
+p:python-3=3.12.14-r4 python3=3.12.14-r4
+
+C:Q1wAWCELGvOa3+oi6gTfW5ccQd9sw=
+P:nginx-mainline
+V:1.31.4-r3
+A:aarch64
+S:613174
+I:1513119
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.4-r3 nginx=1.31.4-r3
+
+C:Q1q7HhJN/0GdIE0yjTxynjJ0v3HmI=
+P:python-3.11
+V:3.11.16-r3
+A:aarch64
+S:11831
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r3
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1HAZCPTatN2Q5zhw/eWsOkvmct7k=
+P:ca-certificates-bundle
+V:20260611-r1
+A:aarch64
+S:116408
+I:230194
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q17tQiGKy0d30i1r5l1bl9vOoSho0=
+P:python-3.10
+V:3.10.21-r3
+A:aarch64
+S:11838
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r3
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1DrTm7aPW3N9Uo6CxC6oWHfwh2u0=
+P:python-3.11
+V:3.11.16-r4
+A:aarch64
+S:11837
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r4
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1GXQj+6ZBc4v6Vki2rQ/rCjysC38=
+P:python-3.12
+V:3.12.14-r5
+A:aarch64
+S:13493
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r5
+p:python-3=3.12.14-r5 python3=3.12.14-r5
+
+C:Q131XdpvfskaMK0EHHA+K8xVnUk/A=
+P:python-3.13
+V:3.13.15-r5
+A:aarch64
+S:13516
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r5
+p:python-3=3.13.15-r5 python3=3.13.15-r5
+
+C:Q1xWgEKZuAwjRFz0Uj8d9u1zIV/9g=
+P:python-3.14
+V:3.14.7-r5
+A:aarch64
+S:16132
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r5
+p:python-3=0 python3=0
+
+C:Q1lWmN2WiKAeWaeYXNd1bJH6UKEb4=
+P:python-3.10
+V:3.10.21-r4
+A:aarch64
+S:11826
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r4
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1Oj515jWX11dLMeNygMu+hbTkHHM=
+P:python-3.11
+V:3.11.16-r5
+A:aarch64
+S:11820
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r5
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1bVzxHJb8KpKtzswdUyRSg6Si5oA=
+P:python-3.12
+V:3.12.14-r6
+A:aarch64
+S:13479
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r6
+p:python-3=3.12.14-r6 python3=3.12.14-r6
+
+C:Q10ZEJ7LrH7q/vRqzpwUVOFDHvYok=
+P:python-3.13
+V:3.13.15-r6
+A:aarch64
+S:13498
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r6
+p:python-3=3.13.15-r6 python3=3.13.15-r6
+
+C:Q1oeh+gZvPz44uq1c8Exs323PHl7g=
+P:python-3.14
+V:3.14.7-r6
+A:aarch64
+S:16073
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r6
+p:python-3=0 python3=0
+
+C:Q11eGlUjtiBrHKJY7XtAwx88MhHmw=
+P:nginx-mainline
+V:1.31.5-r0
+A:aarch64
+S:616567
+I:1579071
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.5-r0 nginx=1.31.5-r0
+
+C:Q13XbYdB7fAJDpHmvGQQuxzvdpEf0=
+P:python-3.13
+V:3.13.15-r7
+A:aarch64
+S:13558
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r7
+p:python-3=3.13.15-r7 python3=3.13.15-r7
+
+C:Q1GWo0IrhelproT9E7/uNscQc5avE=
+P:python-3.14
+V:3.14.7-r7
+A:aarch64
+S:16124
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r7
+p:python-3=0 python3=0
+
+C:Q1aF/6XzN/J9leZvrqW26UuNZ1IXw=
+P:wolfi-baselayout
+V:20230201-r30
+A:aarch64
+S:13964
+I:137724
+T:baselayout data for Wolfi
+D:ca-certificates-bundle
+p:merged-bin merged-lib merged-sbin merged-usrsbin merged-varrun
+
+C:Q1l+qVKeXo7R8M2kdlf6WyX3GqOpo=
+P:tzdata
+V:2026d-r0
+A:aarch64
+S:565321
+I:1974867
+T:Timezone data provided by IANA
+
+C:Q14JjW95L2gKja2PYvJDnATsQq4LQ=
+P:python-3.10
+V:3.10.21-r5
+A:aarch64
+S:11920
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r5
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1JDgzRNm63LfCQ68PJxUnRS51+HA=
+P:python-3.11
+V:3.11.16-r6
+A:aarch64
+S:11909
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r6
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1gqp5/RYYL2Tjny1NNebaLj477nM=
+P:python-3.12
+V:3.12.14-r7
+A:aarch64
+S:13576
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r7
+p:python-3=3.12.14-r7 python3=3.12.14-r7
+
+C:Q1CZrBDBogOUx/Ts4fReZjoemcB2c=
+P:python-3.13
+V:3.13.15-r8
+A:aarch64
+S:13602
+I:42185
+T:the Python programming language
+D:python-3.13-base=3.13.15-r8
+p:python-3=3.13.15-r8 python3=3.13.15-r8
+
+C:Q1mcuImO4v5HAcZoHj+ZUy3i6VzRo=
+P:python-3.14
+V:3.14.7-r8
+A:aarch64
+S:16177
+I:42170
+T:the Python programming language
+D:python-3.14-base=3.14.7-r8
+p:python-3=0 python3=0
+
+C:Q17Xkp5M88+3oUaIAASYdy2PLq2QU=
+P:python-3.10
+V:3.10.21-r6
+A:aarch64
+S:12293
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r6
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1ayOXZCYVNMGy3knTfm/C2dlwuog=
+P:python-3.11
+V:3.11.16-r7
+A:aarch64
+S:12293
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r7
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1kWlpPMeg/br4V7aFT9L7nRDk83s=
+P:python-3.12
+V:3.12.14-r8
+A:aarch64
+S:13907
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r8
+p:python-3=3.12.14-r8 python3=3.12.14-r8
+
+C:Q1Ad2cmJaAeQG861/hNm6pDgZ0aUM=
+P:python-3.13
+V:3.13.15_git20260912-r0
+A:aarch64
+S:13760
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260912-r0
+p:python-3=3.13.15_git20260912-r0 python3=3.13.15_git20260912-r0
+
+C:Q1BH5ttQ8RRqMmFqVOjYNDIrDFulA=
+P:python-3.14
+V:3.14.7_git20260912-r0
+A:aarch64
+S:16450
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260912-r0
+p:python-3=0 python3=0
+
+C:Q1zs0Bs84Os97Pj15YMzGb03ya3bc=
+P:python-3.14
+V:3.14.7_git20260914-r0
+A:aarch64
+S:16443
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260914-r0
+p:python-3=0 python3=0
+
+C:Q11bBFK1Jr6TwYF8Y9JR/yoypXdXw=
+P:python-3.14
+V:3.14.7_git20260914-r1
+A:aarch64
+S:16450
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260914-r1
+p:python-3=0 python3=0
+
+C:Q1guykuGvDnqsTlioRrghypeaFe8g=
+P:python-3.14
+V:3.14.7_git20260914-r2
+A:aarch64
+S:16454
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260914-r2
+p:python-3=0 python3=0
+
+C:Q13rtSDNHFC26Nogm5cfPhQdd2QNo=
+P:python-3.14
+V:3.14.7_git20260914-r3
+A:aarch64
+S:16445
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260914-r3
+p:python-3=0 python3=0
+
+C:Q1lrW1DNnIg8yAxYRqE/q4Hp0lESY=
+P:python-3.14
+V:3.14.7_git20260915-r0
+A:aarch64
+S:16457
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260915-r0
+p:python-3=0 python3=0
+
+C:Q195PduKnFK1lmuMNk6uIqRoOz3ls=
+P:nginx-mainline
+V:1.31.6-r0
+A:aarch64
+S:619774
+I:1579071
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.6-r0 nginx=1.31.6-r0
+
+C:Q1R4YYqdL7lvOO0XSMxOT+bRZwvfU=
+P:python-3.14
+V:3.14.7_git20260915-r1
+A:aarch64
+S:16459
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260915-r1
+p:python-3=0 python3=0
+
+C:Q1zND61fee5CJ+46Et9Y/DuWmW1g4=
+P:python-3.14
+V:3.14.7_git20260916-r0
+A:aarch64
+S:16461
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260916-r0
+p:python-3=0 python3=0
+
+C:Q1OieB//5yg0bZUkQ4X72G0sSm3yg=
+P:python-3.14
+V:3.14.7_git20260916-r1
+A:aarch64
+S:16473
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260916-r1
+p:python-3=0 python3=0
+
+C:Q1gRcsAYF1guPvKcskS5ijm9Uoo0k=
+P:python-3.14
+V:3.14.7_git20260917-r0
+A:aarch64
+S:16463
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260917-r0
+p:python-3=0 python3=0
+
+C:Q1IkJYf2rOCM6fqCxUWQUaENqOguU=
+P:python-3.14
+V:3.14.7_git20260917-r1
+A:aarch64
+S:16458
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260917-r1
+p:python-3=0 python3=0
+
+C:Q1fSKR0x/Fu9vctYhR7+f3O3UHTws=
+P:python-3.14
+V:3.14.7_git20260917-r2
+A:aarch64
+S:16460
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260917-r2
+p:python-3=0 python3=0
+
+C:Q1+qC1vrbRmd64Z+wsdeZ+IO5cXkw=
+P:python-3.13
+V:3.13.15_git20260917-r0
+A:aarch64
+S:14057
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260917-r0
+p:python-3=3.13.15_git20260917-r0 python3=3.13.15_git20260917-r0
+
+C:Q1KG0tFiTUm28dexYE/GzEuNA+1Y4=
+P:python-3.14
+V:3.14.7_git20260917-r3
+A:aarch64
+S:16700
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260917-r3
+p:python-3=0 python3=0
+
+C:Q11vP61J4zF6LRdfd1ZJtHCtZTHQg=
+P:python-3.13
+V:3.13.15_git20260918-r0
+A:aarch64
+S:14055
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260918-r0
+p:python-3=3.13.15_git20260918-r0 python3=3.13.15_git20260918-r0
+
+C:Q1nfrZUkIz2jYwJKWjd1FwABgPyNM=
+P:python-3.13
+V:3.13.15_git20260918-r1
+A:aarch64
+S:14056
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260918-r1
+p:python-3=3.13.15_git20260918-r1 python3=3.13.15_git20260918-r1
+
+C:Q1uHXF3WZPspiCGL99RrJ3GUx+5JY=
+P:python-3.14
+V:3.14.7_git20260918-r0
+A:aarch64
+S:16695
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260918-r0
+p:python-3=0 python3=0
+
+C:Q1TaunWjTN5Wp/AoMDhtknV8Pn+ME=
+P:nginx-mainline
+V:1.31.6-r1
+A:aarch64
+S:617789
+I:1579071
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.6-r1 nginx=1.31.6-r1
+
+C:Q1LTUpbqlJ7vXFcmUzDHO7xASm9vQ=
+P:ca-certificates-bundle
+V:20260909-r0
+A:aarch64
+S:117626
+I:232559
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1VRejqJ4mpISZYu/Z6OxC6eXQfFA=
+P:ca-certificates-bundle
+V:20260909-r1
+A:aarch64
+S:117668
+I:232559
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1YE9X1UhQ4qD8RKXy315U657DGeI=
+P:python-3.11
+V:3.11.16-r8
+A:aarch64
+S:12347
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.16-r8
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1gnWEGF3pbKTKNJFTHmtOhxmaIts=
+P:nginx-mainline
+V:1.31.6-r2
+A:aarch64
+S:617816
+I:1579071
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.3 so:libpcre2-8.so.0 so:libssl.so.3 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.6-r2 nginx=1.31.6-r2
+
+C:Q1u6GKK6jsTLJqD06B4ciUf0tC54U=
+P:python-3.13
+V:3.13.15_git20260918-r2
+A:aarch64
+S:14097
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260918-r2
+p:python-3=3.13.15_git20260918-r2 python3=3.13.15_git20260918-r2
+
+C:Q1zjF0B0Ses1IXjydFqRvnZr/59u4=
+P:python-3.12
+V:3.12.14-r9
+A:aarch64
+S:13952
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.14-r9
+p:python-3=3.12.14-r9 python3=3.12.14-r9
+
+C:Q1Q6vZWZDSOkcPpdpyZa3v2JvT2EY=
+P:python-3.14
+V:3.14.7_git20260918-r1
+A:aarch64
+S:16741
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260918-r1
+p:python-3=0 python3=0
+
+C:Q1YQ0TMKQEJnoqFJYWON+OYiloCXU=
+P:python-3.10
+V:3.10.21-r7
+A:aarch64
+S:12343
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.21-r7
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1/IIdjA1m03lkDDMEc7Yiok8QDyo=
+P:python-3.14
+V:3.14.7_git20260925-r0
+A:aarch64
+S:16750
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.7_git20260925-r0
+p:python-3=0 python3=0
+
+C:Q1gUKXBxZdd+PuLxImeANzDrpgmNs=
+P:python-3.13
+V:3.13.15_git20260925-r0
+A:aarch64
+S:14099
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.15_git20260925-r0
+p:python-3=3.13.15_git20260925-r0 python3=3.13.15_git20260925-r0
+
+C:Q1Vkg6p7vS82XZyZIvI/fwUvMeBi0=
+P:tzdata
+V:2026e-r0
+A:aarch64
+S:565116
+I:1973057
+T:Timezone data provided by IANA
+
+C:Q1pd7MNLZ6Hhu/zDZ7K+4UO3H8o+I=
+P:ca-certificates-bundle
+V:20260909-r2
+A:aarch64
+S:118424
+I:232559
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1RFa0+v0XXPBRtYuEIrKrzygUdAA=
+P:python-3.12
+V:3.12.15-r0
+A:aarch64
+S:14669
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r0
+p:python-3=3.12.15-r0 python3=3.12.15-r0
+
+C:Q15XEtmXfjb5fnD9tMAeWON8dhhig=
+P:python-3.10
+V:3.10.22-r0
+A:aarch64
+S:13075
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r0
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1fmYlRa6zMkKEKZPfS5Y0cu7oVDo=
+P:python-3.11
+V:3.11.17-r0
+A:aarch64
+S:13072
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.17-r0
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1IfyhnWlWb7EN9DbEVNChBb7KPPg=
+P:nginx-mainline
+V:1.31.6-r3
+A:aarch64
+S:618725
+I:1579695
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.4 so:libpcre2-8.so.0 so:libssl.so.4 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.6-r3 nginx=1.31.6-r3
+
+C:Q1sC5TO3sbEyFUWWmyOYeQUhoeiLA=
+P:python-3.14
+V:3.14.8_git20261001-r0
+A:aarch64
+S:17700
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261001-r0
+p:python-3=0 python3=0
+
+C:Q12ZE5IhbUxcK8UxAJzT/dW4SZocA=
+P:python-3.13
+V:3.13.16_git20261002-r0
+A:aarch64
+S:14934
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261002-r0
+p:python-3=3.13.16_git20261002-r0 python3=3.13.16_git20261002-r0
+
+C:Q1qtHiaa8YH3xOQJ4u++WCkBcSpVc=
+P:python-3.10
+V:3.10.22-r1
+A:aarch64
+S:13052
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r1
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1wg66K/Ypoy4nQdp/1AcF6H2/l9E=
+P:python-3.12
+V:3.12.15-r1
+A:aarch64
+S:14644
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r1
+p:python-3=3.12.15-r1 python3=3.12.15-r1
+
+C:Q1V5AD/3llnbug3TEJStuspuSPqNE=
+P:python-3.13
+V:3.13.16_git20261002-r1
+A:aarch64
+S:14916
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261002-r1
+p:python-3=3.13.16_git20261002-r1 python3=3.13.16_git20261002-r1
+
+C:Q1q+QKIH63Ffz1K1nDOS10Iqoufto=
+P:python-3.11
+V:3.11.17-r1
+A:aarch64
+S:13047
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.17-r1
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1nNE6aLL8MgXGNHmQFePh/h9N+RQ=
+P:python-3.14
+V:3.14.8_git20261001-r1
+A:aarch64
+S:17686
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261001-r1
+p:python-3=0 python3=0
+
+C:Q1XD/qNJKCuskwt1UmSmzxu2U6Vkg=
+P:python-3.11
+V:3.11.17-r2
+A:aarch64
+S:13120
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.17-r2
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1/BNRiJzTAMlzaWHpsdtWEjOFbS8=
+P:python-3.10
+V:3.10.22-r2
+A:aarch64
+S:13120
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r2
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1R17wm/P6Px+m9vIW4zVhTDS7UMY=
+P:python-3.12
+V:3.12.15-r2
+A:aarch64
+S:14720
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r2
+p:python-3=3.12.15-r2 python3=3.12.15-r2
+
+C:Q1yIRaEv5rxm+1qqlJ1BfV2ddyfpA=
+P:python-3.13
+V:3.13.16_git20261002-r2
+A:aarch64
+S:14986
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261002-r2
+p:python-3=3.13.16_git20261002-r2 python3=3.13.16_git20261002-r2
+
+C:Q1LaRurpvfxn1ngLfbZmyUNGVyBlo=
+P:python-3.14
+V:3.14.8_git20261001-r2
+A:aarch64
+S:17761
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261001-r2
+p:python-3=0 python3=0
+
+C:Q1vT+JT38/LNiWAuDn0n31kItbyCQ=
+P:python-3.14
+V:3.14.8_git20261008-r0
+A:aarch64
+S:17742
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261008-r0
+p:python-3=0 python3=0
+
+C:Q1CZD2Lvd+vv6ijPEaNb4FEQIAXtw=
+P:python-3.10
+V:3.10.22-r3
+A:aarch64
+S:13169
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r3
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1+Du0BcK8Z1hchZj7OXTDzG4QUco=
+P:python-3.11
+V:3.11.17-r3
+A:aarch64
+S:13167
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.17-r3
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1sxL9CIMsKFh1X8z6pwU0fBuPy5o=
+P:python-3.12
+V:3.12.15-r3
+A:aarch64
+S:14772
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r3
+p:python-3=3.12.15-r3 python3=3.12.15-r3
+
+C:Q1H0iNE5BJdj/NvD4FX9d9fEHISFw=
+P:python-3.13
+V:3.13.16_git20261002-r3
+A:aarch64
+S:15047
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261002-r3
+p:python-3=3.13.16_git20261002-r3 python3=3.13.16_git20261002-r3
+
+C:Q1wd8/Md57zBIu5Zz6FGaQsHQemY0=
+P:python-3.14
+V:3.14.8_git20261008-r1
+A:aarch64
+S:17816
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261008-r1
+p:python-3=0 python3=0
+
+C:Q16LhLgnucg3up+f9bUpypIkWtXD0=
+P:python-3.13
+V:3.13.16_git20261009-r0
+A:aarch64
+S:15053
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261009-r0
+p:python-3=3.13.16_git20261009-r0 python3=3.13.16_git20261009-r0
+
+C:Q12PfpeCUasmX6qXeq5nqP7zdMU0o=
+P:python-3.15
+V:3.15.0-r0
+A:aarch64
+S:17673
+I:42222
+T:the Python programming language
+D:python-3.15-base=3.15.0-r0
+p:python-3=0 python3=0
+
+C:Q1cD1ugoxTtS7glznkPMXbTBPEeOU=
+P:python-3.15
+V:3.15.0_git20261010-r0
+A:aarch64
+S:17701
+I:42364
+T:the Python programming language
+D:python-3.15-base=3.15.0_git20261010-r0
+p:python-3=0 python3=0
+
+C:Q19bchb/0ZOj+FiN6fniJaLegZmi8=
+P:python-3.14
+V:3.14.8_git20261014-r0
+A:aarch64
+S:17820
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261014-r0
+p:python-3=0 python3=0
+
+C:Q18CHw9YtrsLFUutdG71yACEv5iFw=
+P:nginx-mainline
+V:1.31.7-r0
+A:aarch64
+S:622136
+I:1580287
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.4 so:libpcre2-8.so.0 so:libssl.so.4 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.7-r0 nginx=1.31.7-r0
+
+C:Q19KwOzdde9HcZCIFm2Y8XL7W0dzc=
+P:python-3.13
+V:3.13.16_git20261016-r0
+A:aarch64
+S:15048
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261016-r0
+p:python-3=3.13.16_git20261016-r0 python3=3.13.16_git20261016-r0
+
+C:Q1jNeLQ4bMCrUFaT8vR1o1cayR0uw=
+P:python-3.15
+V:3.15.0_git20261017-r0
+A:aarch64
+S:17713
+I:42364
+T:the Python programming language
+D:python-3.15-base=3.15.0_git20261017-r0
+p:python-3=0 python3=0
+
+C:Q14uJqcyPpzvpTugyY1amcsRF9egk=
+P:python-3.14
+V:3.14.8_git20261014-r1
+A:aarch64
+S:20463
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261014-r1
+p:python-3=0 python3=0
+
+C:Q1RLTr7ZKP6VAbDCxxSZS6ENtyubk=
+P:python-3.15
+V:3.15.0_git20261017-r1
+A:aarch64
+S:20339
+I:42364
+T:the Python programming language
+D:python-3.15-base=3.15.0_git20261017-r1
+p:python-3=0 python3=0
+
+C:Q12NXUp1YSrgDFsj3YmYoLOz7Pngg=
+P:ca-certificates-bundle
+V:20260909-r3
+A:aarch64
+S:119164
+I:229626
+T:
+D:merged-usrsbin wolfi-baselayout
+
+C:Q1OLXtKx1vFDJ5nzQfUDnR3zOOsb4=
+P:python-3.10
+V:3.10.22-r4
+A:aarch64
+S:13182
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r4
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1ll5O0k/GdWyUn5FbRwVRKl7+WuU=
+P:python-3.12
+V:3.12.15-r4
+A:aarch64
+S:14775
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r4
+p:python-3=3.12.15-r4 python3=3.12.15-r4
+
+C:Q1qE+uuPWmHUgvuA787qsXopOgvQ4=
+P:python-3.13
+V:3.13.16_git20261016-r1
+A:aarch64
+S:15103
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261016-r1
+p:python-3=3.13.16_git20261016-r1 python3=3.13.16_git20261016-r1
+
+C:Q1pgWljPsNWEluGIzU2LVVqp6geRw=
+P:python-3.14
+V:3.14.8_git20261014-r2
+A:aarch64
+S:20528
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261014-r2
+p:python-3=0 python3=0
+
+C:Q1S9dqU2WOgvPOMP81XeY2L+Hm+to=
+P:python-3.15
+V:3.15.0_git20261017-r2
+A:aarch64
+S:20397
+I:42364
+T:the Python programming language
+D:python-3.15-base=3.15.0_git20261017-r2
+p:python-3=0 python3=0
+
+C:Q1kMYAoQA7wnhzMIj9pqwSnaimwLs=
+P:python-3.14
+V:3.14.8_git20261021-r0
+A:aarch64
+S:20528
+I:42364
+T:the Python programming language
+D:python-3.14-base=3.14.8_git20261021-r0
+p:python-3=0 python3=0
+
+C:Q1E3chNORwIWt7M670AukiWWcxUSQ=
+P:python-3.14
+V:3.14.8_git20261021-r1
+A:aarch64
+S:20731
+I:25968
+T:the Python programming language (metapackage)
+D:python-3.14-runtime=3.14.8_git20261021-r1
+p:python-3=0 python3=0
+
+C:Q1GjFDLbXgVQqWwrFliMRn/0gt7/g=
+P:python-3.15
+V:3.15.0_git20261017-r3
+A:aarch64
+S:20670
+I:25968
+T:the Python programming language (metapackage)
+D:python-3.15-runtime=3.15.0_git20261017-r3
+p:python-3=0 python3=0
+
+C:Q1ShvikG/cNZ5Ktnfl4PlmKL7umYs=
+P:nginx-mainline
+V:1.31.8-r0
+A:aarch64
+S:620954
+I:1580287
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.4 so:libpcre2-8.so.0 so:libssl.so.4 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.8-r0 nginx=1.31.8-r0
+
+C:Q1lHtU03PuVRKlL1/Nc09c4azj88k=
+P:python-3.12
+V:3.12.15-r5
+A:aarch64
+S:15167
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r5
+p:python-3=3.12.15-r5 python3=3.12.15-r5
+
+C:Q1Hs2uzDB2Bw6Tv6GNdtQ0NIVnO/g=
+P:python-3.15
+V:3.15.0_git20261017-r4
+A:aarch64
+S:21095
+I:25968
+T:the Python programming language (metapackage)
+D:python-3.15-runtime=3.15.0_git20261017-r4
+p:python-3=0 python3=0
+
+C:Q1MOktggvthShKDw2QLrM4/ZAsAIg=
+P:python-3.12
+V:3.12.15-r6
+A:aarch64
+S:15204
+I:42185
+T:the Python programming language
+D:python-3.12-base=3.12.15-r6
+p:python-3=3.12.15-r6 python3=3.12.15-r6
+
+C:Q1F+3n9AWViTtForMm0k44k4DnAz0=
+P:python-3.14
+V:3.14.8_git20261021-r2
+A:aarch64
+S:21162
+I:25968
+T:the Python programming language (metapackage)
+D:python-3.14-runtime=3.14.8_git20261021-r2
+p:python-3=0 python3=0
+
+C:Q1qQNx88O5sb4dTiDX366PqAAqtbU=
+P:python-3.10
+V:3.10.22-r5
+A:aarch64
+S:13767
+I:42185
+T:the Python programming language
+D:python-3.10-base=3.10.22-r5
+p:python-3=3.10.999 python3=3.10.999
+
+C:Q1b2fZ8r+qyTbPc46FL4Fch8jWM2o=
+P:python-3.11
+V:3.11.17-r4
+A:aarch64
+S:13754
+I:42185
+T:the Python programming language
+D:python-3.11-base=3.11.17-r4
+p:python-3=3.11.999 python3=3.11.999
+
+C:Q1HiewL9o8HMNQkPlAHFQIRKu2eL4=
+P:python-3.13
+V:3.13.16_git20261016-r2
+A:aarch64
+S:15649
+I:42375
+T:the Python programming language
+D:python-3.13-base=3.13.16_git20261016-r2
+p:python-3=3.13.16_git20261016-r2 python3=3.13.16_git20261016-r2
+
+C:Q1xJJxYnrBzpYhWS8Luv5aPZE41Yc=
+P:nginx-mainline
+V:1.31.8-r1
+A:aarch64
+S:620513
+I:1580287
+T:HTTP and reverse proxy server (mainline version)
+D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.4 so:libpcre2-8.so.0 so:libssl.so.4 so:libz.so.1 wolfi-baselayout
+p:cmd:nginx=1.31.8-r1 nginx=1.31.8-r1
+
