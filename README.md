@@ -26,6 +26,10 @@ Runtime images have no shell and no package manager and run as uid **65532**.
 | `python:3.12.15-1a2b3c4d` | one exact build (the suffix hashes the lock file, so it changes when any package changes) |
 | `…-dev` | the same, for the `-dev` variant |
 
+Builds are reproducible: rebuilding an unchanged lock produces the same digest
+(the `org.opencontainers.image.revision` annotation is the last commit that changed
+that line's lock or config), so Dependabot only proposes real changes.
+
 Pin consumers by tag **and** digest (`python:3.12@sha256:…`) and let Dependabot
 bump the digest. Ignore minor/major updates for these images in Dependabot so it
 never moves you to another line.
