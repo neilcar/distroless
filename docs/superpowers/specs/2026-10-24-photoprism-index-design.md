@@ -115,12 +115,12 @@ workflow's SUMMARY parsing.
    shared packages today, they are frozen at upstream's release and Trivy may not see
    all of them. The base gate likewise judges only the Wolfi packages and notes the
    AppImage findings.
+4. No shell in the published image: no `sh`, `bash`, `busybox` or `ash` on disk.
 5. **A release watcher**: a scheduled check opens or updates an `automation` issue when
    darktable or RawTherapee publishes a newer stable release than the pinned one (and
    when one with a fix for a listed AppImage finding exists), so the bundles do not go
    stale. Building both from source against Wolfi is a possible later step, not this
    project.
-4. No shell in the published image: no `sh`, `bash`, `busybox` or `ash` on disk.
 
 ## Non-goals
 
