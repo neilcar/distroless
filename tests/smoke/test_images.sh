@@ -5,7 +5,11 @@ ref=$1 image=$2 variant=$3
 fail() { echo "SMOKE FAIL ($image/$variant): $*" >&2; exit 1; }
 
 user=$(docker inspect --format '{{.Config.User}}' "$ref")
-[[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
+if [[ "$image" == "photoprism-base" ]]; then  # runs as root (owner's decision)
+  [[ "$user" == "0" || "$user" == "root" || "$user" == "0:0" ]] || fail "user is '$user'"
+else
+  [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
+fi
 
 has_file() { docker run --rm --entrypoint "" "$ref" "$@" >/dev/null 2>&1; }
 if [[ "$variant" == "runtime" ]]; then
@@ -38,6 +42,25 @@ case "$image" in
     printf 'FROM %s\nCOPY hello /hello\nENTRYPOINT ["/hello"]\n' "$ref" > "$dir/Dockerfile"
     docker build -q -t smoke-static "$dir" >/dev/null
     [[ "$(docker run --rm smoke-static)" == "ok" ]] || fail "static binary"
+    ;;
+  photoprism-base)
+    tool() { docker run --rm --entrypoint "$1" "$ref" "${@:2}"; }
+    for cmd in "ffmpeg -version" "exiftool -ver" "heif-dec --version" "magick -version" \
+               "vips --version" "djxl --version" "rsvg-convert --version" "mariadb --version" \
+               "yt-dlp --version"; do
+      # shellcheck disable=SC2086  # each entry is "tool args"
+      tool $cmd >/dev/null || fail "$cmd"
+    done
+    out=$(tool darktable-cli --version) || fail "darktable-cli --version"
+    grep -q '5\.6\.2' <<<"$out" || fail "darktable-cli is not 5.6.2: $out"
+    out=$(tool rawtherapee-cli -v || true)  # upstream prints the version, then exits 255
+    grep -q '5\.13' <<<"$out" || fail "rawtherapee-cli is not 5.13: $out"
+    if [[ "$variant" == "dev" ]]; then
+      for cmd in "go version" "node --version" "make --version" "bash --version"; do
+        # shellcheck disable=SC2086
+        tool $cmd >/dev/null || fail "$cmd"
+      done
+    fi
     ;;
 esac
 echo "smoke ok: $image/$variant"

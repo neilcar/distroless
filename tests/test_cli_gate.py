@@ -47,3 +47,15 @@ def test_cli_gate_snapshot_only_fix_does_not_block(tmp_path, capsys):
                    "--label", "py"])
     out = capsys.readouterr().out
     assert rc == 0 and "no released fix" in out
+
+
+def test_cli_gate_vendor_prefix_moves_findings_out_of_the_gate(tmp_path, capsys):
+    p = tmp_path / "c.json"
+    p.write_text(json.dumps({"Results": [{"Target": "opt/yt-dlp/yt-dlp", "Vulnerabilities": [
+        {"VulnerabilityID": "CVE-5", "Severity": "CRITICAL", "PkgName": "openssl",
+         "FixedVersion": "3.5.9"}]}]}))
+    rc = cli.main(["gate", "--candidate", str(p), "--ignore", str(tmp_path / "none"),
+                   "--vendor-prefix", "/opt/darktable", "--vendor-prefix", "/opt/yt-dlp",
+                   "--label", "pp"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "Vendored (not gated)" in out and "CVE-5" in out

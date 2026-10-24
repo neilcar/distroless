@@ -13,7 +13,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: repo-writes
+  group: repo-writes-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -46,14 +46,14 @@ jobs:
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
           for attempt in 1 2 3; do
-            git push && break
+            git push origin "HEAD:$GITHUB_REF_NAME" && break
             [[ $attempt == 3 ]] && exit 1
-            git pull --rebase
+            git pull --rebase origin "$GITHUB_REF_NAME"
           done
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Trigger build
         if: steps.commit.outputs.changed == 'true'
-        run: gh workflow run build.yml
+        run: gh workflow run build.yml --ref "$GITHUB_REF_NAME"
       - name: Report events, warnings and blocked lines
         run: |
           set -euo pipefail

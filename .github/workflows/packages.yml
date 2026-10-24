@@ -13,7 +13,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: repo-writes
+  group: repo-writes-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -55,11 +55,11 @@ jobs:
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
           for attempt in 1 2 3; do
-            git push && break
+            git push origin "HEAD:$GITHUB_REF_NAME" && break
             [[ $attempt == 3 ]] && exit 1
-            git pull --rebase
+            git pull --rebase origin "$GITHUB_REF_NAME"
           done
-          gh workflow run sync.yml
+          gh workflow run sync.yml --ref "$GITHUB_REF_NAME"
       - name: Report failure
         if: failure()
         run: uv run dl notify --title "melange packages build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

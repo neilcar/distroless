@@ -92,7 +92,8 @@ def cmd_gate(args) -> int:
     candidate = json.loads(Path(args.candidate).read_text())
     published = json.loads(Path(args.published).read_text()) if args.published else None
     indexes = load_indexes(args.index_dir)
-    result = evaluate(candidate, published, load_ignore(args.ignore), indexes)
+    result = evaluate(candidate, published, load_ignore(args.ignore), indexes,
+                      vendor_prefixes=args.vendor_prefix)
     print(summary_markdown(result, args.label))
     return 0 if result.passed else 1
 
@@ -141,7 +142,8 @@ def cmd_matrix(args) -> int:
             parts = Path(c).parts
             if len(parts) == 4 and parts[0] == "locks":
                 wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
-        selected = [e for e in entries if e in wanted]
+        # vendor.json is shared by every variant of its line.
+        selected = [e for e in entries if e in wanted or (e[0], e[1], "vendor") in wanted]
     include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
     print(json.dumps({"include": include, "resync": False}))
     return 0
@@ -239,6 +241,8 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--ignore", default=".trivyignore")
     gate.add_argument("--label", default="")
     gate.add_argument("--index-dir")
+    gate.add_argument("--vendor-prefix", action="append", default=[],
+                      help="path of vendored upstream files; findings under it are listed, not gated")
     gate.set_defaults(func=cmd_gate)
 
     rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")

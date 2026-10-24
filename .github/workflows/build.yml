@@ -14,9 +14,10 @@ on:
 permissions:
   contents: read
 
-# One build at a time, so an older run can't re-tag a floating tag after a newer one.
+# One build at a time per branch, so an older run can't re-tag a floating tag after a
+# newer one (only main pushes), and a branch run never displaces a queued main run.
 concurrency:
-  group: build
+  group: build-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -55,7 +56,7 @@ jobs:
           if [[ $(jq -r .resync m.json) == true ]]; then
             # Configs/packages changed: sync re-renders and re-locks, then builds.
             echo "Config inputs changed; dispatching sync instead of building stale configs."
-            gh workflow run sync.yml
+            gh workflow run sync.yml --ref "$GITHUB_REF_NAME"
           fi
           echo "matrix=$(jq -c '{include}' m.json)" >> "$GITHUB_OUTPUT"
           echo "any=$(jq '.include | length > 0' m.json)" >> "$GITHUB_OUTPUT"
@@ -105,21 +106,66 @@ jobs:
           runtime=(); [[ "$VARIANT" == runtime ]] && runtime=(--runtime)
           uv run dl lock-check "${runtime[@]}" "$LOCK"
 
+      # A line with vendor.json gets one more layer of pinned upstream files (and the
+      # launcher that runs them); its prefixes are listed by the gate, not gated.
+      - name: Vendored files
+        run: |
+          set -euo pipefail
+          vendor="locks/$IMAGE/$LINE/vendor.json"
+          [[ -f "$vendor" ]] || exit 0
+          echo "VENDOR_JSON=$vendor" >> "$GITHUB_ENV"
+          echo "VENDOR_PREFIXES=$(jq -r '[.vendor[].prefix] | join(" ")' "$vendor")" >> "$GITHUB_ENV"
+      - name: Cache vendored downloads
+        if: env.VENDOR_JSON != ''
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/vendor-cache
+          key: vendor-${{ hashFiles(env.VENDOR_JSON) }}
+
       - name: Build (both arches, plus a docker tarball for the smoke test)
         run: |
           set -euo pipefail
           mkdir -p oci sbom  # apko writes an OCI layout only into an existing directory
           # apko would stamp the current commit into the index, changing its digest on
           # every commit; use the commit that last changed this lock/config instead, so
-          # an unchanged image keeps an identical digest.
-          rev=$(git log -1 --format=%H -- "$LOCK" "$CFG")
+          # an unchanged image keeps an identical digest. vendor.json sits in the same
+          # lock dir, so a vendored version bump also moves the revision.
+          rev=$(git log -1 --format=%H -- "$LOCK" "$CFG" ${VENDOR_JSON:+"$VENDOR_JSON"})
           apko build --vcs=false --annotations "org.opencontainers.image.revision:$rev" \
             --lockfile "$LOCK" --sbom-path sbom "$CFG" "$REPO:candidate" oci/
-          # oci/ is scanned per platform and pushed as-is. The amd64 docker tarball
-          # (same lock, reproducible) is only for the smoke test.
-          apko build --vcs=false --annotations "org.opencontainers.image.revision:$rev" \
-            --lockfile "$LOCK" --sbom=false --arch x86_64 "$CFG" "$REPO:candidate" img-x86_64.tar
           ls sbom
+          if [[ -n "${VENDOR_JSON:-}" ]]; then
+            # Append before the views, the scan and the push: the scanned digest is the pushed one.
+            for pair in x86_64:amd64 aarch64:arm64; do
+              a=${pair%%:*}; p=${pair##*:}
+              (cd launcher && CGO_ENABLED=0 GOOS=linux GOARCH="$p" \
+                go build -trimpath -ldflags=-buildid= -o "$RUNNER_TEMP/launcher-$a" .)
+              uv run dl vendor-layer --vendor "$VENDOR_JSON" --arch "$a" \
+                --launcher "$RUNNER_TEMP/launcher-$a" --cache "$RUNNER_TEMP/vendor-cache" \
+                --out "$RUNNER_TEMP/vendor-$a.tar.gz" --manifest "vendor-$a.json"
+              uv run dl append-layer --layout oci/ --arch "$a" --layer "$RUNNER_TEMP/vendor-$a.tar.gz"
+              rm "$RUNNER_TEMP/vendor-$a.tar.gz"   # the layout holds its own copy
+            done
+            cat vendor-*.json
+          fi
+          # Trivy ignores --platform for a multi-arch layout, so give each platform a
+          # view of oci/ (the same blobs, hard-linked; the index lists only that manifest).
+          for pair in x86_64:amd64 aarch64:arm64; do
+            a=${pair%%:*}; p=${pair##*:}
+            mkdir -p "view-$a" && cp -Rl oci/blobs oci/oci-layout "view-$a/"   # hard links: no second copy
+            jq --arg p "$p" '.manifests |= map(select(.platform.architecture == $p))' \
+              oci/index.json > "view-$a/index.json"
+            [[ $(jq '.manifests | length' "view-$a/index.json") == 1 ]]
+          done
+          # The smoke test runs the amd64 image from oci/ itself, as a docker-load tarball:
+          # its manifest.json points at that manifest's config and layer blobs.
+          m=$(jq -r '.manifests[0].digest | ltrimstr("sha256:")' view-x86_64/index.json)
+          jq --arg ref "$REPO:candidate-amd64" \
+            '[{Config: ("blobs/sha256/" + (.config.digest | ltrimstr("sha256:"))), RepoTags: [$ref],
+               Layers: [.layers[].digest | "blobs/sha256/" + ltrimstr("sha256:")]}]' \
+            "oci/blobs/sha256/$m" > manifest.json
+          mapfile -t blobs < <(jq -r '.[0].Config, .[0].Layers[]' manifest.json)
+          tar -cf img-x86_64.tar manifest.json -C oci "${blobs[@]}"
 
       - name: Smoke test (amd64)
         run: |
@@ -130,15 +176,10 @@ jobs:
       - name: Scan candidate and published image
         run: |
           set -euo pipefail
-          # Trivy ignores --platform for a multi-arch layout, so give each platform a
-          # view of oci/ (same blobs, index listing only that manifest) and check
-          # the report really is for that architecture.
+          # Scan each platform's view of oci/ and check the report really is for that
+          # architecture.
           for pair in x86_64:amd64 aarch64:arm64; do
             a=${pair%%:*}; p=${pair##*:}
-            mkdir -p "view-$a" && cp -R oci/blobs oci/oci-layout "view-$a/"
-            jq --arg p "$p" '.manifests |= map(select(.platform.architecture == $p))' \
-              oci/index.json > "view-$a/index.json"
-            [[ $(jq '.manifests | length' "view-$a/index.json") == 1 ]]
             trivy image --quiet --input "view-$a/" --format json --output "cand-$a.json"
             [[ $(jq -r .Metadata.ImageConfig.architecture "cand-$a.json") == "$p" ]] \
               || { echo "scanned the wrong architecture for $a"; exit 1; }
@@ -164,8 +205,9 @@ jobs:
           rc=0
           for a in x86_64 aarch64; do
             pub=(); [[ -f "pub-$a.json" ]] && pub=(--published "pub-$a.json")
-            uv run dl gate --index-dir "$RUNNER_TEMP/index" --candidate "cand-$a.json" "${pub[@]}" --ignore .trivyignore \
-              --label "$IMAGE:$LINE $VARIANT ($a)" >> "$GITHUB_STEP_SUMMARY" || rc=1
+            vendored=(); for v in ${VENDOR_PREFIXES:-}; do vendored+=(--vendor-prefix "$v"); done
+            uv run dl gate --index-dir "$RUNNER_TEMP/index" --candidate "cand-$a.json" "${pub[@]}" "${vendored[@]}" \
+              --ignore .trivyignore --label "$IMAGE:$LINE $VARIANT ($a)" >> "$GITHUB_STEP_SUMMARY" || rc=1
           done
           exit $rc
 
@@ -174,7 +216,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch -q origin main
-          if ! git diff --quiet "${{ github.sha }}" origin/main -- "$LOCK" "$CFG"; then
+          if ! git diff --quiet "${{ github.sha }}" origin/main -- "$LOCK" "$CFG" ${VENDOR_JSON:+"$VENDOR_JSON"}; then
             echo "A newer lock for this line is on main; its build will publish instead."
             echo "SKIPPED=1" >> "$GITHUB_ENV"
             exit 0
@@ -200,6 +242,11 @@ jobs:
             a=${pair%%:*}; p=${pair##*:}
             d=$(jq -r --arg p "$p" '.manifests[] | select(.platform.architecture == $p) | .digest' oci/index.json)
             cosign attest --yes --type spdxjson --predicate "sbom/sbom-$a.spdx.json" "$REPO@$d"
+            # The vendored layer is not in apko's SBOM; attest what went into it.
+            if [[ -f "vendor-$a.json" ]]; then
+              cosign attest --yes --type https://github.com/neilcar/distroless/vendor-layer/v1 \
+                --predicate "vendor-$a.json" "$REPO@$d"
+            fi
           done
 
       - name: Report failure

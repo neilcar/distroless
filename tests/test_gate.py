@@ -1,4 +1,4 @@
-from dltools.gate import evaluate, findings, load_ignore
+from dltools.gate import evaluate, findings, load_ignore, summary_markdown
 
 
 def report(*vulns):
@@ -146,3 +146,46 @@ def test_gate_unparseable_fixed_version_noted():
     rep = report_typed("CVE-9", "HIGH", "zlib", "1.3.2-r7", "not-a-version!")
     r = evaluate(rep, None, set(), INDEXES)
     assert r.passed and any("unparseable" in n for n in r.notes)
+
+
+VENDOR = ["/opt/darktable", "/opt/rawtherapee", "/opt/yt-dlp"]
+
+
+def report_at(target, *vulns):
+    """Trivy JSON with one result for `target`; vulns are (id, severity, fixed[, pkg_path])."""
+    return {"Results": [{"Target": target, "Class": "lang-pkgs", "Type": "jar", "Vulnerabilities": [
+        {"VulnerabilityID": v[0], "Severity": v[1], "FixedVersion": v[2], "PkgName": "exiv2",
+         "InstalledVersion": "0.28.1", **({"PkgPath": v[3]} if len(v) > 3 else {})}
+        for v in vulns
+    ]}]}
+
+
+def test_gate_vendored_findings_are_notes():
+    cand = report_at("opt/darktable/usr/lib/libexiv2.so", ("CVE-2026-1", "HIGH", "0.28.5"))
+    r = evaluate(cand, None, set(), vendor_prefixes=VENDOR)
+    assert r.passed and r.reasons == []
+    assert r.candidate_counts["HIGH"] == 0
+    assert r.vendored_counts["HIGH"] == 1
+    md = summary_markdown(r, "photoprism-base:latest runtime (x86_64)")
+    assert "Vendored (not gated)" in md
+    vendored_section = md.split("Vendored (not gated)", 1)[1]
+    assert "CVE-2026-1" in vendored_section and "opt/darktable/usr/lib/libexiv2.so" in vendored_section
+
+
+def test_gate_vendored_not_counted_in_regression():
+    pub = report()
+    cand = report_at("img", ("V-1", "MEDIUM", "", "/opt/yt-dlp/yt-dlp"),
+                     ("V-2", "MEDIUM", "", "opt/rawtherapee/usr/lib/libjpeg.so.8"))
+    r = evaluate(cand, pub, set(), vendor_prefixes=VENDOR)
+    assert r.passed
+    assert r.candidate_counts["MEDIUM"] == 0 and r.vendored_counts["MEDIUM"] == 2
+
+
+def test_gate_vendor_prefix_matches_whole_path_components():
+    cand = report_at("opt/darktable-extra/lib.so", ("CVE-3", "HIGH", "1.0"))
+    assert not evaluate(cand, None, set(), vendor_prefixes=VENDOR).passed
+
+
+def test_gate_without_vendor_prefixes_has_no_vendored_section():
+    r = evaluate(report(("CVE-2", "LOW", "")), None, set())
+    assert "Vendored" not in summary_markdown(r, "x")

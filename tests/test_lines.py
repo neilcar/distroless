@@ -5,7 +5,12 @@ from pathlib import Path
 import pytest
 
 from dltools.lines import (
-    Line, discover, nginx_lines, photoprism_base_lines, python_lines, static_lines,
+    Line,
+    discover,
+    nginx_lines,
+    photoprism_base_lines,
+    python_lines,
+    static_lines,
 )
 from dltools.wolfi import parse_apkindex
 
