@@ -86,13 +86,8 @@ jobs:
           set -euo pipefail
           mkdir -p oci sbom  # apko writes an OCI layout only into an existing directory
           apko build --lockfile "$LOCK" --sbom-path sbom "$CFG" "$REPO:candidate" oci/
-          # Per-arch OCI layouts are what gets scanned; their manifests must match the
-          # pushed index. The amd64 docker tarball is only for the smoke test.
-          for a in x86_64 aarch64; do
-            mkdir -p "oci-$a"
-            apko build --lockfile "$LOCK" --sbom=false --arch "$a" "$CFG" "$REPO:candidate" "oci-$a/"
-            tar -C "oci-$a" -cf "oci-$a.tar" .
-          done
+          # oci/ is scanned per platform and pushed as-is. The amd64 docker tarball
+          # (same lock, reproducible) is only for the smoke test.
           apko build --lockfile "$LOCK" --sbom=false --arch x86_64 "$CFG" "$REPO:candidate" img-x86_64.tar
           ls sbom
 
@@ -105,9 +100,8 @@ jobs:
       - name: Scan candidate and published image
         run: |
           set -euo pipefail
-          for a in x86_64 aarch64; do
-            trivy image --quiet --input "oci-$a.tar" --format json --output "cand-$a.json"
-          done
+          trivy image --quiet --input oci/ --platform linux/amd64 --format json --output cand-x86_64.json
+          trivy image --quiet --input oci/ --platform linux/arm64 --format json --output cand-aarch64.json
           if crane digest "$REPO:$PRIMARY" >/dev/null 2>&1; then
             trivy image --quiet --platform linux/amd64 --format json --output pub-x86_64.json "$REPO:$PRIMARY"
             trivy image --quiet --platform linux/arm64 --format json --output pub-aarch64.json "$REPO:$PRIMARY"
@@ -131,14 +125,10 @@ jobs:
           echo "${{ github.token }}" | crane auth login ghcr.io -u "${{ github.actor }}" --password-stdin
           digest=$(crane push --index oci/ "$REPO:$HASHTAG")
           digest=${digest##*@}
-          # The pushed per-arch manifests must be exactly the ones that were scanned.
+          # The pushed index must list exactly the per-platform manifests that were scanned.
           jq -r '.manifests[].digest' oci/index.json | sort > local.txt
           crane manifest "$REPO@$digest" | jq -r '.manifests[].digest' | sort > pushed.txt
           diff local.txt pushed.txt
-          for a in x86_64 aarch64; do
-            jq -r '.manifests[].digest' "oci-$a/index.json" | grep -qxF -f pushed.txt \
-              || { echo "scanned $a image is not in the pushed index"; exit 1; }
-          done
           while read -r t; do crane tag "$REPO@$digest" "$t"; done < tags.txt
           echo "DIGEST=$digest" >> "$GITHUB_ENV"
           echo "Published \`$REPO@$digest\` as: $(paste -sd' ' tags.txt)" >> "$GITHUB_STEP_SUMMARY"
@@ -149,8 +139,9 @@ jobs:
           set -euo pipefail
           cosign sign --yes "$REPO@$DIGEST"
           cosign attest --yes --type spdxjson --predicate sbom/sbom-index.spdx.json "$REPO@$DIGEST"
-          for a in x86_64 aarch64; do
-            d=$(jq -r '.manifests[0].digest' "oci-$a/index.json")
+          for pair in x86_64:amd64 aarch64:arm64; do
+            a=${pair%%:*}; p=${pair##*:}
+            d=$(jq -r --arg p "$p" '.manifests[] | select(.platform.architecture == $p) | .digest' oci/index.json)
             cosign attest --yes --type spdxjson --predicate "sbom/sbom-$a.spdx.json" "$REPO@$d"
           done
 
