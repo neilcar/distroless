@@ -67,7 +67,7 @@ def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:
     try:
         with urllib.request.urlopen(url, timeout=timeout) as resp:
             data = json.load(resp)
-    except Exception:  # network, HTTP, or JSON errors all mean "no data"
+    except (OSError, ValueError):  # URLError/HTTPError are OSErrors; bad JSON is ValueError
         return None
     if not isinstance(data, list) or not data or not all("cycle" in c for c in data):
         return None
