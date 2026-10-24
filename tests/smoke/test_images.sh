@@ -51,6 +51,18 @@ case "$image" in
       # shellcheck disable=SC2086  # each entry is "tool args"
       tool $cmd >/dev/null || fail "$cmd"
     done
+    if [[ "$variant" == "runtime" ]]; then
+      # Every script must find its interpreter (no shell in the image, so look from outside).
+      root=$(mktemp -d)
+      cid=$(docker create --entrypoint /none "$ref")
+      docker export "$cid" | tar -x -C "$root" --exclude='dev' --exclude='dev/*'
+      docker rm "$cid" >/dev/null
+      image_path=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$ref" \
+        | sed -n 's/^PATH=//p')
+      python3 -I "$(dirname "$0")/shebang_audit.py" "$root" "${image_path:-/usr/sbin:/sbin:/usr/bin:/bin}" \
+        || fail "scripts whose interpreter is missing (see above)"
+      rm -rf "$root"
+    fi
     out=$(tool darktable-cli --version) || fail "darktable-cli --version"
     grep -q '5\.6\.2' <<<"$out" || fail "darktable-cli is not 5.6.2: $out"
     out=$(tool rawtherapee-cli -v || true)  # upstream prints the version, then exits 255

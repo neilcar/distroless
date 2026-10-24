@@ -112,6 +112,15 @@ def test_build_layer_installs_launchers(vendor, tmp_path, launcher, launch_dir):
     assert {m.name: m.mode for m in ms}["opt/tool/tool"] == 0o755
 
 
+def test_build_layer_installs_launcher_as_env(vendor, tmp_path, launcher, launch_dir):
+    # The image has no coreutils; `#!/usr/bin/env perl` (exiftool) needs an env.
+    out = tmp_path / "out.tar.gz"
+    build_layer(vendor, "x86_64", tmp_path / "cache", out, launcher, launch_dir)
+    ms, files = members(out)
+    assert files["usr/bin/env"] == launcher.read_bytes()
+    assert {m.name: m.mode for m in ms}["usr/bin/env"] == 0o755
+
+
 def test_build_layer_requires_launch_recipe(vendor, tmp_path, launcher):
     with pytest.raises(FileNotFoundError, match="launch.json"):
         build_layer(vendor, "x86_64", tmp_path / "c", tmp_path / "o.tar.gz", launcher,

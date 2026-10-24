@@ -1,6 +1,7 @@
 // Command launcher runs a vendored tool (unpacked AppImage or single binary) without a shell.
 //
-// It is installed as /usr/bin/<tool>. The name it is run under picks the tool's prefix, whose
+// It is installed as /usr/bin/<tool>, and as /usr/bin/env for `#!/usr/bin/env X` scripts
+// (exiftool), since the image has no coreutils. The name it is run under picks the tool's prefix, whose
 // launch.json says what to exec and with which environment; the AppImages' own AppRun scripts
 // need bash, which the image does not have.
 package main
@@ -39,6 +40,9 @@ func main() { os.Exit(launch(os.Args, tools, os.Environ(), os.Stderr)) }
 // launch execs the tool named by argv[0]; it returns only on failure, with the exit code.
 func launch(argv []string, tools map[string]string, environ []string, stderr io.Writer) int {
 	name := filepath.Base(argv[0])
+	if name == "env" {
+		return runEnv(argv[1:], environ, stderr)
+	}
 	prefix, ok := tools[name]
 	if !ok {
 		fmt.Fprintf(stderr, "launcher: no tool for %s\n", name)
@@ -53,6 +57,61 @@ func launch(argv []string, tools map[string]string, environ []string, stderr io.
 	err = syscall.Exec(path, args, env)
 	fmt.Fprintf(stderr, "launcher: %s: exec %s: %v\n", name, path, err)
 	return 126
+}
+
+// runEnv is a minimal env(1): NAME=VALUE assignments, then a command looked up on PATH
+// (or used as-is if it contains a slash). No options.
+func runEnv(args, environ []string, stderr io.Writer) int {
+	env := newEnv(environ)
+	for len(args) > 0 {
+		a := args[0]
+		if strings.HasPrefix(a, "-") {
+			fmt.Fprintf(stderr, "env: options are not supported: %s\n", a)
+			return 125
+		}
+		k, v, ok := strings.Cut(a, "=")
+		if !ok {
+			break
+		}
+		env.set(k, v)
+		args = args[1:]
+	}
+	if len(args) == 0 {
+		fmt.Fprintln(stderr, "usage: env [NAME=VALUE]... COMMAND [ARG]...")
+		return 125
+	}
+	path := lookPath(args[0], env.values["PATH"])
+	if path == "" {
+		fmt.Fprintf(stderr, "env: %s: not found\n", args[0])
+		return 127
+	}
+	err := syscall.Exec(path, args, env.list())
+	fmt.Fprintf(stderr, "env: %s: %v\n", args[0], err)
+	return 126
+}
+
+// lookPath finds cmd as execvp does: as-is if it contains a slash, else in each PATH dir.
+func lookPath(cmd, pathList string) string {
+	if strings.Contains(cmd, "/") {
+		if isExecutable(cmd) {
+			return cmd
+		}
+		return ""
+	}
+	for _, dir := range filepath.SplitList(pathList) {
+		if dir == "" {
+			dir = "."
+		}
+		if p := filepath.Join(dir, cmd); isExecutable(p) {
+			return p
+		}
+	}
+	return ""
+}
+
+func isExecutable(p string) bool {
+	fi, err := os.Stat(p)
+	return err == nil && fi.Mode().IsRegular() && fi.Mode().Perm()&0o111 != 0
 }
 
 func readRecipe(file string) (*recipe, error) {

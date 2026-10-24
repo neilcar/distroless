@@ -16,7 +16,7 @@ const testTool = "testtool"
 
 func TestMain(m *testing.M) {
 	switch filepath.Base(os.Args[0]) {
-	case "stub":
+	case "stub", "perl-stub":
 		// Print what we were started with, one item per line, so tests can compare exactly.
 		for _, a := range os.Args {
 			fmt.Println("arg=" + a)
@@ -26,6 +26,8 @@ func TestMain(m *testing.M) {
 		fmt.Println("HOME=" + os.Getenv("HOME"))
 		fmt.Println("TOOL_DATA=" + os.Getenv("TOOL_DATA"))
 		os.Exit(0)
+	case "env":
+		os.Exit(launch(os.Args, nil, os.Environ(), os.Stderr))
 	case testTool, "unknown-tool":
 		os.Exit(launch(os.Args, map[string]string{testTool: os.Getenv("LAUNCHER_TEST_PREFIX")},
 			os.Environ(), os.Stderr))
@@ -165,5 +167,97 @@ func TestLauncherUnknownName(t *testing.T) {
 	}
 	if out != "" {
 		t.Errorf("stdout = %q", out)
+	}
+}
+
+// setupEnv returns a link named env to the test binary and a PATH dir holding perl-stub.
+func setupEnv(t *testing.T) (envLink, binDir string) {
+	t.Helper()
+	self, err := os.Executable()
+	if err != nil {
+		t.Fatal(err)
+	}
+	binDir = t.TempDir()
+	if err := os.Symlink(self, filepath.Join(binDir, "perl-stub")); err != nil {
+		t.Fatal(err)
+	}
+	envLink = filepath.Join(t.TempDir(), "env")
+	if err := os.Symlink(self, envLink); err != nil {
+		t.Fatal(err)
+	}
+	return envLink, binDir
+}
+
+func TestEnvPassesArgvThroughExactly(t *testing.T) {
+	envLink, bin := setupEnv(t)
+	out, errs, code := run(t, envLink, "", []string{"PATH=/nonexistent:" + bin}, "perl-stub", "a", "b")
+	if code != 0 {
+		t.Fatalf("exit %d, stderr %q", code, errs)
+	}
+	if got, want := args(out), []string{"perl-stub", "a", "b"}; !equal(got, want) {
+		t.Errorf("args = %q, want %q", got, want)
+	}
+}
+
+func TestEnvAppliesAssignments(t *testing.T) {
+	envLink, bin := setupEnv(t)
+	out, errs, code := run(t, envLink, "", []string{"PATH=" + bin, "HOME=/caller"},
+		"HOME=/assigned", "TOOL_DATA=x=y", "perl-stub", "two words")
+	if code != 0 {
+		t.Fatalf("exit %d, stderr %q", code, errs)
+	}
+	for _, line := range []string{"HOME=/assigned", "TOOL_DATA=x=y", "arg=two words"} {
+		if !strings.Contains(out, line+"\n") {
+			t.Errorf("output lacks %q:\n%s", line, out)
+		}
+	}
+}
+
+func TestEnvCommandWithSlashIsUsedAsIs(t *testing.T) {
+	envLink, bin := setupEnv(t)
+	stub := filepath.Join(bin, "perl-stub")
+	out, errs, code := run(t, envLink, "", []string{"PATH=/nonexistent"}, stub, "-x")
+	if code != 0 {
+		t.Fatalf("exit %d, stderr %q", code, errs)
+	}
+	if got, want := args(out), []string{stub, "-x"}; !equal(got, want) {
+		t.Errorf("args = %q, want %q", got, want)
+	}
+}
+
+func TestEnvRejectsOptions(t *testing.T) {
+	envLink, bin := setupEnv(t)
+	for _, argv := range [][]string{{"-i", "perl-stub"}, {"A=1", "-u", "HOME", "perl-stub"}, {"--", "perl-stub"}} {
+		out, errs, code := run(t, envLink, "", []string{"PATH=" + bin}, argv...)
+		var opt string
+		for _, a := range argv {
+			if strings.HasPrefix(a, "-") {
+				opt = a
+				break
+			}
+		}
+		if code != 125 || errs != "env: options are not supported: "+opt+"\n" || out != "" {
+			t.Errorf("%q: exit %d, stderr %q, stdout %q", argv, code, errs, out)
+		}
+	}
+}
+
+func TestEnvWithoutCommand(t *testing.T) {
+	envLink, _ := setupEnv(t)
+	for _, argv := range [][]string{nil, {"A=1"}} {
+		out, errs, code := run(t, envLink, "", nil, argv...)
+		if code != 125 || !strings.HasPrefix(errs, "usage: env ") || out != "" {
+			t.Errorf("%q: exit %d, stderr %q, stdout %q", argv, code, errs, out)
+		}
+	}
+}
+
+func TestEnvMissingCommand(t *testing.T) {
+	envLink, bin := setupEnv(t)
+	for _, cmd := range []string{"no-such-tool", filepath.Join(bin, "no-such-tool")} {
+		_, errs, code := run(t, envLink, "", []string{"PATH=" + bin}, cmd)
+		if code != 127 || errs != "env: "+cmd+": not found\n" {
+			t.Errorf("%s: exit %d, stderr %q", cmd, code, errs)
+		}
 	}
 }

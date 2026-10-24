@@ -161,6 +161,9 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
             f = entry["files"][arch]
             manifest.append({"name": name, "version": entry["version"], "arch": arch,
                              "url": f["url"], "sha256": f["sha256"]})
+        # The launcher is also env(1): the image has no coreutils, and scripts such as
+        # Wolfi's exiftool start with `#!/usr/bin/env perl`.
+        layer.add("usr/bin/env", "file", 0o755, Path(launcher_bin))
         out.parent.mkdir(parents=True, exist_ok=True)
         layer.write(out)
     return {"vendor": manifest}
