@@ -80,12 +80,19 @@ A build is published only if, per arch:
 
 Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 
-### nginx config package
+### Local melange packages
 
-`distroless-nginx-config` (in `melange/`) replaces Wolfi's port-80 config. The
-`nginx-config.yml` workflow builds it with a throwaway signing key and commits the
-signed packages (`packages/`) and public key (`melange.rsa.pub`); no private key
-is stored anywhere.
+Two config-only packages live in `melange/`:
+
+- `distroless-nginx-config` replaces Wolfi's port-80 nginx config.
+- `distroless-no-shell` is an empty package that provides `cmd:bash`. ffmpeg's
+  `libsrt` depends on bash only for unused `srt-*` scripts; the `photoprism-base`
+  runtime variant installs this instead so the image stays shell-free (the `-dev`
+  variant keeps real bash).
+
+The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
+key and commits the signed packages (`packages/`) and public key
+(`melange.rsa.pub`); no private key is stored anywhere.
 
 ## Results (2026-10-24)
 

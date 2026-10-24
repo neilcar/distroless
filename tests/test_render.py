@@ -83,3 +83,12 @@ def test_render_vendor_written_per_line():
     line = Line("v-img", "latest", "ca-certificates-bundle", "1-r0")
     assert render_vendor(catalog, line) == {"vendor": vendor}
     assert render_vendor(CATALOG, STATIC) is None
+
+
+def test_render_photoprism_base_no_shell_stub_in_runtime_only():
+    line = Line("photoprism-base", "latest", "libvips", "8.18.7-r2")
+    runtime, dev = render(CATALOG, line, "runtime"), render(CATALOG, line, "dev")
+    assert "distroless-no-shell" in pkgs(runtime) and "bash" not in pkgs(runtime)
+    assert "distroless-no-shell" not in pkgs(dev) and "bash" in pkgs(dev)
+    assert "./packages" in runtime["contents"]["repositories"]
+    assert "./melange.rsa.pub" in runtime["contents"]["keyring"]

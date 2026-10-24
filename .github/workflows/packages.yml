@@ -1,6 +1,6 @@
-name: nginx config package
+name: melange packages
 
-# Builds distroless-nginx-config with a throwaway signing key and commits the
+# Builds every melange/*.yaml package with a throwaway signing key and commits the
 # signed packages and public key. No private key is ever stored.
 on:
   push:
@@ -31,8 +31,13 @@ jobs:
           key="$RUNNER_TEMP/melange.rsa"
           melange keygen "$key"
           rm -rf packages
-          melange build melange/nginx-config.yaml --source-dir melange/nginx-config \
-            --arch x86_64,aarch64 --signing-key "$key" --out-dir packages --runner docker
+          for cfg in melange/*.yaml; do
+            name=$(basename "$cfg" .yaml)
+            src=melange/$name
+            [[ -d $src ]] || src=melange
+            melange build "$cfg" --source-dir "$src" \
+              --arch x86_64,aarch64 --signing-key "$key" --out-dir packages --runner docker
+          done
           cp "$key.pub" melange.rsa.pub
           rm -f "$key"
           find packages -type f | sort
@@ -43,7 +48,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages melange.rsa.pub
           git diff --cached --quiet && exit 0
-          git commit -m "chore(nginx-config): rebuild distroless-nginx-config package
+          git commit -m "chore(packages): rebuild melange packages
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
           for attempt in 1 2 3; do
@@ -54,4 +59,4 @@ jobs:
           gh workflow run sync.yml
       - name: Report failure
         if: failure()
-        run: uv run dl notify --title "nginx config package build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: uv run dl notify --title "melange packages build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

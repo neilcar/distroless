@@ -48,9 +48,13 @@ images:
     # PhotoPrism's runtime tools; runs as root (owner's decision), unlike every other image.
     run_as: "0"
     lines: [latest]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
     variants:
       runtime:
-        packages: ["{package}", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "ghostscript", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu"]
+        # distroless-no-shell provides cmd:bash so ffmpeg's libsrt (which needs bash only
+        # for its unused srt-* scripts) installs without a shell. Runtime only; dev keeps bash.
+        packages: ["{package}", "distroless-no-shell", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "ghostscript", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu"]
       dev:
         packages: ["{package}", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "ghostscript", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu", "busybox", "bash", "curl", "git", "make", "go-1.27", "nodejs-22", "npm", "gcc", "glibc-dev", "libvips-dev", "libheif-dev", "pkgconf"]
     paths:
