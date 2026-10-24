@@ -32,3 +32,9 @@ def test_rescan_known_but_now_fixable_rebuilds_without_new_issue():
 def test_rescan_ignored_and_low_are_quiet():
     d = decide(report(("CVE-4", "HIGH", "1"), ("CVE-5", "LOW", "1")), {"CVE-4"}, set())
     assert not d.open_issue and not d.rebuild
+
+
+def test_rescan_fix_not_available_does_not_rebuild():
+    idx = {a: {"p": ["1.0-r0"]} for a in ("x86_64", "aarch64")}
+    d = decide(report(("CVE-6", "HIGH", "2.0-r0")), set(), set(), idx)
+    assert d.open_issue and not d.rebuild

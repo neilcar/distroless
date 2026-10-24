@@ -1,6 +1,15 @@
 import json
 
+import pytest
+
 from dltools import cli
+
+INDEX = "P:x\nV:1.0-r0\n\nP:py\nV:3.13.15-r8\n\n"
+
+
+@pytest.fixture(autouse=True)
+def offline(monkeypatch):
+    monkeypatch.setattr(cli, "fetch_index", lambda arch: INDEX)
 
 
 def write(tmp_path, name, vulns):
@@ -27,3 +36,14 @@ def test_cli_gate_passes_against_published(tmp_path, capsys):
                    "--ignore", str(tmp_path / "none"), "--label", "x"])
     assert rc == 0
     assert "PASS" in capsys.readouterr().out
+
+
+def test_cli_gate_snapshot_only_fix_does_not_block(tmp_path, capsys):
+    p = tmp_path / "c.json"
+    p.write_text(json.dumps({"Results": [{"Vulnerabilities": [
+        {"VulnerabilityID": "CVE-9", "Severity": "HIGH", "PkgName": "py",
+         "FixedVersion": "3.13.15_git20260912-r0"}]}]}))
+    rc = cli.main(["gate", "--candidate", str(p), "--ignore", str(tmp_path / "none"),
+                   "--label", "py"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "no released fix" in out

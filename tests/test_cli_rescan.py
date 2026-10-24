@@ -1,6 +1,13 @@
 import json
 
+import pytest
+
 from dltools import cli
+
+
+@pytest.fixture(autouse=True)
+def offline(monkeypatch):
+    monkeypatch.setattr(cli, "fetch_index", lambda arch: "P:p\nV:1.0-r0\n\n")
 
 
 def test_cli_rescan_decide(tmp_path, capsys):

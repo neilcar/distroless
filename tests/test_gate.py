@@ -74,3 +74,42 @@ def test_load_ignore(tmp_path):
 
 def test_load_ignore_missing_file(tmp_path):
     assert load_ignore(tmp_path / "missing") == set()
+
+
+INDEXES = {a: {
+    "python-3.13": ["3.13.15-r8", "3.13.15_git20260912-r0"],
+    "nginx-stable": ["1.30.2-r0"],
+    "zlib": ["1.3.2-r7"],
+} for a in ("x86_64", "aarch64")}
+
+
+def report_pkg(vid, sev, pkg, fixed):
+    return {"Results": [{"Vulnerabilities": [
+        {"VulnerabilityID": vid, "Severity": sev, "PkgName": pkg, "FixedVersion": fixed}]}]}
+
+
+def test_gate_fix_only_in_snapshot_is_not_blocking():
+    rep = report_pkg("CVE-2026-82049", "HIGH", "python-3.13", "3.13.15_git20260912-r0")
+    assert evaluate(rep, None, set(), INDEXES).passed
+
+
+def test_gate_fix_not_in_wolfi_is_not_blocking():
+    rep = report_pkg("CVE-2026-42055", "HIGH", "nginx-stable", "1.30.3-r0")
+    assert evaluate(rep, None, set(), INDEXES).passed
+
+
+def test_gate_released_fix_in_wolfi_blocks():
+    rep = report_pkg("CVE-1", "CRITICAL", "zlib", "1.3.2-r5")
+    r = evaluate(rep, None, set(), INDEXES)
+    assert not r.passed and "zlib" in r.reasons[0]
+
+
+def test_gate_any_of_several_fixed_versions_counts():
+    rep = report_pkg("CVE-2", "HIGH", "zlib", "1.2.13-r9, 1.3.2-r7")
+    assert not evaluate(rep, None, set(), INDEXES).passed
+
+
+def test_gate_unavailable_fixes_are_listed_but_not_blocking():
+    rep = report_pkg("CVE-2026-42055", "HIGH", "nginx-stable", "1.30.3-r0")
+    r = evaluate(rep, None, set(), INDEXES)
+    assert any("CVE-2026-42055" in n and "no released fix" in n for n in r.notes)

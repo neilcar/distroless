@@ -64,7 +64,8 @@ def cmd_sync(args) -> int:
 def cmd_gate(args) -> int:
     candidate = json.loads(Path(args.candidate).read_text())
     published = json.loads(Path(args.published).read_text()) if args.published else None
-    result = evaluate(candidate, published, load_ignore(args.ignore))
+    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    result = evaluate(candidate, published, load_ignore(args.ignore), indexes)
     print(summary_markdown(result, args.label))
     return 0 if result.passed else 1
 
@@ -74,7 +75,8 @@ def cmd_rescan_decide(args) -> int:
     prev_path = Path(args.previous)
     previous = set(prev_path.read_text().split()) if prev_path.exists() else set()
     ignore = load_ignore(args.ignore)
-    d = decide(report, ignore, previous)
+    indexes = {arch: parse_apkindex(fetch_index(arch)) for arch in ARCHES}
+    d = decide(report, ignore, previous, indexes)
     ids = sorted({f.id for f in findings(report, ignore) if f.severity in BLOCKING})
     print(json.dumps({"open_issue": d.open_issue, "rebuild": d.rebuild,
                       "summary": d.summary, "ids": ids}))
