@@ -31,3 +31,12 @@ def test_lockcheck_empty_lock_is_a_violation():
         "lock has no packages for aarch64",
         "lock has no packages for x86_64",
     ]
+
+
+def test_lockcheck_forbidden_packages():
+    lock = {"contents": {"packages": [
+        {"name": n, "version": "1.0-r0", "architecture": a}
+        for a in ("x86_64", "aarch64") for n in ("busybox", "python-3.12")]}}
+    from dltools.lockcheck import RUNTIME_FORBIDDEN
+    v = check_lock(lock, forbidden=RUNTIME_FORBIDDEN)
+    assert len(v) == 2 and all("busybox" in x and "not allowed" in x for x in v)

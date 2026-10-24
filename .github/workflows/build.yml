@@ -14,6 +14,11 @@ on:
 permissions:
   contents: read
 
+# One build at a time, so an older run can't re-tag a floating tag after a newer one.
+concurrency:
+  group: build
+  cancel-in-progress: false
+
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -23,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
       - run: uv sync --locked
       - id: matrix
@@ -31,10 +36,12 @@ jobs:
           FILTER: ${{ inputs.filter }}
         run: |
           set -euo pipefail
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            git diff --name-only HEAD~1 HEAD > changed.txt
+          before="${{ github.event.before }}"
+          if [[ "${{ github.event_name }}" == "push" && -n "$before" && ! "$before" =~ ^0+$ ]] \
+             && git cat-file -e "$before^{commit}" 2>/dev/null; then
+            git diff --name-only "$before" "${{ github.sha }}" > changed.txt
           else
-            : > changed.txt
+            : > changed.txt   # dispatch, new branch or unknown base: build everything
           fi
           uv run dl matrix --changed changed.txt > m.json
           if [[ -n "${FILTER:-}" ]]; then
@@ -81,7 +88,12 @@ jobs:
           echo "PRIMARY=$(head -1 tags.txt)" >> "$GITHUB_ENV"
           echo "HASHTAG=$(grep -E -- '-[0-9a-f]{8}(-dev)?$|^[0-9a-f]{8}$' tags.txt | head -1)" >> "$GITHUB_ENV"
 
-      - name: Build (both arches, plus per-arch tarballs for scanning)
+      - name: Lock check (released-only; no shell or package manager in runtime images)
+        run: |
+          runtime=(); [[ "$VARIANT" == runtime ]] && runtime=(--runtime)
+          uv run dl lock-check "${runtime[@]}" "$LOCK"
+
+      - name: Build (both arches, plus a docker tarball for the smoke test)
         run: |
           set -euo pipefail
           mkdir -p oci sbom  # apko writes an OCI layout only into an existing directory
@@ -100,11 +112,31 @@ jobs:
       - name: Scan candidate and published image
         run: |
           set -euo pipefail
-          trivy image --quiet --input oci/ --platform linux/amd64 --format json --output cand-x86_64.json
-          trivy image --quiet --input oci/ --platform linux/arm64 --format json --output cand-aarch64.json
-          if crane digest "$REPO:$PRIMARY" >/dev/null 2>&1; then
-            trivy image --quiet --platform linux/amd64 --format json --output pub-x86_64.json "$REPO:$PRIMARY"
-            trivy image --quiet --platform linux/arm64 --format json --output pub-aarch64.json "$REPO:$PRIMARY"
+          # Trivy ignores --platform for a multi-arch layout, so give each platform a
+          # view of oci/ (same blobs, index listing only that manifest) and check
+          # the report really is for that architecture.
+          for pair in x86_64:amd64 aarch64:arm64; do
+            a=${pair%%:*}; p=${pair##*:}
+            mkdir -p "view-$a" && cp -R oci/blobs oci/oci-layout "view-$a/"
+            jq --arg p "$p" '.manifests |= map(select(.platform.architecture == $p))' \
+              oci/index.json > "view-$a/index.json"
+            [[ $(jq '.manifests | length' "view-$a/index.json") == 1 ]]
+            trivy image --quiet --input "view-$a/" --format json --output "cand-$a.json"
+            [[ $(jq -r .Metadata.ImageConfig.architecture "cand-$a.json") == "$p" ]] \
+              || { echo "scanned the wrong architecture for $a"; exit 1; }
+          done
+          # Compare against the published image; only a definite "not found" means
+          # this is the line's first publish. Any other registry error fails the job.
+          if out=$(crane digest "$REPO:$PRIMARY" 2>&1); then
+            for pair in x86_64:amd64 aarch64:arm64; do
+              a=${pair%%:*}; p=${pair##*:}
+              trivy image --quiet --platform "linux/$p" --format json --output "pub-$a.json" "$REPO:$PRIMARY"
+              [[ $(jq -r .Metadata.ImageConfig.architecture "pub-$a.json") == "$p" ]]
+            done
+          elif grep -qE 'MANIFEST_UNKNOWN|NAME_UNKNOWN|404|not found' <<<"$out"; then
+            echo "first publish of $REPO:$PRIMARY"
+          else
+            echo "$out"; echo "could not check the published image"; exit 1
           fi
 
       - name: Gate
@@ -122,6 +154,12 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
+          git fetch -q origin main
+          if ! git diff --quiet "${{ github.sha }}" origin/main -- "$LOCK" "$CFG"; then
+            echo "A newer lock for this line is on main; its build will publish instead."
+            echo "SKIPPED=1" >> "$GITHUB_ENV"
+            exit 0
+          fi
           echo "${{ github.token }}" | crane auth login ghcr.io -u "${{ github.actor }}" --password-stdin
           digest=$(crane push --index oci/ "$REPO:$HASHTAG")
           digest=${digest##*@}
@@ -134,7 +172,7 @@ jobs:
           echo "Published \`$REPO@$digest\` as: $(paste -sd' ' tags.txt)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Sign and attest
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && env.SKIPPED != '1'
         run: |
           set -euo pipefail
           cosign sign --yes "$REPO@$DIGEST"

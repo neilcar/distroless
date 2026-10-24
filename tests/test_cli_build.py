@@ -61,3 +61,28 @@ def test_tags_cli(tmp_path, capsys):
     assert cli.main(["tags", "--state", str(state), "--image", "python", "--line", "3.12",
                      "--variant", "dev", "--lock", str(lock)]) == 0
     assert capsys.readouterr().out.split() == ["3.12-dev", "3.12.15-dev", f"3.12.15-{h}-dev"]
+
+
+def test_tags_cli_takes_version_from_lock_not_state(tmp_path, capsys):
+    # state already says 3.12.16 but the line's lock (blocked re-lock) still has 3.12.15
+    state = tmp_path / "lines.json"
+    state.write_text(json.dumps({"lines": [
+        {"image": "python", "name": "3.12", "package": "python-3.12", "version": "3.12.16-r0"}]}))
+    lock = tmp_path / "runtime.lock.json"
+    lock.write_text(json.dumps({"contents": {"packages": [
+        {"name": "python-3.12", "version": "3.12.15-r6", "architecture": a}
+        for a in ("x86_64", "aarch64")]}}))
+    assert cli.main(["tags", "--state", str(state), "--image", "python", "--line", "3.12",
+                     "--variant", "runtime", "--lock", str(lock)]) == 0
+    out = capsys.readouterr().out.split()
+    assert out[:2] == ["3.12", "3.12.15"] and out[2].startswith("3.12.15-")
+
+
+def test_lock_check_runtime_rejects_shell(tmp_path, capsys):
+    lock = tmp_path / "l.json"
+    lock.write_text(json.dumps({"contents": {"packages": [
+        {"name": n, "version": "1.0-r0", "architecture": a}
+        for a in ("x86_64", "aarch64") for n in ("python-3.12", "bash")]}}))
+    assert cli.main(["lock-check", str(lock)]) == 0
+    assert cli.main(["lock-check", "--runtime", str(lock)]) == 1
+    assert "bash" in capsys.readouterr().out

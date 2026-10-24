@@ -57,3 +57,10 @@ def test_render_static_minimal():
 
 def test_render_is_yaml_serialisable():
     assert yaml.safe_load(yaml.safe_dump(render(CATALOG, PY, "dev"))) == render(CATALOG, PY, "dev")
+
+
+def test_render_nginx_compiled_in_paths_writable_by_nonroot():
+    paths = {p["path"]: p for p in render(CATALOG, NGINX, "runtime")["paths"]}
+    for d in ("/var/lib/nginx", "/var/lib/nginx/logs", "/var/lib/nginx/tmp"):
+        assert paths[d]["type"] == "directory"
+        assert (paths[d]["uid"], paths[d]["gid"]) == (65532, 65532)

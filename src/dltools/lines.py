@@ -74,19 +74,63 @@ def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:
     return data
 
 
+def _eol_passed(cycle: dict | None, today: date) -> bool:
+    """True only when the data positively says the cycle is end-of-life."""
+    if cycle is None:
+        return False
+    eol = cycle.get("eol")
+    if eol is True:
+        return True
+    if isinstance(eol, str):
+        try:
+            return date.fromisoformat(eol) <= today
+        except ValueError:
+            return False
+    return False
+
+
+def _order(line: Line) -> tuple:
+    rank = {"static": 0, "python": 1, "nginx": 2}.get(line.image, 9)
+    sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
+        line.name
+    ) if line.name in NGINX_LINES else 0
+    return (rank, sub)
+
+
 def discover(indexes, eol: list[dict] | None, today: date, current: list[Line]):
-    """Return (lines, warnings). With no EOL data, keep the current Python lines."""
+    """Return (lines, warnings).
+
+    A current line is only retired when the data positively says so (a Python cycle
+    listed with a past EOL date). Missing EOL data, a cycle absent from it, or a
+    package missing from an arch's index keeps the line with a warning.
+    """
     warnings: list[str] = []
     if eol is None:
         warnings.append(
             "endoflife.date data unavailable; keeping the current Python lines unchanged"
         )
-        py = []
-        for ln in current:
-            if ln.image != "python":
-                continue
-            v = newest_released_all_arches(indexes, ln.package) or ln.version
-            py.append(Line(ln.image, ln.name, ln.package, v))
+        py: list[Line] = []
     else:
         py = python_lines(eol, indexes, today)
-    return static_lines(indexes) + py + nginx_lines(indexes), warnings
+    lines = static_lines(indexes) + py + nginx_lines(indexes)
+    present = {(ln.image, ln.name) for ln in lines}
+    cycles = {c.get("cycle"): c for c in eol or []}
+
+    for ln in current:
+        if (ln.image, ln.name) in present:
+            continue
+        if ln.image == "python" and eol is not None and _eol_passed(cycles.get(ln.name), today):
+            continue  # genuinely end-of-life: retire
+        version = newest_released_all_arches(indexes, ln.package)
+        if version is None:
+            warnings.append(
+                f"{ln.package} has no released version on every arch in the Wolfi index; "
+                f"keeping {ln.image}:{ln.name} at {ln.version}"
+            )
+            version = ln.version
+        elif ln.image == "python" and eol is not None:
+            warnings.append(
+                f"python {ln.name} is not confirmed supported by endoflife.date data; keeping it"
+            )
+        lines.append(Line(ln.image, ln.name, ln.package, version))
+    return sorted(lines, key=_order), warnings

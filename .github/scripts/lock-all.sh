@@ -17,7 +17,8 @@ for cfg in locks/*/*/*.apko.yaml; do
     uv run dl pin-released --config "$cfg" --lock "$lock"
     rc=$?
     if [[ $rc -eq 0 ]]; then
-      uv run dl lock-check "$lock" && ok=1
+      runtime=(); [[ "$cfg" == */runtime.apko.yaml ]] && runtime=(--runtime)
+      uv run dl lock-check "${runtime[@]}" "$lock" && ok=1
       break
     elif [[ $rc -ne 3 ]]; then
       break

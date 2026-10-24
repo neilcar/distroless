@@ -36,3 +36,7 @@ images:
         cmd: "-g 'daemon off;'"
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      # nginx opens its compiled-in error log before reading nginx.conf.
+      - {path: /var/lib/nginx, type: directory, permissions: 0755, uid: 65532, gid: 65532}
+      - {path: /var/lib/nginx/logs, type: directory, permissions: 0755, uid: 65532, gid: 65532}
+      - {path: /var/lib/nginx/tmp, type: directory, permissions: 0755, uid: 65532, gid: 65532}

@@ -30,6 +30,7 @@ case "$image" in
       sleep 0.5
     done
     [[ "$code" == "200" ]] || { docker logs "$cid" >&2; fail "nginx returned '$code' on 8080"; }
+    if docker logs "$cid" 2>&1 | grep -E '\[(alert|emerg|crit)\]'; then fail "nginx logged alerts"; fi
     ;;
   static)
     dir=$(mktemp -d)

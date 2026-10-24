@@ -13,8 +13,8 @@ from pathlib import Path
 import yaml
 
 from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_markdown
-from dltools.lines import discover, fetch_eol
-from dltools.lockcheck import check_lock
+from dltools.lines import Line, discover, fetch_eol
+from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
 from dltools.notify import upsert_issue
 from dltools.pinning import apply_pins, released_overrides
 from dltools.render import load_catalog, render
@@ -115,8 +115,9 @@ def cmd_matrix(args) -> int:
 
 def cmd_lock_check(args) -> int:
     failed = False
+    forbidden = RUNTIME_FORBIDDEN if args.runtime else frozenset()
     for path in args.locks:
-        for violation in check_lock(json.loads(Path(path).read_text())):
+        for violation in check_lock(json.loads(Path(path).read_text()), forbidden=forbidden):
             print(f"{path}: {violation}")
             failed = True
     return 1 if failed else 0
@@ -126,7 +127,16 @@ def cmd_tags(args) -> int:
     line = next(
         ln for ln in load_state(args.state) if ln.image == args.image and ln.name == args.line
     )
-    lock_hash = hashlib.sha256(Path(args.lock).read_bytes()).hexdigest()
+    raw = Path(args.lock).read_bytes()
+    # The tag carries what the lock actually contains, not what state hoped for
+    # (they differ when a re-lock for a new version was blocked).
+    locked = {
+        p["name"]: p["version"]
+        for p in json.loads(raw).get("contents", {}).get("packages", [])
+    }
+    if line.package in locked:
+        line = Line(line.image, line.name, line.package, locked[line.package])
+    lock_hash = hashlib.sha256(raw).hexdigest()
     print("\n".join(tags(line, args.variant, lock_hash)))
     return 0
 
@@ -183,6 +193,8 @@ def build_parser() -> argparse.ArgumentParser:
     matrix.set_defaults(func=cmd_matrix)
 
     lockcheck = sub.add_parser("lock-check", help="fail on unreleased or single-arch locks")
+    lockcheck.add_argument("--runtime", action="store_true",
+                           help="also reject shells and package managers")
     lockcheck.add_argument("locks", nargs="+")
     lockcheck.set_defaults(func=cmd_lock_check)
 

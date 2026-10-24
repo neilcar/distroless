@@ -90,3 +90,38 @@ def test_eol_failure_still_refreshes_versions(indexes):
     stale = [Line("python", "3.12", "python-3.12", "3.12.14-r0")]
     lines, _ = discover(indexes, None, TODAY, current=stale)
     assert [ln.version for ln in lines if ln.image == "python"] == ["3.12.15-r6"]
+
+
+def test_changed_eol_schema_does_not_retire_lines(indexes):
+    current, _ = discover(indexes, json.loads((FIXTURES / "python-eol.json").read_text()),
+                          TODAY, current=[])
+    junk = [{"cycle": c, "released": "x", "end": "y"} for c in ("3.11", "3.12")]  # renamed keys
+    lines, warnings = discover(indexes, junk, TODAY, current=current)
+    assert [ln.name for ln in lines if ln.image == "python"] == [
+        "3.11", "3.12", "3.13", "3.14", "3.15"]
+    assert warnings
+
+
+def test_line_retired_only_when_eol_says_so(indexes, eol):
+    current, _ = discover(indexes, eol, TODAY, current=[])
+    lines, _ = discover(indexes, eol, date(2027, 11, 1), current=current)
+    names = [ln.name for ln in lines if ln.image == "python"]
+    assert "3.11" not in names and "3.12" in names  # 3.11 eol 2027-10-31
+
+
+def test_cycle_missing_from_eol_data_is_kept(indexes, eol):
+    current, _ = discover(indexes, eol, TODAY, current=[])
+    truncated = [c for c in eol if c["cycle"] != "3.13"]
+    lines, warnings = discover(indexes, truncated, TODAY, current=current)
+    assert "3.13" in [ln.name for ln in lines if ln.image == "python"]
+    assert any("3.13" in w for w in warnings)
+
+
+def test_package_missing_from_index_keeps_current_line(indexes, eol):
+    current, _ = discover(indexes, eol, TODAY, current=[])
+    broken = {"x86_64": indexes["x86_64"],
+              "aarch64": {k: v for k, v in indexes["aarch64"].items() if k != "nginx-stable"}}
+    lines, warnings = discover(broken, eol, TODAY, current=current)
+    stable = [ln for ln in lines if ln.image == "nginx" and ln.name == "stable"]
+    assert stable and stable[0].version == "1.30.2-r0"
+    assert any("nginx-stable" in w for w in warnings)
