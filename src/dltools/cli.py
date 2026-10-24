@@ -11,6 +11,7 @@ from pathlib import Path
 
 import yaml
 
+from dltools.gate import evaluate, load_ignore, summary_markdown
 from dltools.lines import discover, fetch_eol
 from dltools.render import load_catalog, render
 from dltools.state import diff, load_state, save_state
@@ -54,6 +55,14 @@ def cmd_sync(args) -> int:
     return 0
 
 
+def cmd_gate(args) -> int:
+    candidate = json.loads(Path(args.candidate).read_text())
+    published = json.loads(Path(args.published).read_text()) if args.published else None
+    result = evaluate(candidate, published, load_ignore(args.ignore))
+    print(summary_markdown(result, args.label))
+    return 0 if result.passed else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -64,6 +73,13 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--catalog", default="catalog.yaml")
     sync.add_argument("--today", help="YYYY-MM-DD (default: today)")
     sync.set_defaults(func=cmd_sync)
+
+    gate = sub.add_parser("gate", help="apply the scan gate to Trivy JSON reports")
+    gate.add_argument("--candidate", required=True)
+    gate.add_argument("--published")
+    gate.add_argument("--ignore", default=".trivyignore")
+    gate.add_argument("--label", default="")
+    gate.set_defaults(func=cmd_gate)
     return parser
 
 

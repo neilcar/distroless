@@ -1,0 +1,2 @@
+# Scan-gate exceptions: one vulnerability ID per line, with a "# reason" comment.
+# Only the repo owner edits this file; automation never adds to it.
