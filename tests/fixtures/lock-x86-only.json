@@ -1,0 +1,40 @@
+{
+ "version": "v1",
+ "contents": {
+  "repositories": [
+   {
+    "name": "https://packages.wolfi.dev/os"
+   }
+  ],
+  "packages": [
+   {
+    "name": "wolfi-baselayout",
+    "version": "20230201-r30",
+    "architecture": "x86_64",
+    "url": "https://packages.wolfi.dev/os/x86_64/wolfi-baselayout-20230201-r30.apk",
+    "checksum": "sha1-x"
+   },
+   {
+    "name": "ca-certificates-bundle",
+    "version": "20260909-r3",
+    "architecture": "x86_64",
+    "url": "https://packages.wolfi.dev/os/x86_64/ca-certificates-bundle-20260909-r3.apk",
+    "checksum": "sha1-x"
+   },
+   {
+    "name": "python-3.13",
+    "version": "3.13.15-r8",
+    "architecture": "x86_64",
+    "url": "https://packages.wolfi.dev/os/x86_64/python-3.13-3.13.15-r8.apk",
+    "checksum": "sha1-x"
+   },
+   {
+    "name": "libexpat1",
+    "version": "2.7.4-r0",
+    "architecture": "x86_64",
+    "url": "https://packages.wolfi.dev/os/x86_64/libexpat1-2.7.4-r0.apk",
+    "checksum": "sha1-x"
+   }
+  ]
+ }
+}
