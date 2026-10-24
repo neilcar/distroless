@@ -57,9 +57,9 @@ It replaces the scripts, so everything that reads their output keeps working unc
 `parallel-index.sh`, the maintenance `driver.sh`, and the n8n "PhotoPrism maintenance"
 workflow's SUMMARY parsing.
 
-- **The reference is the scripts at the commit the rewrite starts from** (today
-  `a6eb4ab08`, "Add an xl index class and hand finished classes' room down"), not this
-  summary. From that commit on, behaviour changes go into the Go program; `plan.sh` and
+- **The reference is the scripts at `a6eb4ab08`** ("Add an xl index class and hand
+  finished classes' room down"), not this summary. The owner froze the scripts there on
+  2026-10-24 and will make no further changes to them. From that commit on, behaviour changes go into the Go program; `plan.sh` and
   `index.sh` are deleted in the same change that switches the Jobs over.
 - Same settings and defaults (every variable in the README's Settings table that the
   pod scripts read, including the `XL_*` settings), same plan files (`PLAN`, `PLANM`,
