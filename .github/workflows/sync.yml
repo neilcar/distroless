@@ -13,7 +13,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: repo-writes
+  group: repo-writes-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -46,34 +46,39 @@ jobs:
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
           for attempt in 1 2 3; do
-            git push && break
+            git push origin "HEAD:$GITHUB_REF_NAME" && break
             [[ $attempt == 3 ]] && exit 1
-            git pull --rebase
+            git pull --rebase origin "$GITHUB_REF_NAME"
           done
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Trigger build
         if: steps.commit.outputs.changed == 'true'
-        run: gh workflow run build.yml
+        run: gh workflow run build.yml --ref "$GITHUB_REF_NAME"
       - name: Report events, warnings and blocked lines
         run: |
           set -euo pipefail
+          # Only main files issues; a branch run just logs what it would have filed.
+          notify() {
+            if [[ "$GITHUB_REF" == refs/heads/main ]]; then uv run dl notify "$@"
+            else echo "branch run, not notifying: $*"; fi
+          }
           while IFS= read -r event; do
             kind=$(jq -r .kind <<<"$event"); detail=$(jq -r .detail <<<"$event")
             line=$(jq -r '.line.image + ":" + .line.name' <<<"$event")
             case "$kind" in
-              line_added)          uv run dl notify --title "New line: $line" --body "$detail ($RUN_URL)" ;;
-              line_removed)        uv run dl notify --title "Line retired: $line" --body "$detail. Its last images stay published. ($RUN_URL)" ;;
-              nginx_minor_changed) uv run dl notify --title "nginx line moved: $line" --body "$detail ($RUN_URL)" ;;
+              line_added)          notify --title "New line: $line" --body "$detail ($RUN_URL)" ;;
+              line_removed)        notify --title "Line retired: $line" --body "$detail. Its last images stay published. ($RUN_URL)" ;;
+              nginx_minor_changed) notify --title "nginx line moved: $line" --body "$detail ($RUN_URL)" ;;
             esac
           done < "$RUNNER_TEMP/events.jsonl"
           if [[ -s "$RUNNER_TEMP/warnings.txt" ]]; then
-            uv run dl notify --title "Sync warning" --body "$(cat "$RUNNER_TEMP/warnings.txt") ($RUN_URL)"
+            notify --title "Sync warning" --body "$(cat "$RUNNER_TEMP/warnings.txt") ($RUN_URL)"
           fi
           while IFS= read -r dir; do
             [[ -n "$dir" ]] || continue
-            uv run dl notify --title "Sync blocked: ${dir#locks/}" \
+            notify --title "Sync blocked: ${dir#locks/}" \
               --body "Could not produce a released-only lock; the line keeps its previous lock. ($RUN_URL)"
           done < "$RUNNER_TEMP/blocked.txt"
       - name: Report failure
-        if: failure()
+        if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
         run: uv run dl notify --title "Sync failed" --body "$RUN_URL"

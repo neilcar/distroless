@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import subprocess
 import sys
 from datetime import date
 from pathlib import Path
@@ -16,11 +17,14 @@ from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_mark
 from dltools.lines import Line, discover, fetch_eol
 from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
 from dltools.notify import upsert_issue
+from dltools.ocilayout import append_layer
 from dltools.pinning import apply_pins, released_overrides
-from dltools.render import load_catalog, render
+from dltools.render import load_catalog, render, render_vendor
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
+from dltools.vendor import DEFAULT_LAUNCH_DIR, build_layer
+from dltools.vendorcheck import fetch_releases, newer_releases, token
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
@@ -67,6 +71,11 @@ def cmd_sync(args) -> int:
             _write_if_changed(
                 line_dir / f"{variant}.apko.yaml", yaml.safe_dump(cfg, sort_keys=False)
             )
+        vendor = render_vendor(catalog, line)
+        if vendor is not None:
+            _write_if_changed(
+                line_dir / "vendor.json", json.dumps(vendor, indent=2, sort_keys=True) + "\n"
+            )
     if locks.exists():
         for line_dir in locks.glob("*/*"):
             if line_dir.is_dir() and line_dir not in wanted:
@@ -85,7 +94,13 @@ def cmd_gate(args) -> int:
     candidate = json.loads(Path(args.candidate).read_text())
     published = json.loads(Path(args.published).read_text()) if args.published else None
     indexes = load_indexes(args.index_dir)
-    result = evaluate(candidate, published, load_ignore(args.ignore), indexes)
+    prefixes, components = list(args.vendor_prefix), []
+    if args.vendor:
+        for v in json.loads(Path(args.vendor).read_text())["vendor"]:
+            prefixes.append(v["prefix"])
+            components.append(f"{v['name']} {v['version']}")
+    result = evaluate(candidate, published, load_ignore(args.ignore), indexes,
+                      vendor_prefixes=prefixes, vendor_components=components)
     print(summary_markdown(result, args.label))
     return 0 if result.passed else 1
 
@@ -105,6 +120,21 @@ def cmd_rescan_decide(args) -> int:
 
 def cmd_notify(args) -> int:
     upsert_issue(args.title, args.body)
+    return 0
+
+
+def cmd_vendor_check(args) -> int:
+    vendor = json.loads(Path(args.vendor).read_text())
+    try:
+        messages = newer_releases(vendor, fetch_releases(vendor, token()))
+        if args.dry_run:
+            print("\n".join(messages) if messages else "no newer releases")
+        elif messages:
+            upsert_issue("Vendored tool updates available",
+                         "\n".join(f"- {m}" for m in messages), dedupe=True)
+    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+        # network, bad response or gh failure: warn, don't fail the job
+        print(f"warning: vendored release check failed: {exc}", file=sys.stderr)
     return 0
 
 
@@ -134,7 +164,8 @@ def cmd_matrix(args) -> int:
             parts = Path(c).parts
             if len(parts) == 4 and parts[0] == "locks":
                 wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
-        selected = [e for e in entries if e in wanted]
+        # vendor.json is shared by every variant of its line.
+        selected = [e for e in entries if e in wanted or (e[0], e[1], "vendor") in wanted]
     include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
     print(json.dumps({"include": include, "resync": False}))
     return 0
@@ -200,6 +231,19 @@ def cmd_state_revert(args) -> int:
     return 0
 
 
+def cmd_vendor_layer(args) -> int:
+    vendor = json.loads(Path(args.vendor).read_text())
+    manifest = build_layer(vendor, args.arch, Path(args.cache), Path(args.out),
+                           Path(args.launcher), Path(args.launch_dir), env=not args.no_env)
+    Path(args.manifest).write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    return 0
+
+
+def cmd_append_layer(args) -> int:
+    append_layer(Path(args.layout), args.arch, Path(args.layer), args.history)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -219,6 +263,9 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--ignore", default=".trivyignore")
     gate.add_argument("--label", default="")
     gate.add_argument("--index-dir")
+    gate.add_argument("--vendor-prefix", action="append", default=[],
+                      help="path of vendored upstream files; findings under it are listed, not gated")
+    gate.add_argument("--vendor", help="vendor.json: its prefixes are vendored (as --vendor-prefix)")
     gate.set_defaults(func=cmd_gate)
 
     rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")
@@ -232,6 +279,11 @@ def build_parser() -> argparse.ArgumentParser:
     notify.add_argument("--title", required=True)
     notify.add_argument("--body", required=True)
     notify.set_defaults(func=cmd_notify)
+
+    vcheck = sub.add_parser("vendor-check", help="report newer stable releases of vendored tools")
+    vcheck.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
+    vcheck.add_argument("--dry-run", action="store_true", help="print messages, never notify")
+    vcheck.set_defaults(func=cmd_vendor_check)
 
     matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
     matrix.add_argument("--locks", default="locks")
@@ -268,6 +320,26 @@ def build_parser() -> argparse.ArgumentParser:
     revert.add_argument("--image", required=True)
     revert.add_argument("--line", required=True)
     revert.set_defaults(func=cmd_state_revert)
+
+    vlayer = sub.add_parser("vendor-layer", help="build the layer of vendored upstream files")
+    vlayer.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
+    vlayer.add_argument("--arch", required=True, choices=ARCHES)
+    vlayer.add_argument("--launcher", required=True, help="launcher binary for this arch")
+    vlayer.add_argument("--cache", required=True, help="download cache directory")
+    vlayer.add_argument("--out", required=True, help="layer .tar.gz to write")
+    vlayer.add_argument("--manifest", required=True, help="JSON list of what went in")
+    vlayer.add_argument("--launch-dir", default=str(DEFAULT_LAUNCH_DIR),
+                        help="directory holding <name>/launch.json (default: repo vendor/)")
+    vlayer.add_argument("--no-env", action="store_true",
+                        help="don't install the launcher as /usr/bin/env (variants with busybox)")
+    vlayer.set_defaults(func=cmd_vendor_layer)
+
+    alayer = sub.add_parser("append-layer", help="add a layer to one arch of an OCI layout")
+    alayer.add_argument("--layout", required=True)
+    alayer.add_argument("--arch", required=True, choices=ARCHES)
+    alayer.add_argument("--layer", required=True)
+    alayer.add_argument("--history", default="vendor layer")
+    alayer.set_defaults(func=cmd_append_layer)
     return parser
 
 

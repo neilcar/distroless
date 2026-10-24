@@ -37,3 +37,38 @@ def test_upsert_issue_ensures_label_before_creating():
     assert names.index(["gh", "label", "create"]) < names.index(["gh", "issue", "create"])
     label_call = next(c for c in run.calls if c[:3] == ["gh", "label", "create"])
     assert "--force" in label_call
+
+
+class ViewRunner(FakeRunner):
+    def __init__(self, existing, view):
+        super().__init__(existing)
+        self.view = view
+
+    def __call__(self, args, **kwargs):
+        if args[:3] == ["gh", "issue", "view"]:
+            self.calls.append(args)
+            return subprocess.CompletedProcess(args, 0, stdout=json.dumps(self.view), stderr="")
+        return super().__call__(args, **kwargs)
+
+
+def _commented(run):
+    return any(c[:3] == ["gh", "issue", "comment"] for c in run.calls)
+
+
+def test_dedupe_skips_comment_when_latest_text_matches():
+    run = ViewRunner([{"number": 7, "title": "T"}],
+                     {"body": "old", "comments": [{"body": "x"}, {"body": "same"}]})
+    upsert_issue("T", "same", runner=run, dedupe=True)
+    assert not _commented(run)
+
+
+def test_dedupe_skips_comment_when_issue_body_matches():
+    run = ViewRunner([{"number": 7, "title": "T"}], {"body": "same", "comments": []})
+    upsert_issue("T", "same", runner=run, dedupe=True)
+    assert not _commented(run)
+
+
+def test_dedupe_comments_when_text_changed():
+    run = ViewRunner([{"number": 7, "title": "T"}], {"body": "old", "comments": []})
+    upsert_issue("T", "new", runner=run, dedupe=True)
+    assert _commented(run)

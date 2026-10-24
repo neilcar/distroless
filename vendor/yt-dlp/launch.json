@@ -1,0 +1,4 @@
+{
+  "exec": "yt-dlp",
+  "env_default": {"HOME": "/tmp"}
+}

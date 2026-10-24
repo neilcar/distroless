@@ -36,6 +36,12 @@ def test_matrix_global_inputs_build_all(locks, capsys, tmp_path, path):
     assert len(matrix(locks, [path], capsys, tmp_path)) == 4
 
 
+def test_matrix_vendor_json_change_builds_every_variant_of_the_line(locks, capsys, tmp_path):
+    out = matrix(locks, ["locks/python/3.12/vendor.json"], capsys, tmp_path)
+    assert out == [{"image": "python", "line": "3.12", "variant": "dev"},
+                   {"image": "python", "line": "3.12", "variant": "runtime"}]
+
+
 def test_matrix_removed_line_not_built(locks, capsys, tmp_path):
     assert matrix(locks, ["locks/python/3.10/runtime.lock.json"], capsys, tmp_path) == []
 

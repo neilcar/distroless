@@ -47,3 +47,31 @@ def test_cli_gate_snapshot_only_fix_does_not_block(tmp_path, capsys):
                    "--label", "py"])
     out = capsys.readouterr().out
     assert rc == 0 and "no released fix" in out
+
+
+def test_cli_gate_vendor_prefix_moves_findings_out_of_the_gate(tmp_path, capsys):
+    p = tmp_path / "c.json"
+    p.write_text(json.dumps({"Results": [{"Target": "opt/yt-dlp/yt-dlp", "Vulnerabilities": [
+        {"VulnerabilityID": "CVE-5", "Severity": "CRITICAL", "PkgName": "openssl",
+         "FixedVersion": "3.5.9"}]}]}))
+    rc = cli.main(["gate", "--candidate", str(p), "--ignore", str(tmp_path / "none"),
+                   "--vendor-prefix", "/opt/darktable", "--vendor-prefix", "/opt/yt-dlp",
+                   "--label", "pp"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "Vendored (not gated)" in out and "CVE-5" in out
+
+
+def test_cli_gate_vendor_json_sets_prefixes_and_caveat(tmp_path, capsys):
+    vj = tmp_path / "vendor.json"
+    vj.write_text(json.dumps({"vendor": [
+        {"name": "darktable", "version": "5.6.2", "prefix": "/opt/darktable"},
+        {"name": "yt-dlp", "version": "2026.10.21", "prefix": "/opt/yt-dlp"}]}))
+    p = tmp_path / "c.json"
+    p.write_text(json.dumps({"Results": [{"Target": "opt/yt-dlp/yt-dlp", "Vulnerabilities": [
+        {"VulnerabilityID": "CVE-5", "Severity": "CRITICAL", "PkgName": "openssl",
+         "FixedVersion": "3.5.9"}]}]}))
+    rc = cli.main(["gate", "--candidate", str(p), "--ignore", str(tmp_path / "none"),
+                   "--vendor", str(vj), "--label", "pp"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "CVE-5" in out.split("Vendored (not gated)", 1)[1]
+    assert "(darktable 5.6.2, yt-dlp 2026.10.21)" in out

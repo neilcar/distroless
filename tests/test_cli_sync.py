@@ -42,7 +42,7 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
     assert not (locks / "nginx/stable").exists()  # not in the catalog's nginx lines
-    assert sum(e["kind"] == "line_added" for e in events) == 7  # static + 5 python + mainline
+    assert sum(e["kind"] == "line_added" for e in events) == 8  # static + 5 python + mainline + photoprism-base
 
 
 def test_cli_sync_second_run_is_a_no_op(tmp_path, offline, capsys):
@@ -107,3 +107,15 @@ def test_cli_sync_reads_nginx_lines_from_catalog(tmp_path, offline, capsys):
               "--catalog", str(p), "--today", "2026-10-24"])
     assert (tmp_path / "l/nginx/mainline/runtime.apko.yaml").exists()
     assert not (tmp_path / "l/nginx/stable").exists()
+
+
+def test_sync_writes_vendor_json(tmp_path, offline, capsys):
+    run_sync(tmp_path, capsys)
+    path = tmp_path / "locks/photoprism-base/latest/vendor.json"
+    data = json.loads(path.read_text())
+    assert [v["name"] for v in data["vendor"]] == ["darktable", "rawtherapee", "yt-dlp"]
+    assert path.read_text().endswith("}\n")
+    before = path.read_bytes()
+    run_sync(tmp_path, capsys)
+    assert path.read_bytes() == before
+    assert not (tmp_path / "locks/static/latest/vendor.json").exists()

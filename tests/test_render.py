@@ -1,7 +1,7 @@
 import yaml
 
 from dltools.lines import Line
-from dltools.render import load_catalog, render
+from dltools.render import load_catalog, render, render_vendor
 
 CATALOG = load_catalog("catalog.yaml")
 PY = Line("python", "3.12", "python-3.12", "3.12.15-r6")
@@ -64,3 +64,31 @@ def test_render_nginx_compiled_in_paths_writable_by_nonroot():
     for d in ("/var/lib/nginx", "/var/lib/nginx/logs", "/var/lib/nginx/tmp"):
         assert paths[d]["type"] == "directory"
         assert (paths[d]["uid"], paths[d]["gid"]) == (65532, 65532)
+
+
+def test_render_run_as_override():
+    catalog = {**CATALOG, "images": {**CATALOG["images"], "root-img": {
+        "run_as": "0", "variants": {"runtime": {"packages": []}}}}}
+    line = Line("root-img", "latest", "ca-certificates-bundle", "1-r0")
+    assert render(catalog, line, "runtime")["accounts"]["run-as"] == "0"
+    assert render(CATALOG, STATIC, "runtime")["accounts"]["run-as"] == "65532"
+    assert CATALOG["accounts"]["run-as"] == "65532"  # the shared default is not mutated
+
+
+def test_render_vendor_written_per_line():
+    vendor = [{"name": "tool", "version": "1", "kind": "binary", "prefix": "/opt/tool",
+               "files": {"x86_64": {"url": "u", "sha256": "s"}}, "launchers": ["tool"]}]
+    catalog = {**CATALOG, "images": {**CATALOG["images"], "v-img": {
+        "vendor": vendor, "variants": {"runtime": {"packages": []}}}}}
+    line = Line("v-img", "latest", "ca-certificates-bundle", "1-r0")
+    assert render_vendor(catalog, line) == {"vendor": vendor}
+    assert render_vendor(CATALOG, STATIC) is None
+
+
+def test_render_photoprism_base_no_shell_stub_in_runtime_only():
+    line = Line("photoprism-base", "latest", "libvips", "8.18.7-r2")
+    runtime, dev = render(CATALOG, line, "runtime"), render(CATALOG, line, "dev")
+    assert "distroless-no-shell" in pkgs(runtime) and "bash" not in pkgs(runtime)
+    assert "distroless-no-shell" not in pkgs(dev) and "bash" in pkgs(dev)
+    assert "./packages" in runtime["contents"]["repositories"]
+    assert "./melange.rsa.pub" in runtime["contents"]["keyring"]

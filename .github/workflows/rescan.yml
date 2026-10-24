@@ -56,7 +56,9 @@ jobs:
             prev=".rescan/${image}_${line}_${variant}.txt"
             decision=$(uv run dl rescan-decide --index-dir "$RUNNER_TEMP/index" --report report.json \
               --ignore .trivyignore --previous "$prev")
-            if [[ $(jq -r .open_issue <<<"$decision") == true ]]; then
+            if [[ $(jq -r .open_issue <<<"$decision") == true && "$GITHUB_REF" != refs/heads/main ]]; then
+              echo "branch run, not notifying: new Critical/High in $image:$tag"
+            elif [[ $(jq -r .open_issue <<<"$decision") == true ]]; then
               uv run dl notify --title "New Critical/High in $image:$tag" \
                 --body "$(jq -r .summary <<<"$decision")
 
@@ -75,11 +77,14 @@ jobs:
             echo "::error::could not scan: ${failed[*]}"
             exit 1   # the "Report failure" step opens the issue
           fi
+      - name: Check vendored tool releases
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}   # branch runs don't file issues
+        run: uv run dl vendor-check --vendor locks/photoprism-base/latest/vendor.json
       - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: always()
         with:
           path: .rescan
           key: rescan-ids-${{ github.run_id }}
       - name: Report failure
-        if: failure()
+        if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
         run: uv run dl notify --title "Rescan failed" --body "$RUN_URL"

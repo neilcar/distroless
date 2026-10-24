@@ -29,13 +29,17 @@ def render(catalog: dict, line: Line, variant: str) -> dict:
     if pin not in packages:
         packages.append(pin)
 
+    accounts = dict(catalog["accounts"])
+    if "run_as" in image:
+        accounts["run-as"] = image["run_as"]
+
     cfg: dict = {
         "contents": {
             "repositories": list(catalog["repositories"]) + image.get("extra_repositories", []),
             "keyring": list(catalog["keyring"]) + image.get("extra_keyring", []),
             "packages": packages,
         },
-        "accounts": catalog["accounts"],
+        "accounts": accounts,
         "archs": list(catalog["archs"]),
         "annotations": {
             "org.opencontainers.image.source": SOURCE,
@@ -52,3 +56,9 @@ def render(catalog: dict, line: Line, variant: str) -> dict:
     if "paths" in image:
         cfg["paths"] = [dict(p) for p in image["paths"]]
     return cfg
+
+
+def render_vendor(catalog: dict, line: Line) -> dict | None:
+    """The image's vendored upstream files (pinned by sha256), or None if it has none."""
+    vendor = catalog["images"][line.image].get("vendor")
+    return {"vendor": vendor} if vendor else None

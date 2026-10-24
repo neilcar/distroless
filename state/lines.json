@@ -41,6 +41,12 @@
       "name": "mainline",
       "package": "nginx-mainline",
       "version": "1.31.8-r1"
+    },
+    {
+      "image": "photoprism-base",
+      "name": "latest",
+      "package": "libvips",
+      "version": "8.18.7-r2"
     }
   ]
 }

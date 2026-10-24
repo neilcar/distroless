@@ -1,0 +1,61 @@
+{
+  "vendor": [
+    {
+      "files": {
+        "aarch64": {
+          "sha256": "5b8015f8534453cb3bbd6e5a03e362cb7d9d9573f20d3928aadad354df18ad10",
+          "url": "https://github.com/darktable-org/darktable/releases/download/release-5.6.2/Darktable-5.6.2-aarch64.AppImage"
+        },
+        "x86_64": {
+          "sha256": "4b0d1c737a2a18c7d8afb81aa3daaf25930bbe541dda98e6354dabd5c2e4dc36",
+          "url": "https://github.com/darktable-org/darktable/releases/download/release-5.6.2/Darktable-5.6.2-x86_64.AppImage"
+        }
+      },
+      "kind": "appimage",
+      "launchers": [
+        "darktable-cli"
+      ],
+      "name": "darktable",
+      "prefix": "/opt/darktable",
+      "version": "5.6.2"
+    },
+    {
+      "files": {
+        "aarch64": {
+          "sha256": "9e424633272a49bb47afe4bf065604858acf9de77c4d80e0f6557024492e2b55",
+          "url": "https://github.com/RawTherapee/RawTherapee/releases/download/5.13/RawTherapee_5.13_arm64_release.AppImage"
+        },
+        "x86_64": {
+          "sha256": "746a3509a234804c3a5f66649006ac29ac67f193a8559d2297357949a890b097",
+          "url": "https://github.com/RawTherapee/RawTherapee/releases/download/5.13/RawTherapee_5.13_x86_64_release.AppImage"
+        }
+      },
+      "kind": "appimage",
+      "launchers": [
+        "rawtherapee-cli"
+      ],
+      "name": "rawtherapee",
+      "prefix": "/opt/rawtherapee",
+      "version": "5.13"
+    },
+    {
+      "files": {
+        "aarch64": {
+          "sha256": "e137c2171b0b8ef648e6136e86aa70c65923e93e434f01c93901d64744b190aa",
+          "url": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux_aarch64"
+        },
+        "x86_64": {
+          "sha256": "d8bd33fca9d5b23bd5b9952b3fca36db5c46331933fda9f598a3da14ce2c243f",
+          "url": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux"
+        }
+      },
+      "kind": "binary",
+      "launchers": [
+        "yt-dlp"
+      ],
+      "name": "yt-dlp",
+      "prefix": "/opt/yt-dlp",
+      "version": "2026.10.21"
+    }
+  ]
+}

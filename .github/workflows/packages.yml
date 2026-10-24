@@ -1,6 +1,6 @@
-name: nginx config package
+name: melange packages
 
-# Builds distroless-nginx-config with a throwaway signing key and commits the
+# Builds every melange/*.yaml package with a throwaway signing key and commits the
 # signed packages and public key. No private key is ever stored.
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: repo-writes
+  group: repo-writes-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -31,8 +31,16 @@ jobs:
           key="$RUNNER_TEMP/melange.rsa"
           melange keygen "$key"
           rm -rf packages
-          melange build melange/nginx-config.yaml --source-dir melange/nginx-config \
-            --arch x86_64,aarch64 --signing-key "$key" --out-dir packages --runner docker
+          # One build per arch: a multi-arch melange build races on the source dir.
+          for cfg in melange/*.yaml; do
+            name=$(basename "$cfg" .yaml)
+            for arch in x86_64 aarch64; do
+              src=melange/$name
+              [[ -d $src ]] || src=$(mktemp -d)
+              melange build "$cfg" --source-dir "$src" \
+                --arch "$arch" --signing-key "$key" --out-dir packages --runner docker
+            done
+          done
           cp "$key.pub" melange.rsa.pub
           rm -f "$key"
           find packages -type f | sort
@@ -43,15 +51,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages melange.rsa.pub
           git diff --cached --quiet && exit 0
-          git commit -m "chore(nginx-config): rebuild distroless-nginx-config package
+          git commit -m "chore(packages): rebuild melange packages
 
           Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
           for attempt in 1 2 3; do
-            git push && break
+            git push origin "HEAD:$GITHUB_REF_NAME" && break
             [[ $attempt == 3 ]] && exit 1
-            git pull --rebase
+            git pull --rebase origin "$GITHUB_REF_NAME"
           done
-          gh workflow run sync.yml
+          gh workflow run sync.yml --ref "$GITHUB_REF_NAME"
       - name: Report failure
-        if: failure()
-        run: uv run dl notify --title "nginx config package build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
+        run: uv run dl notify --title "melange packages build failed" --body "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

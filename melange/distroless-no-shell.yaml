@@ -1,0 +1,26 @@
+# Empty package that provides the virtual `cmd:bash`. Some Wolfi libraries (libsrt,
+# pulled in by ffmpeg) depend on cmd:bash only for unused helper scripts. This lets
+# the runtime image satisfy that dependency without shipping a shell. It installs nothing.
+package:
+  name: distroless-no-shell
+  version: 1.0.0
+  epoch: 0
+  description: Satisfies cmd:bash for packages that only need it for unused scripts; the image has no shell
+  copyright:
+    - license: Apache-2.0
+  dependencies:
+    provides:
+      - cmd:bash=1.0.0-r0
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p "${{targets.destdir}}"

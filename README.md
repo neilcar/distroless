@@ -13,8 +13,24 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/static` | `latest` | CA certificates, tzdata, `/etc/passwd` with `nonroot` (65532). For static binaries. |
 | `ghcr.io/neilcar/distroless/python` | every supported Python (today 3.11–3.15) | Python runtime only. `-dev` tags add busybox, pip and `uv` for build stages. |
 | `ghcr.io/neilcar/distroless/nginx` | `mainline` (`stable` retired 2026-10-24) | nginx listening on **8080**, pid/temp files in `/tmp`, default server in `/etc/nginx/conf.d/default.conf` (replace it with yours). |
+| `ghcr.io/neilcar/distroless/photoprism-base` | `latest` | PhotoPrism's runtime tools: ffmpeg, exiftool, libvips (`vips`), ImageMagick 7, libheif, libjxl, librsvg, the MariaDB client, sqlite, plus vendored darktable 5.6.2, RawTherapee 5.13 and yt-dlp under `/opt` (run through `/usr/bin/darktable-cli`, `rawtherapee-cli`, `yt-dlp`). Runs as **root**. `-dev` adds busybox, bash, Go, Node.js, make, gcc and the libvips/libheif headers. |
 
-Runtime images have no shell and no package manager and run as uid **65532**.
+Runtime images have no shell and no package manager and run as uid **65532**
+(`photoprism-base`: uid **0**, the owner's decision).
+
+`photoprism-base` has one layer that is not a Wolfi package: darktable, RawTherapee
+and yt-dlp from their upstream release files (pinned by sha256 in `catalog.yaml`,
+written to `locks/photoprism-base/latest/vendor.json`), unpacked without their
+AppRun shell scripts and started by a small Go launcher (`launcher/`). The launcher
+is also installed as a minimal `/usr/bin/env` in the runtime variant (assignments and a
+command, no options; `-dev` keeps busybox's env),
+so `#!/usr/bin/env perl` scripts such as exiftool run without coreutils. It is
+appended to the apko image before the scan, so the scanned digest is the pushed one.
+Trivy findings under `/opt/darktable`, `/opt/rawtherapee` and `/opt/yt-dlp` are
+listed in a separate *Vendored (not gated)* section of the gate summary (Trivy cannot
+see inside those files, so it is normally empty; see [Scan gate](#scan-gate)), and the
+layer's contents are attested per arch (predicate type
+`https://github.com/neilcar/distroless/vendor-layer/v1`).
 
 ### Tags
 
@@ -78,14 +94,27 @@ A build is published only if, per arch:
 2. it has no more findings at any severity than the image currently published
    for that tag.
 
+Findings in vendored files (`photoprism-base`'s `/opt/...`) count toward neither rule.
+In practice that section is empty: Trivy cannot see the libraries bundled inside the
+vendored AppImages and the PyInstaller yt-dlp binary, so their CVEs are not scanned at
+all. New upstream releases are tracked by the vendor release watcher instead, and the
+gate summary says so every time.
+
 Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 
-### nginx config package
+### Local melange packages
 
-`distroless-nginx-config` (in `melange/`) replaces Wolfi's port-80 config. The
-`nginx-config.yml` workflow builds it with a throwaway signing key and commits the
-signed packages (`packages/`) and public key (`melange.rsa.pub`); no private key
-is stored anywhere.
+Two config-only packages live in `melange/`:
+
+- `distroless-nginx-config` replaces Wolfi's port-80 nginx config.
+- `distroless-no-shell` is an empty package that provides `cmd:bash`. ffmpeg's
+  `libsrt` depends on bash only for unused `srt-*` scripts; the `photoprism-base`
+  runtime variant installs this instead so the image stays shell-free (the `-dev`
+  variant keeps real bash).
+
+The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
+key and commits the signed packages (`packages/`) and public key
+(`melange.rsa.pub`); no private key is stored anywhere.
 
 ## Results (2026-10-24)
 

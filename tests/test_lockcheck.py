@@ -40,3 +40,22 @@ def test_lockcheck_forbidden_packages():
     from dltools.lockcheck import RUNTIME_FORBIDDEN
     v = check_lock(lock, forbidden=RUNTIME_FORBIDDEN)
     assert len(v) == 2 and all("busybox" in x and "not allowed" in x for x in v)
+
+
+def _runtime_lock(*names):
+    return {"contents": {"packages": [
+        {"name": n, "version": "1.0-r0", "architecture": a}
+        for a in ("x86_64", "aarch64") for n in names]}}
+
+
+def test_lockcheck_runtime_accepts_no_shell_stub_without_bash():
+    from dltools.lockcheck import RUNTIME_FORBIDDEN
+    lock = _runtime_lock("libsrt", "distroless-no-shell", "ffmpeg")
+    assert check_lock(lock, forbidden=RUNTIME_FORBIDDEN) == []
+
+
+def test_lockcheck_runtime_still_rejects_real_bash():
+    from dltools.lockcheck import RUNTIME_FORBIDDEN
+    lock = _runtime_lock("libsrt", "distroless-no-shell", "bash")
+    v = check_lock(lock, forbidden=RUNTIME_FORBIDDEN)
+    assert len(v) == 2 and all("bash" in x for x in v)
