@@ -57,9 +57,13 @@ It replaces the scripts, so everything that reads their output keeps working unc
 `parallel-index.sh`, the maintenance `driver.sh`, and the n8n "PhotoPrism maintenance"
 workflow's SUMMARY parsing.
 
-- **The reference is the scripts at `a6eb4ab08`** ("Add an xl index class and hand
-  finished classes' room down"), not this summary. The owner froze the scripts there on
-  2026-10-24 and will make no further changes to them. From that commit on, behaviour changes go into the Go program; `plan.sh` and
+- **The reference is the scripts on `k8s-parallel-index` when the port starts**, not
+  this summary. They are still changing (after `a6eb4ab08`: `d3159123c`, `ce0170d7b`,
+  `17ea6a25b` — one pod per class even over budget, pods without room wait instead of
+  failing the plan, `*_MEMORY_REQUEST` below the limit), so the port is kept honest by
+  the differential test, not by a freeze: until the scripts are deleted, CI runs the
+  bash scripts and `parallel-index` side by side and fails on any difference, so a
+  script change must be mirrored in Go in the same PR. From that commit on, behaviour changes go into the Go program; `plan.sh` and
   `index.sh` are deleted in the same change that switches the Jobs over.
 - Same settings and defaults (every variable in the README's Settings table that the
   pod scripts read, including the `XL_*` settings), same plan files (`PLAN`, `PLANM`,
@@ -175,7 +179,7 @@ workflow's SUMMARY parsing.
 - The fork's local branch is 10 commits ahead of `private/k8s-parallel-index`. The Go
   rewrite reproduces the **local branch's** behaviour (skip-library-update, third-level
   walking, `.heic` renames, own-class work sharing, larger-first pod start order, the xl class and helper pods);
-  push those commits first. (Builder's call, made in design.)
+  (Builder's call, made in design.)
 - Deploy through Fleet/GitOps or the maintenance repo's own deploy, never ad-hoc helm.
 
 ## Left to the builder

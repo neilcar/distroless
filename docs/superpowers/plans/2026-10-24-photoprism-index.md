@@ -34,7 +34,7 @@ GitHub Actions native amd64/arm64 runners, bash `test.sh` as the black-box suite
 - Both `linux/amd64` and `linux/arm64`. Wolfi arch names `x86_64`, `aarch64`.
 - The runtime image has **no shell** (`sh`, `bash`, `ash`, `busybox`) and no `apk`. The `-dev` variant may have them.
 - `photoprism-base` and `photoprism-index` run as **uid/gid 0** (owner's decision); every other image keeps 65532.
-- The parallel-index behaviour reference is the scripts at fork commit **`a6eb4ab08`**. Settings, defaults, output lines, plan files, claim layout and exit codes (0, 1, 3, 4, 5) are byte-for-byte compatible.
+- The parallel-index behaviour reference is the scripts at the **head of `k8s-parallel-index` when Task 6 starts** (today `17ea6a25b`); later script changes must be mirrored in Go, enforced by `difftest.sh` in CI. Settings, defaults, output lines, plan files, claim layout and exit codes (0, 1, 3, 4, 5) are byte-for-byte compatible.
 - PhotoPrism stays release **261007** with the `k8s-261007-skip-fixes` patches (schema must match the server).
 - Image names: `ghcr.io/neilcar/distroless/photoprism-base` (`latest`, `latest-dev`), `ghcr.io/neilcar/photoprism-index`. `ghcr.io/neilcar/photoprism-k8s` keeps publishing unchanged.
 - Trivy rule: the switch happens only if C/H/M/L is lower than `photoprism-k8s` at digest `sha256:df9bd936e056c024fc5f0884325553733c13a66bfffd3fea44fbfc00eb4ef10a`, counting only non-vendored findings. Vendored findings (under `/opt/darktable`, `/opt/rawtherapee`, `/opt/yt-dlp`) are listed separately.
@@ -44,7 +44,7 @@ GitHub Actions native amd64/arm64 runners, bash `test.sh` as the black-box suite
 ## Rulings made while planning (deviations from the spec's wording)
 
 1. **Vendor layer, not melange packages.** The AppImages are 122–178 MB; GitHub rejects files over 100 MB, so they cannot be committed under `packages/` like `distroless-nginx-config`. They are downloaded at build time (sha256-pinned), unpacked, and appended to the apko image as one deterministic layer. yt-dlp uses the same mechanism (its standalone `yt-dlp_linux`/`yt-dlp_linux_aarch64` release binaries). Cost if wrong: the base has one non-apk layer whose SBOM entries come from the vendor manifest instead of apko.
-2. **`test.sh` stays as the black-box suite**, pointed at the Go binary, instead of being rewritten in Go. It already encodes the frozen behaviour (92 checks pass on Linux at `a6eb4ab08`); Go unit tests cover the internals. A differential test compares the bash and Go plans directly until the scripts are deleted. Cost if wrong: the suite still needs bash on the CI runner (never in the image).
+2. **`test.sh` stays as the black-box suite**, pointed at the Go binary, instead of being rewritten in Go. It already encodes the behaviour (92 checks passed on Linux at `a6eb4ab08`; recount at the branch point); Go unit tests cover the internals. A differential test compares the bash and Go plans directly until the scripts are deleted. Cost if wrong: the suite still needs bash on the CI runner (never in the image).
 3. **The image is built on `k8s-261007-skip-fixes`**, not `k8s-parallel-index`: the current index image (tag `k8s-261007-4`) is built there, and the server is 261007. `parallel-index` comes from `k8s-parallel-index` at a commit pinned in `docker/photoprism/wolfi/PARALLEL_INDEX_REF`.
 4. **The RawTherapee fallback is exercised by disabling darktable** (`PHOTOPRISM_DISABLE_DARKTABLE=true`) on a RAW fixture, rather than by finding a RAW darktable cannot decode.
 
@@ -196,7 +196,7 @@ The AppImages' `AppRun` launchers are shell scripts or need a shell, so they can
 
 ## Part 2 — `parallel-index` (repo `photoprism`, branch `parallel-index-go`)
 
-Before starting, ask the owner to push the 10 local commits on `k8s-parallel-index` to `private`, or to OK you pushing them. Then branch from `a6eb4ab08`.
+Before starting, ask the owner to push the 10 local commits on `k8s-parallel-index` to `private`, or to OK you pushing them. Then branch from the head of `k8s-parallel-index`, which was `17ea6a25b` when this was written.
 
 ### Task 6: Implementation-agnostic test suite, module skeleton and resources
 
@@ -410,5 +410,5 @@ Before starting, ask the owner to push the 10 local commits on `k8s-parallel-ind
 **Rollback** (any time before Task 14 merges):
 1. Restore `driver.sh`'s `INDEX_IMAGE` to `photoprism-k8s@sha256:df9bd936…`.
 2. `git revert` the maintenance commit.
-3. Run `deploy.sh` from the fork at `a6eb4ab08`, which still has the scripts.
+3. Run `deploy.sh` from the fork at the Task 6 branch point, which still has the scripts.
 4. `kubectl apply -f trigger.yaml`.
