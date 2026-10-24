@@ -23,8 +23,8 @@ from dltools.render import load_catalog, render, render_vendor
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
-from dltools.vendorcheck import fetch_releases, newer_releases, token
 from dltools.vendor import DEFAULT_LAUNCH_DIR, build_layer
+from dltools.vendorcheck import fetch_releases, newer_releases, token
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
