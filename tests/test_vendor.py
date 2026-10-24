@@ -121,6 +121,28 @@ def test_build_layer_installs_launcher_as_env(vendor, tmp_path, launcher, launch
     assert {m.name: m.mode for m in ms}["usr/bin/env"] == 0o755
 
 
+def test_build_layer_without_env_for_dev(vendor, tmp_path, launcher, launch_dir):
+    # The dev variant keeps busybox's full env; only the runtime layer carries the launcher's.
+    out = tmp_path / "dev.tar.gz"
+    build_layer(vendor, "x86_64", tmp_path / "cache", out, launcher, launch_dir, env=False)
+    _, files = members(out)
+    assert "usr/bin/env" not in files
+    assert files["usr/bin/darktable-cli"] == launcher.read_bytes()
+
+
+def test_cli_vendor_layer_no_env(vendor, tmp_path, launcher, launch_dir):
+    from dltools import cli
+    vj = tmp_path / "vendor.json"
+    vj.write_text(json.dumps(vendor))
+    for flag, has_env in (([], True), (["--no-env"], False)):
+        out = tmp_path / f"layer{len(flag)}.tar.gz"
+        assert cli.main(["vendor-layer", "--vendor", str(vj), "--arch", "x86_64",
+                         "--launcher", str(launcher), "--cache", str(tmp_path / "cache"),
+                         "--out", str(out), "--manifest", str(tmp_path / "m.json"),
+                         "--launch-dir", str(launch_dir), *flag]) == 0
+        assert ("usr/bin/env" in members(out)[1]) == has_env
+
+
 def test_build_layer_requires_launch_recipe(vendor, tmp_path, launcher):
     with pytest.raises(FileNotFoundError, match="launch.json"):
         build_layer(vendor, "x86_64", tmp_path / "c", tmp_path / "o.tar.gz", launcher,

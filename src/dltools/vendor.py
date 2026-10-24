@@ -129,8 +129,11 @@ class _Layer:
 
 
 def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bin: Path,
-                launch_dir: Path = DEFAULT_LAUNCH_DIR) -> dict:
-    """Write the vendor layer for `arch` to `out` (.tar.gz); returns what went into it."""
+                launch_dir: Path = DEFAULT_LAUNCH_DIR, env: bool = True) -> dict:
+    """Write the vendor layer for `arch` to `out` (.tar.gz); returns what went into it.
+
+    With `env`, the launcher is also installed as /usr/bin/env (for images without
+    coreutils); a variant with busybox keeps busybox's full env instead."""
     cache_dir, out = Path(cache_dir), Path(out)
     entries = vendor["vendor"]
     # Download and verify everything before unpacking any of it.
@@ -161,9 +164,10 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
             f = entry["files"][arch]
             manifest.append({"name": name, "version": entry["version"], "arch": arch,
                              "url": f["url"], "sha256": f["sha256"]})
-        # The launcher is also env(1): the image has no coreutils, and scripts such as
-        # Wolfi's exiftool start with `#!/usr/bin/env perl`.
-        layer.add("usr/bin/env", "file", 0o755, Path(launcher_bin))
+        # The launcher is also env(1): the runtime image has no coreutils, and scripts such
+        # as Wolfi's exiftool start with `#!/usr/bin/env perl`.
+        if env:
+            layer.add("usr/bin/env", "file", 0o755, Path(launcher_bin))
         out.parent.mkdir(parents=True, exist_ok=True)
         layer.write(out)
     return {"vendor": manifest}

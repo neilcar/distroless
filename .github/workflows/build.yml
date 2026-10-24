@@ -136,13 +136,15 @@ jobs:
           ls sbom
           if [[ -n "${VENDOR_JSON:-}" ]]; then
             # Append before the views, the scan and the push: the scanned digest is the pushed one.
+            # Only the runtime variant gets the launcher as /usr/bin/env; dev keeps busybox's.
+            noenv=(); [[ "$VARIANT" == runtime ]] || noenv=(--no-env)
             for pair in x86_64:amd64 aarch64:arm64; do
               a=${pair%%:*}; p=${pair##*:}
               (cd launcher && CGO_ENABLED=0 GOOS=linux GOARCH="$p" \
                 go build -trimpath -ldflags=-buildid= -o "$RUNNER_TEMP/launcher-$a" .)
               uv run dl vendor-layer --vendor "$VENDOR_JSON" --arch "$a" \
                 --launcher "$RUNNER_TEMP/launcher-$a" --cache "$RUNNER_TEMP/vendor-cache" \
-                --out "$RUNNER_TEMP/vendor-$a.tar.gz" --manifest "vendor-$a.json"
+                --out "$RUNNER_TEMP/vendor-$a.tar.gz" --manifest "vendor-$a.json" "${noenv[@]}"
               uv run dl append-layer --layout oci/ --arch "$a" --layer "$RUNNER_TEMP/vendor-$a.tar.gz"
               rm "$RUNNER_TEMP/vendor-$a.tar.gz"   # the layout holds its own copy
             done

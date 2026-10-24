@@ -22,7 +22,8 @@ Runtime images have no shell and no package manager and run as uid **65532**
 and yt-dlp from their upstream release files (pinned by sha256 in `catalog.yaml`,
 written to `locks/photoprism-base/latest/vendor.json`), unpacked without their
 AppRun shell scripts and started by a small Go launcher (`launcher/`). The launcher
-is also installed as a minimal `/usr/bin/env` (assignments and a command, no options),
+is also installed as a minimal `/usr/bin/env` in the runtime variant (assignments and a
+command, no options; `-dev` keeps busybox's env),
 so `#!/usr/bin/env perl` scripts such as exiftool run without coreutils. It is
 appended to the apko image before the scan, so the scanned digest is the pushed one.
 Trivy findings under `/opt/darktable`, `/opt/rawtherapee` and `/opt/yt-dlp` are

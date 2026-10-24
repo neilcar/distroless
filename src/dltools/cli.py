@@ -212,7 +212,7 @@ def cmd_state_revert(args) -> int:
 def cmd_vendor_layer(args) -> int:
     vendor = json.loads(Path(args.vendor).read_text())
     manifest = build_layer(vendor, args.arch, Path(args.cache), Path(args.out),
-                           Path(args.launcher), Path(args.launch_dir))
+                           Path(args.launcher), Path(args.launch_dir), env=not args.no_env)
     Path(args.manifest).write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     return 0
 
@@ -302,6 +302,8 @@ def build_parser() -> argparse.ArgumentParser:
     vlayer.add_argument("--manifest", required=True, help="JSON list of what went in")
     vlayer.add_argument("--launch-dir", default=str(DEFAULT_LAUNCH_DIR),
                         help="directory holding <name>/launch.json (default: repo vendor/)")
+    vlayer.add_argument("--no-env", action="store_true",
+                        help="don't install the launcher as /usr/bin/env (variants with busybox)")
     vlayer.set_defaults(func=cmd_vendor_layer)
 
     alayer = sub.add_parser("append-layer", help="add a layer to one arch of an OCI layout")

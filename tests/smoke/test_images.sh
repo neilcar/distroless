@@ -67,6 +67,15 @@ case "$image" in
     grep -q '5\.6\.2' <<<"$out" || fail "darktable-cli is not 5.6.2: $out"
     out=$(tool rawtherapee-cli -v || true)  # upstream prints the version, then exits 255
     grep -q '5\.13' <<<"$out" || fail "rawtherapee-cli is not 5.13: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      # /usr/bin/env is the launcher's minimal env: no options.
+      out=$(tool /usr/bin/env -u FOO /usr/bin/perl -e 1 2>&1) && fail "runtime env accepted an option"
+      grep -q 'env: options are not supported: -u' <<<"$out" || fail "runtime env is not the launcher: $out"
+    else
+      # dev keeps busybox's full env.
+      tool /usr/bin/env -u FOO /bin/true || fail "dev env -u FOO /bin/true"
+      tool /usr/bin/env -i /bin/true || fail "dev env -i /bin/true"
+    fi
     if [[ "$variant" == "dev" ]]; then
       for cmd in "go version" "node --version" "make --version" "bash --version"; do
         # shellcheck disable=SC2086
