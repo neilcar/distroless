@@ -31,12 +31,15 @@ jobs:
           key="$RUNNER_TEMP/melange.rsa"
           melange keygen "$key"
           rm -rf packages
+          # One build per arch: a multi-arch melange build races on the source dir.
           for cfg in melange/*.yaml; do
             name=$(basename "$cfg" .yaml)
-            src=melange/$name
-            [[ -d $src ]] || src=melange
-            melange build "$cfg" --source-dir "$src" \
-              --arch x86_64,aarch64 --signing-key "$key" --out-dir packages --runner docker
+            for arch in x86_64 aarch64; do
+              src=melange/$name
+              [[ -d $src ]] || src=$(mktemp -d)
+              melange build "$cfg" --source-dir "$src" \
+                --arch "$arch" --signing-key "$key" --out-dir packages --runner docker
+            done
           done
           cp "$key.pub" melange.rsa.pub
           rm -f "$key"
