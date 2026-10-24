@@ -4,8 +4,8 @@ name: melange packages
 # signed packages and public key. No private key is ever stored.
 on:
   push:
-    branches: [main, photoprism-base]
-    paths: ["melange/**", ".github/workflows/packages.yml"]
+    branches: [main]
+    paths: ["melange/**"]
   workflow_dispatch:
 
 permissions:
