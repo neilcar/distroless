@@ -16,11 +16,13 @@ from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_mark
 from dltools.lines import Line, discover, fetch_eol
 from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
 from dltools.notify import upsert_issue
+from dltools.ocilayout import append_layer
 from dltools.pinning import apply_pins, released_overrides
 from dltools.render import load_catalog, render, render_vendor
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
+from dltools.vendor import DEFAULT_LAUNCH_DIR, build_layer
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
@@ -205,6 +207,19 @@ def cmd_state_revert(args) -> int:
     return 0
 
 
+def cmd_vendor_layer(args) -> int:
+    vendor = json.loads(Path(args.vendor).read_text())
+    manifest = build_layer(vendor, args.arch, Path(args.cache), Path(args.out),
+                           Path(args.launcher), Path(args.launch_dir))
+    Path(args.manifest).write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    return 0
+
+
+def cmd_append_layer(args) -> int:
+    append_layer(Path(args.layout), args.arch, Path(args.layer), args.history)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dl")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -273,6 +288,24 @@ def build_parser() -> argparse.ArgumentParser:
     revert.add_argument("--image", required=True)
     revert.add_argument("--line", required=True)
     revert.set_defaults(func=cmd_state_revert)
+
+    vlayer = sub.add_parser("vendor-layer", help="build the layer of vendored upstream files")
+    vlayer.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
+    vlayer.add_argument("--arch", required=True, choices=ARCHES)
+    vlayer.add_argument("--launcher", required=True, help="launcher binary for this arch")
+    vlayer.add_argument("--cache", required=True, help="download cache directory")
+    vlayer.add_argument("--out", required=True, help="layer .tar.gz to write")
+    vlayer.add_argument("--manifest", required=True, help="JSON list of what went in")
+    vlayer.add_argument("--launch-dir", default=str(DEFAULT_LAUNCH_DIR),
+                        help="directory holding <name>/launch.json (default: repo vendor/)")
+    vlayer.set_defaults(func=cmd_vendor_layer)
+
+    alayer = sub.add_parser("append-layer", help="add a layer to one arch of an OCI layout")
+    alayer.add_argument("--layout", required=True)
+    alayer.add_argument("--arch", required=True, choices=ARCHES)
+    alayer.add_argument("--layer", required=True)
+    alayer.add_argument("--history", default="vendor layer")
+    alayer.set_defaults(func=cmd_append_layer)
     return parser
 
 
