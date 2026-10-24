@@ -7,7 +7,7 @@ checked out at `~/code/home/photoprism`, remote `private`).
 ## Intent
 
 The parallel index Jobs (`photoprism-index-plan`, `photoprism-index-partition`,
-`-medium`, `-large`, and their retries) run `ghcr.io/neilcar/photoprism-k8s`, an
+`-medium`, `-large`, `-xl`, their retries, and the per-class helper pods) run `ghcr.io/neilcar/photoprism-k8s`, an
 Ubuntu 26.04 image built from `docker/photoprism/resolute/Dockerfile`. The owner wants
 those Jobs on a distroless image built from their own Wolfi bases, the same way
 trakt-clean, atpass and the watchers moved: pinned released packages, no package
@@ -57,14 +57,24 @@ It replaces the scripts, so everything that reads their output keeps working unc
 `parallel-index.sh`, the maintenance `driver.sh`, and the n8n "PhotoPrism maintenance"
 workflow's SUMMARY parsing.
 
+- **The reference is the scripts at the commit the rewrite starts from** (today
+  `a6eb4ab08`, "Add an xl index class and hand finished classes' room down"), not this
+  summary. From that commit on, behaviour changes go into the Go program; `plan.sh` and
+  `index.sh` are deleted in the same change that switches the Jobs over.
 - Same settings and defaults (every variable in the README's Settings table that the
-  pod scripts read), same plan file format, same claim layout under `CLAIM_ROOT`
-  (atomic `mkdir`), same partition/class/weight/megapixel logic, same shared-work order.
+  pod scripts read, including the `XL_*` settings), same plan files (`PLAN`, `PLANM`,
+  `PLANL`, `PLANX`) and `PODS<TAB>small<TAB>medium<TAB>large<TAB>xl` line, same claim
+  layout under `CLAIM_ROOT` (atomic `mkdir`), same four classes (small, medium, large,
+  xl) and their weight/megapixel logic, and the same shared-work rules: pods take only
+  unclaimed folders of their own class, and helper pods with no partition of their own,
+  started by `parallel-index.sh` as a larger class finishes, take the unclaimed folders
+  of their class.
 - Same log lines that anything parses or a person relies on, in particular
   `resources: peak working set … of … (…%) with N workers`, the 60-second `progress:`
   lines, the plan's `scanning:` / `sampling:` lines, and the `OOM<TAB>folder` lines.
 - Same exit codes: 0 indexed, 1 a folder failed, 3 no/too-small memory limit,
-  4 blocked by another operation, 5 a folder ran out of memory. (137 stays the kernel's.)
+  4 blocked by another operation, 5 a folder ran out of memory (retried one class up:
+  small→medium→large→xl). 137 stays the kernel's.
 - Same worker sizing: `min(CPU, (limit - BASE_MEM_MB) / WORKER_MEM_MB, MAX_WORKERS)`
   from the downward API and cgroup, setting `PHOTOPRISM_INDEX_WORKERS`, `GOMAXPROCS`,
   `PHOTOPRISM_DATABASE_CONNS`, `MALLOC_ARENA_MAX=2` for the `photoprism` children.
