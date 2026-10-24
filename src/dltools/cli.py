@@ -22,6 +22,7 @@ from dltools.render import load_catalog, render, render_vendor
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
+from dltools.vendorcheck import fetch_releases, newer_releases, token
 from dltools.vendor import DEFAULT_LAUNCH_DIR, build_layer
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
@@ -118,6 +119,20 @@ def cmd_rescan_decide(args) -> int:
 
 def cmd_notify(args) -> int:
     upsert_issue(args.title, args.body)
+    return 0
+
+
+def cmd_vendor_check(args) -> int:
+    vendor = json.loads(Path(args.vendor).read_text())
+    try:
+        messages = newer_releases(vendor, fetch_releases(vendor, token()))
+    except (OSError, ValueError) as exc:  # network or bad response: warn, don't fail the job
+        print(f"warning: could not check vendored releases: {exc}", file=sys.stderr)
+        return 0
+    if args.dry_run:
+        print("\n".join(messages) if messages else "no newer releases")
+    elif messages:
+        upsert_issue("Vendored tool updates available", "\n".join(f"- {m}" for m in messages))
     return 0
 
 
@@ -262,6 +277,11 @@ def build_parser() -> argparse.ArgumentParser:
     notify.add_argument("--title", required=True)
     notify.add_argument("--body", required=True)
     notify.set_defaults(func=cmd_notify)
+
+    vcheck = sub.add_parser("vendor-check", help="report newer stable releases of vendored tools")
+    vcheck.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
+    vcheck.add_argument("--dry-run", action="store_true", help="print messages, never notify")
+    vcheck.set_defaults(func=cmd_vendor_check)
 
     matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
     matrix.add_argument("--locks", default="locks")
