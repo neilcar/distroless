@@ -84,6 +84,7 @@ jobs:
       - name: Build (both arches, plus per-arch tarballs for scanning)
         run: |
           set -euo pipefail
+          mkdir -p oci sbom  # apko writes an OCI layout only into an existing directory
           apko build --lockfile "$LOCK" --sbom-path sbom "$CFG" "$REPO:candidate" oci/
           for a in x86_64 aarch64; do
             apko build --lockfile "$LOCK" --sbom=false --arch "$a" "$CFG" "$REPO:candidate" "img-$a.tar"
