@@ -4,7 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from dltools.lines import Line, discover, nginx_lines, python_lines, static_lines
+from dltools.lines import (
+    Line, discover, nginx_lines, photoprism_base_lines, python_lines, static_lines,
+)
 from dltools.wolfi import parse_apkindex
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -135,3 +137,9 @@ def test_unconfigured_nginx_line_is_retired(indexes, eol):
     current, _ = discover(indexes, eol, TODAY, current=[])
     lines, _ = discover(indexes, eol, TODAY, current=current, nginx_names=["mainline"])
     assert [ln.name for ln in lines if ln.image == "nginx"] == ["mainline"]
+
+
+def test_photoprism_base_line(indexes):
+    assert photoprism_base_lines(indexes) == [
+        Line("photoprism-base", "latest", "libvips", "8.18.7-r0")
+    ]

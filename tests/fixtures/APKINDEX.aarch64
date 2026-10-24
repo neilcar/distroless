@@ -2792,3 +2792,17 @@ T:HTTP and reverse proxy server (mainline version)
 D:merged-usrsbin nginx-config so:ld-linux-aarch64.so.1 so:libc.so.6 so:libcrypt.so.1 so:libcrypto.so.4 so:libpcre2-8.so.0 so:libssl.so.4 so:libz.so.1 wolfi-baselayout
 p:cmd:nginx=1.31.8-r1 nginx=1.31.8-r1
 
+P:libvips
+V:8.18.7-r0
+A:aarch64
+S:1
+I:1
+T:
+
+P:libvips
+V:8.18.8_rc1-r1
+A:aarch64
+S:1
+I:1
+T:
+

@@ -17,7 +17,7 @@ from dltools.lines import Line, discover, fetch_eol
 from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
 from dltools.notify import upsert_issue
 from dltools.pinning import apply_pins, released_overrides
-from dltools.render import load_catalog, render
+from dltools.render import load_catalog, render, render_vendor
 from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
@@ -66,6 +66,11 @@ def cmd_sync(args) -> int:
             cfg = render(catalog, line, variant)
             _write_if_changed(
                 line_dir / f"{variant}.apko.yaml", yaml.safe_dump(cfg, sort_keys=False)
+            )
+        vendor = render_vendor(catalog, line)
+        if vendor is not None:
+            _write_if_changed(
+                line_dir / "vendor.json", json.dumps(vendor, indent=2, sort_keys=True) + "\n"
             )
     if locks.exists():
         for line_dir in locks.glob("*/*"):

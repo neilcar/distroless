@@ -2796,3 +2796,17 @@ P:only-on-x86
 V:1.0.0-r0
 A:x86_64
 
+P:libvips
+V:8.18.7-r0
+A:x86_64
+S:1
+I:1
+T:
+
+P:libvips
+V:8.18.8_rc1-r1
+A:x86_64
+S:1
+I:1
+T:
+

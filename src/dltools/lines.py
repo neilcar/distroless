@@ -11,6 +11,7 @@ from dltools.wolfi import newest_released_all_arches, version_key
 
 EOL_URL = "https://endoflife.date/api/python.json"
 NGINX_LINES = {"stable": "nginx-stable", "mainline": "nginx-mainline"}
+PHOTOPRISM_BASE_PACKAGE = "libvips"
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,12 @@ def static_lines(indexes) -> list[Line]:
     return [Line("static", "latest", "ca-certificates-bundle", v)] if v else []
 
 
+def photoprism_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, versioned by the libvips package (ships libvips.so.42)."""
+    v = newest_released_all_arches(indexes, PHOTOPRISM_BASE_PACKAGE)
+    return [Line("photoprism-base", "latest", PHOTOPRISM_BASE_PACKAGE, v)] if v else []
+
+
 def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:
     """Python release cycles from endoflife.date, or None on any failure."""
     try:
@@ -91,7 +98,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 
 def _order(line: Line) -> tuple:
-    rank = {"static": 0, "python": 1, "nginx": 2}.get(line.image, 9)
+    rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3}.get(line.image, 9)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -115,7 +122,10 @@ def discover(
         py: list[Line] = []
     else:
         py = python_lines(eol, indexes, today)
-    lines = static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
+    lines = (
+        static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
+        + photoprism_base_lines(indexes)
+    )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
 
