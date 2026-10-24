@@ -86,9 +86,14 @@ jobs:
           set -euo pipefail
           mkdir -p oci sbom  # apko writes an OCI layout only into an existing directory
           apko build --lockfile "$LOCK" --sbom-path sbom "$CFG" "$REPO:candidate" oci/
+          # Per-arch OCI layouts are what gets scanned; their manifests must match the
+          # pushed index. The amd64 docker tarball is only for the smoke test.
           for a in x86_64 aarch64; do
-            apko build --lockfile "$LOCK" --sbom=false --arch "$a" "$CFG" "$REPO:candidate" "img-$a.tar"
+            mkdir -p "oci-$a"
+            apko build --lockfile "$LOCK" --sbom=false --arch "$a" "$CFG" "$REPO:candidate" "oci-$a/"
+            tar -C "oci-$a" -cf "oci-$a.tar" .
           done
+          apko build --lockfile "$LOCK" --sbom=false --arch x86_64 "$CFG" "$REPO:candidate" img-x86_64.tar
           ls sbom
 
       - name: Smoke test (amd64)
@@ -101,7 +106,7 @@ jobs:
         run: |
           set -euo pipefail
           for a in x86_64 aarch64; do
-            trivy image --quiet --input "img-$a.tar" --format json --output "cand-$a.json"
+            trivy image --quiet --input "oci-$a.tar" --format json --output "cand-$a.json"
           done
           if crane digest "$REPO:$PRIMARY" >/dev/null 2>&1; then
             trivy image --quiet --platform linux/amd64 --format json --output pub-x86_64.json "$REPO:$PRIMARY"
@@ -131,7 +136,7 @@ jobs:
           crane manifest "$REPO@$digest" | jq -r '.manifests[].digest' | sort > pushed.txt
           diff local.txt pushed.txt
           for a in x86_64 aarch64; do
-            crane digest --tarball "img-$a.tar" | grep -qxF -f pushed.txt \
+            jq -r '.manifests[].digest' "oci-$a/index.json" | grep -qxF -f pushed.txt \
               || { echo "scanned $a image is not in the pushed index"; exit 1; }
           done
           while read -r t; do crane tag "$REPO@$digest" "$t"; done < tags.txt
@@ -145,7 +150,7 @@ jobs:
           cosign sign --yes "$REPO@$DIGEST"
           cosign attest --yes --type spdxjson --predicate sbom/sbom-index.spdx.json "$REPO@$DIGEST"
           for a in x86_64 aarch64; do
-            d=$(crane digest --tarball "img-$a.tar")
+            d=$(jq -r '.manifests[0].digest' "oci-$a/index.json")
             cosign attest --yes --type spdxjson --predicate "sbom/sbom-$a.spdx.json" "$REPO@$d"
           done
 
