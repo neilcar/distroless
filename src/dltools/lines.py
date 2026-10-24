@@ -49,10 +49,11 @@ def python_lines(eol: list[dict], indexes, today: date) -> list[Line]:
     return sorted(lines, key=lambda ln: version_key(ln.name))
 
 
-def nginx_lines(indexes) -> list[Line]:
+def nginx_lines(indexes, names=None) -> list[Line]:
+    wanted = NGINX_LINES if names is None else {n: NGINX_LINES[n] for n in names}
     return [
         Line("nginx", name, pkg, v)
-        for name, pkg in NGINX_LINES.items()
+        for name, pkg in wanted.items()
         if (v := newest_released_all_arches(indexes, pkg))
     ]
 
@@ -97,7 +98,9 @@ def _order(line: Line) -> tuple:
     return (rank, sub)
 
 
-def discover(indexes, eol: list[dict] | None, today: date, current: list[Line]):
+def discover(
+    indexes, eol: list[dict] | None, today: date, current: list[Line], nginx_names=None
+):
     """Return (lines, warnings).
 
     A current line is only retired when the data positively says so (a Python cycle
@@ -112,7 +115,7 @@ def discover(indexes, eol: list[dict] | None, today: date, current: list[Line]):
         py: list[Line] = []
     else:
         py = python_lines(eol, indexes, today)
-    lines = static_lines(indexes) + py + nginx_lines(indexes)
+    lines = static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
 
@@ -121,6 +124,8 @@ def discover(indexes, eol: list[dict] | None, today: date, current: list[Line]):
             continue
         if ln.image == "python" and eol is not None and _eol_passed(cycles.get(ln.name), today):
             continue  # genuinely end-of-life: retire
+        if ln.image == "nginx" and nginx_names is not None and ln.name not in nginx_names:
+            continue  # removed from the catalog on purpose: retire
         version = newest_released_all_arches(indexes, ln.package)
         if version is None:
             warnings.append(

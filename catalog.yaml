@@ -27,6 +27,9 @@ images:
       PYTHONUNBUFFERED: "1"
 
   nginx:
+    # Lines to build. `stable` was dropped: public Wolfi's nginx-stable stopped at
+    # 1.30.2 with unfixed CVEs (fixed builds were never published), and nothing uses it.
+    lines: [mainline]
     extra_repositories: ["./packages"]
     extra_keyring: ["./melange.rsa.pub"]
     variants:

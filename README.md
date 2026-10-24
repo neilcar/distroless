@@ -12,7 +12,7 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 |---|---|---|
 | `ghcr.io/neilcar/distroless/static` | `latest` | CA certificates, tzdata, `/etc/passwd` with `nonroot` (65532). For static binaries. |
 | `ghcr.io/neilcar/distroless/python` | every supported Python (today 3.11–3.15) | Python runtime only. `-dev` tags add busybox, pip and `uv` for build stages. |
-| `ghcr.io/neilcar/distroless/nginx` | `stable`, `mainline` | nginx listening on **8080**, pid/temp files in `/tmp`, default server in `/etc/nginx/conf.d/default.conf` (replace it with yours). |
+| `ghcr.io/neilcar/distroless/nginx` | `mainline` (`stable` retired 2026-10-24) | nginx listening on **8080**, pid/temp files in `/tmp`, default server in `/etc/nginx/conf.d/default.conf` (replace it with yours). |
 
 Runtime images have no shell and no package manager and run as uid **65532**.
 

@@ -51,7 +51,9 @@ def cmd_sync(args) -> int:
     today = date.fromisoformat(args.today) if args.today else date.today()
     indexes = load_indexes(args.index_dir)
     current = load_state(args.state)
-    lines, warnings = discover(indexes, fetch_eol(), today, current)
+    lines, warnings = discover(
+        indexes, fetch_eol(), today, current, catalog["images"]["nginx"].get("lines")
+    )
     events = diff(current, lines)
     save_state(args.state, lines)
 

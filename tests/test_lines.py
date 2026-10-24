@@ -125,3 +125,13 @@ def test_package_missing_from_index_keeps_current_line(indexes, eol):
     stable = [ln for ln in lines if ln.image == "nginx" and ln.name == "stable"]
     assert stable and stable[0].version == "1.30.2-r0"
     assert any("nginx-stable" in w for w in warnings)
+
+
+def test_nginx_lines_respects_configured_names(indexes):
+    assert [ln.name for ln in nginx_lines(indexes, ["mainline"])] == ["mainline"]
+
+
+def test_unconfigured_nginx_line_is_retired(indexes, eol):
+    current, _ = discover(indexes, eol, TODAY, current=[])
+    lines, _ = discover(indexes, eol, TODAY, current=current, nginx_names=["mainline"])
+    assert [ln.name for ln in lines if ln.image == "nginx"] == ["mainline"]

@@ -37,13 +37,12 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         "python/3.12/runtime.apko.yaml",
         "python/3.12/dev.apko.yaml",
         "python/3.15/dev.apko.yaml",
-        "nginx/stable/runtime.apko.yaml",
         "nginx/mainline/runtime.apko.yaml",
     ]:
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
-    assert not (locks / "nginx/stable/dev.apko.yaml").exists()
-    assert sum(e["kind"] == "line_added" for e in events) == 8  # static + 5 python + 2 nginx
+    assert not (locks / "nginx/stable").exists()  # not in the catalog's nginx lines
+    assert sum(e["kind"] == "line_added" for e in events) == 7  # static + 5 python + mainline
 
 
 def test_cli_sync_second_run_is_a_no_op(tmp_path, offline, capsys):
@@ -96,3 +95,15 @@ def test_fetch_index_command_writes_files(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "fetch_index", lambda arch: f"P:x\nV:1-r0\n\n# {arch}")
     assert cli.main(["fetch-index", "--out", str(tmp_path)]) == 0
     assert (tmp_path / "APKINDEX.aarch64").read_text().endswith("# aarch64")
+
+
+def test_cli_sync_reads_nginx_lines_from_catalog(tmp_path, offline, capsys):
+    import yaml
+    cat = yaml.safe_load((ROOT / "catalog.yaml").read_text())
+    cat["images"]["nginx"]["lines"] = ["mainline"]
+    p = tmp_path / "catalog.yaml"
+    p.write_text(yaml.safe_dump(cat))
+    cli.main(["sync", "--state", str(tmp_path / "s.json"), "--locks", str(tmp_path / "l"),
+              "--catalog", str(p), "--today", "2026-10-24"])
+    assert (tmp_path / "l/nginx/mainline/runtime.apko.yaml").exists()
+    assert not (tmp_path / "l/nginx/stable").exists()
