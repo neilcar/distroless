@@ -1,0 +1,72 @@
+[
+ {
+  "cycle": "3.15",
+  "releaseDate": "2026-10-09",
+  "eol": "2031-10-31",
+  "latest": "3.15.1",
+  "latestReleaseDate": "2026-10-21",
+  "pep": "PEP-0790",
+  "lts": false,
+  "support": "2028-10-09"
+ },
+ {
+  "cycle": "3.14",
+  "releaseDate": "2025-10-07",
+  "eol": "2030-10-31",
+  "latest": "3.14.9",
+  "latestReleaseDate": "2026-10-21",
+  "pep": "PEP-0745",
+  "lts": false,
+  "support": "2027-10-01"
+ },
+ {
+  "cycle": "3.13",
+  "releaseDate": "2024-10-07",
+  "eol": "2029-10-31",
+  "latest": "3.13.17",
+  "latestReleaseDate": "2026-10-21",
+  "pep": "PEP-0719",
+  "lts": false,
+  "support": "2026-10-01"
+ },
+ {
+  "cycle": "3.12",
+  "releaseDate": "2023-10-02",
+  "eol": "2028-10-31",
+  "latest": "3.12.15",
+  "latestReleaseDate": "2026-10-01",
+  "pep": "PEP-0693",
+  "lts": false,
+  "support": "2025-04-02"
+ },
+ {
+  "cycle": "3.11",
+  "releaseDate": "2022-10-24",
+  "eol": "2027-10-31",
+  "latest": "3.11.17",
+  "latestReleaseDate": "2026-10-01",
+  "pep": "PEP-0664",
+  "lts": false,
+  "support": "2024-04-01"
+ },
+ {
+  "cycle": "3.10",
+  "releaseDate": "2021-10-04",
+  "eol": "2026-10-01",
+  "latest": "3.10.22",
+  "latestReleaseDate": "2026-10-01",
+  "pep": "PEP-0619",
+  "lts": false,
+  "support": "2023-04-05"
+ },
+ {
+  "cycle": "3.9",
+  "releaseDate": "2020-10-05",
+  "eol": "2025-10-31",
+  "latest": "3.9.25",
+  "latestReleaseDate": "2025-10-31",
+  "pep": "PEP-0596",
+  "lts": false,
+  "support": "2022-05-17"
+ }
+]
