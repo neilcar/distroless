@@ -103,7 +103,8 @@ jobs:
           uv run dl lock-check "${runtime[@]}" "$LOCK"
 
       # A line with vendor.json gets one more layer of pinned upstream files (and the
-      # launcher that runs them); its prefixes are listed by the gate, not gated.
+      # launcher that runs them). AppImage/binary prefixes are listed by the gate, not gated;
+      # wheels are gated like any package (Trivy reads their site-packages metadata).
       - name: Vendored files
         run: |
           set -euo pipefail

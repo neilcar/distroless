@@ -79,7 +79,10 @@ jobs:
           fi
       - name: Check vendored tool releases
         if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}   # branch runs don't file issues
-        run: uv run dl vendor-check --vendor locks/photoprism-base/latest/vendor.json
+        # Every line's vendor.json in one call, so the one deduped issue lists them all.
+        run: |
+          args=(); for v in locks/*/*/vendor.json; do args+=(--vendor "$v"); done
+          uv run dl vendor-check "${args[@]}"
       - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: always()
         with:

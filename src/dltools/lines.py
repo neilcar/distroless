@@ -18,6 +18,8 @@ NGINX_LINES = {"stable": "nginx-stable", "mainline": "nginx-mainline"}
 PHOTOPRISM_BASE_PACKAGE = "distroless-libvips"
 LIBVIPS_MELANGE = "melange/distroless-libvips.yaml"  # relative to the repository root
 WOLFI_LIBVIPS = "libvips"
+# stash-base is versioned by its Python (plugins and scrapers run on it).
+STASH_BASE_PACKAGE = "python-3.12"
 
 
 @dataclass(frozen=True)
@@ -79,6 +81,12 @@ def photoprism_base_lines(libvips_version: str | None) -> list[Line]:
     return [Line("photoprism-base", "latest", PHOTOPRISM_BASE_PACKAGE, v)] if v else []
 
 
+def stash_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Python 3.12's newest released version."""
+    v = newest_released_all_arches(indexes, STASH_BASE_PACKAGE)
+    return [Line("stash-base", "latest", STASH_BASE_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -129,7 +137,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 
 def _order(line: Line) -> tuple:
-    rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3}.get(line.image, 9)
+    rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4}.get(line.image, 9)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -156,7 +164,7 @@ def discover(
         py = python_lines(eol, indexes, today)
     lines = (
         static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
-        + photoprism_base_lines(photoprism_libvips)
+        + photoprism_base_lines(photoprism_libvips) + stash_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

@@ -110,3 +110,56 @@ def test_render_photoprism_base_dev_build_tools():
     assert {"gnutar", "rsync", "wget", "coreutils", "nodejs-24", "npm"} <= set(dev)
     assert "nodejs-22" not in dev
     assert not {"gnutar", "rsync", "wget", "coreutils", "nodejs-24", "npm"} & set(runtime)
+
+
+STASH = Line("stash-base", "latest", "python-3.12", "3.12.15-r6")
+STASH_RUNTIME_PKGS = {
+    "ffmpeg", "distroless-libvips", "distroless-no-shell", "python-3.12=3.12.15-r6",
+    "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4",
+    "py3.12-pip", "py3.12-pyparsing",
+    # dateparser and apscheduler (Step 1 audit)
+    "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz",
+    # the EmbeddedMetadata scraper (owner's decision)
+    "exiftool", "perl",
+}
+
+
+def test_render_stash_base_runtime():
+    cfg = render(CATALOG, STASH, "runtime")
+    assert STASH_RUNTIME_PKGS <= set(pkgs(cfg))
+    assert not {"busybox", "bash", "coreutils", "apk-tools", "libvips"} & set(pkgs(cfg))
+    assert cfg["accounts"]["run-as"] == "1000"
+    assert {"username": "stash", "uid": 1000, "gid": 1000, "homedir": "/config"} in (
+        cfg["accounts"]["users"])
+    assert {"groupname": "stash", "gid": 1000} in cfg["accounts"]["groups"]
+    # `python` comes from Wolfi's python-3.12 (python -> python3); a paths entry would clash.
+    assert "/usr/bin/python" not in {p["path"] for p in cfg["paths"]}
+    assert {"path": "/config", "type": "directory", "permissions": 0o755, "uid": 1000,
+            "gid": 1000} in cfg["paths"]
+    # target for the stdlib cgi.py shebang (`#! /usr/local/bin/python`)
+    assert {"path": "/usr/local/bin/python", "type": "symlink",
+            "source": "/usr/bin/python3.12", "permissions": 0o755} in cfg["paths"]
+    assert "./packages" in cfg["contents"]["repositories"]
+    assert "./melange.rsa.pub" in cfg["contents"]["keyring"]
+    wheels = {v["name"]: v for v in render_vendor(CATALOG, STASH)["vendor"]}
+    assert set(wheels) == {"cloudscraper", "mechanicalsoup", "stashapi", "apscheduler", "dateparser"}
+    for w in wheels.values():
+        assert w["kind"] == "wheel" and w["prefix"] == "/usr/lib/python3.12/site-packages"
+        assert list(w["files"]) == ["any"] and len(w["files"]["any"]["sha256"]) == 64
+        assert "launchers" not in w
+
+
+def test_render_stash_base_dev():
+    runtime = set(pkgs(render(CATALOG, STASH, "runtime")))
+    dev = set(pkgs(render(CATALOG, STASH, "dev")))
+    tools = {"busybox", "bash", "go-1.27", "nodejs-24", "npm", "make", "git", "gcc",
+             "glibc-dev", "coreutils"}
+    assert (runtime - {"distroless-no-shell"}) | tools <= dev
+    assert "distroless-no-shell" not in dev  # dev keeps real bash
+    assert render(CATALOG, STASH, "dev")["accounts"]["run-as"] == "1000"
+
+
+def test_render_stash_base_accounts_do_not_leak():
+    assert render(CATALOG, PY, "runtime")["accounts"]["users"] == [
+        {"username": "nonroot", "uid": 65532, "gid": 65532}]
+    assert len(CATALOG["accounts"]["users"]) == 1  # the shared default is not mutated

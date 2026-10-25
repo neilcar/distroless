@@ -31,7 +31,7 @@ from dltools.rescan import decide
 from dltools.state import diff, load_state, save_state
 from dltools.tags import tags
 from dltools.vendor import DEFAULT_LAUNCH_DIR, build_layer
-from dltools.vendorcheck import fetch_releases, newer_releases, token
+from dltools.vendorcheck import fetch_pypi, fetch_releases, newer_releases, newer_wheels, token
 from dltools.wolfi import ARCHES, fetch_index, parse_apkindex
 
 
@@ -106,6 +106,10 @@ def cmd_gate(args) -> int:
     prefixes, components = list(args.vendor_prefix), []
     if args.vendor:
         for v in json.loads(Path(args.vendor).read_text())["vendor"]:
+            # Wheels are gated like any package: Trivy reads their metadata in site-packages.
+            # Only files it cannot see into (AppImages, binaries) are listed apart.
+            if v.get("kind") == "wheel":
+                continue
             prefixes.append(v["prefix"])
             components.append(f"{v['name']} {v['version']}")
     result = evaluate(candidate, published, load_ignore(args.ignore), indexes,
@@ -133,17 +137,33 @@ def cmd_notify(args) -> int:
 
 
 def cmd_vendor_check(args) -> int:
-    vendor = json.loads(Path(args.vendor).read_text())
-    try:
-        messages = newer_releases(vendor, fetch_releases(vendor, token()))
-        if args.dry_run:
-            print("\n".join(messages) if messages else "no newer releases")
-        elif messages:
+    """One deduped issue for every vendor.json. Each source (a file, its GitHub releases, its
+    PyPI wheels) is checked on its own: a failure warns and the rest is still reported."""
+    messages: list[str] = []
+
+    def check(what: str, fn, vendor: dict) -> None:
+        try:
+            messages.extend(fn(vendor))
+        except (OSError, ValueError) as exc:  # network, bad response, unreadable file
+            print(f"warning: vendored release check failed for {what}: {exc}", file=sys.stderr)
+
+    for path in args.vendor:  # every image's vendor.json: one issue covers them all
+        try:
+            vendor = json.loads(Path(path).read_text())
+        except (OSError, ValueError) as exc:
+            print(f"warning: vendored release check failed for {path}: {exc}", file=sys.stderr)
+            continue
+        check(f"{path} (GitHub)", lambda v: newer_releases(v, fetch_releases(v, token())), vendor)
+        check(f"{path} (PyPI)", lambda v: newer_wheels(v, fetch_pypi(v)), vendor)
+    messages = list(dict.fromkeys(messages))
+    if args.dry_run:
+        print("\n".join(messages) if messages else "no newer releases")
+    elif messages:
+        try:
             upsert_issue("Vendored tool updates available",
                          "\n".join(f"- {m}" for m in messages), dedupe=True)
-    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
-        # network, bad response or gh failure: warn, don't fail the job
-        print(f"warning: vendored release check failed: {exc}", file=sys.stderr)
+        except (OSError, subprocess.CalledProcessError) as exc:  # gh failure: warn only
+            print(f"warning: vendored release check could not notify: {exc}", file=sys.stderr)
     return 0
 
 
@@ -302,7 +322,8 @@ def build_parser() -> argparse.ArgumentParser:
     gate.add_argument("--index-dir")
     gate.add_argument("--vendor-prefix", action="append", default=[],
                       help="path of vendored upstream files; findings under it are listed, not gated")
-    gate.add_argument("--vendor", help="vendor.json: its prefixes are vendored (as --vendor-prefix)")
+    gate.add_argument("--vendor", help="vendor.json: its non-wheel prefixes are vendored "
+                      "(as --vendor-prefix); wheels are gated")
     gate.set_defaults(func=cmd_gate)
 
     rescan = sub.add_parser("rescan-decide", help="decide issue/rebuild for a re-scan report")
@@ -318,7 +339,8 @@ def build_parser() -> argparse.ArgumentParser:
     notify.set_defaults(func=cmd_notify)
 
     vcheck = sub.add_parser("vendor-check", help="report newer stable releases of vendored tools")
-    vcheck.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
+    vcheck.add_argument("--vendor", required=True, action="append",
+                        help="locks/<image>/<line>/vendor.json (repeat for several images)")
     vcheck.add_argument("--dry-run", action="store_true", help="print messages, never notify")
     vcheck.set_defaults(func=cmd_vendor_check)
 

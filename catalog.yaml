@@ -106,3 +106,80 @@ images:
             url: https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux_aarch64
             sha256: e137c2171b0b8ef648e6136e86aa70c65923e93e434f01c93901d64744b190aa
         launchers: [yt-dlp]
+
+  stash-base:
+    # Base for the shell-free Stash build (neilcar/stash-image): Wolfi ffmpeg, distroless-libvips
+    # (lcms2, as photoprism-base), and Python 3.12 with the libraries the enabled plugins and the
+    # Python scrapers import (audit: .superpowers/sdd/2026-10-25-stash-distroless/task-2-report.md).
+    # Versioned by python-3.12. Runs as uid/gid 1000 (`stash`, home /config), like the chart's pod.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: stash, gid: 1000}]
+      users: [{username: stash, uid: 1000, gid: 1000, homedir: /config}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      # py3.12-tzlocal .. -pytz: dependencies of the dateparser and apscheduler wheels
+      # (date_parser, stash-scheduler); py3.12-pyparsing: cloudscraper's.
+      # exiftool + perl: the EmbeddedMetadata scraper (PyExifTool runs `exiftool`, a
+      # `#!/usr/bin/env perl` script; its pyexiv2 is pip-installed at runtime by the scraper).
+      runtime:
+        # distroless-no-shell: ffmpeg's libsrt needs cmd:bash only for unused scripts.
+        packages: ["{package}", "distroless-no-shell", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl"]
+      # dev: Go (Stash's go.mod wants >= 1.24.3), Node.js 24 and npm for the UI build.
+      dev:
+        packages: ["{package}", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl", "busybox", "bash", "coreutils", "git", "make", "gcc", "glibc-dev", "go-1.27", "nodejs-24", "npm"]
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      # No /usr/bin/python symlink here: Wolfi's python-3.12 already ships python -> python3
+      # (plugins run both); apko refuses a path that a package installs.
+      # CPython 3.12 ships its stdlib cgi.py executable with `#! /usr/local/bin/python`; give
+      # that shebang a target so the shebang audit holds (cgi is only ever imported).
+      # apko chmods through the link, so `permissions` must stay python3.12's own 0755.
+      - {path: /usr/local/bin, type: directory, permissions: 0755, uid: 0, gid: 0}
+      - {path: /usr/local/bin/python, type: symlink, source: /usr/bin/python3.12, permissions: 0755}
+    # Pure-Python wheels not in Wolfi, pinned by sha256 (see locks/stash-base/latest/vendor.json).
+    vendor:
+      - name: cloudscraper
+        version: 1.2.71
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/81/97/fc88803a451029688dffd7eb446dc1b529657577aec13aceff1cc9628c5d/cloudscraper-1.2.71-py2.py3-none-any.whl
+            sha256: 76f50ca529ed2279e220837befdec892626f9511708e200d48d5bb76ded679b0
+      - name: mechanicalsoup
+        version: 1.4.0
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/4e/61/969eee3b34e39aa7810608e3d1932b555fa535cffa743cba6498b054453c/mechanicalsoup-1.4.0-py3-none-any.whl
+            sha256: f460febdffabe24cc36b96dec420def2b30297c6d4663ab33c74e5b67787592d
+      # PyPI stashapp-tools, imported as `stashapi`.
+      - name: stashapi
+        version: 0.2.59
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/64/4d/7262a8dd1f96c012c4b3271453d4c3cbde7caa6b291d18b00553fc6ad64a/stashapp_tools-0.2.59-py3-none-any.whl
+            sha256: ebe7819399d4cd264c87de71f23b2bc9338c55e5ae0c8966c2aa7b1ff9202323
+      - name: apscheduler
+        version: 3.11.3
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/42/c9/8638db32514dbb9157b3d82680c6faea89283523edf9ed2415ea3884f2ae/apscheduler-3.11.3-py3-none-any.whl
+            sha256: bbeb2ec02d23d3c06a6c07ed7f0f3939ada6680eb121fae809a69bb42c537a30
+      - name: dateparser
+        version: 1.4.3
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/30/5f/63f927b5ffd1cc2c030fc2bd362bf920890e8806cf42f701198de5b3f9c7/dateparser-1.4.3-py3-none-any.whl
+            sha256: cbce86c64e0cea5c54c84c015d34c903d46c51bfad50632bf2f05a6141d10c05

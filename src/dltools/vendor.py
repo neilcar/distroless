@@ -13,6 +13,7 @@ import subprocess
 import tarfile
 import tempfile
 import urllib.request
+import zipfile
 from pathlib import Path, PurePosixPath
 
 SQUASHFS_MAGIC = b"hsqs"
@@ -72,6 +73,47 @@ def _extract_appimage(appimage: Path, dest: Path) -> None:
     # unsquashfs keeps squashfs modes; make sure we can walk and remove everything.
     for root, dirs, _files in os.walk(dest):
         os.chmod(root, os.stat(root).st_mode | stat.S_IRWXU)
+
+
+def _pick_file(entry: dict, arch: str) -> dict:
+    """The download for `arch`; a wheel may carry one arch-independent `any` entry instead."""
+    files = entry["files"]
+    if arch in files:
+        return files[arch]
+    if entry["kind"] == "wheel" and "any" in files:
+        return files["any"]
+    raise KeyError(f"{entry['name']}: no file for {arch}")
+
+
+def is_pure_wheel(filename: str) -> bool:
+    """True for a pure-Python wheel name: a py3 python tag (e.g. `py3`, `py2.py3`), abi
+    `none`, platform `any`."""
+    if not filename.endswith(".whl"):
+        return False
+    parts = filename[: -len(".whl")].split("-")
+    if len(parts) < 5:
+        return False
+    python, abi, platform = parts[-3:]
+    return "py3" in python.split(".") and abi == "none" and platform == "any"
+
+
+def _install_wheel(entry: dict, wheel: Path, layer: _Layer, tmp: Path) -> None:
+    """Add exactly the wheel's members under the entry prefix (RECORD stays as shipped)."""
+    name, prefix = entry["name"], entry["prefix"]
+    layer.add(prefix, "dir", 0o755)
+    with zipfile.ZipFile(wheel) as z:
+        for n, info in enumerate(sorted(z.infolist(), key=lambda i: i.filename)):
+            rel = PurePosixPath(info.filename)
+            if rel.is_absolute() or ".." in rel.parts or not rel.parts:
+                raise ValueError(f"{name}: unsafe path in wheel: {info.filename!r}")
+            target = f"{prefix.strip('/')}/{rel.as_posix()}"
+            if info.is_dir():
+                layer.add(target, "dir", 0o755)
+                continue
+            staged = tmp / str(n)
+            staged.write_bytes(z.read(info))
+            executable = (info.external_attr >> 16) & 0o111
+            layer.add(target, "file", 0o755 if executable else 0o644, staged)
 
 
 class _Layer:
@@ -136,9 +178,13 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
     coreutils); a variant with busybox keeps busybox's full env instead."""
     cache_dir, out = Path(cache_dir), Path(out)
     entries = vendor["vendor"]
+    chosen = [_pick_file(e, arch) for e in entries]
+    for e, f in zip(entries, chosen):
+        if e["kind"] == "wheel" and not is_pure_wheel(PurePosixPath(f["url"]).name):
+            raise ValueError(f"{e['name']}: only pure-Python wheels (py3[...]-none-any) "
+                             "are supported")
     # Download and verify everything before unpacking any of it.
-    fetched = [(e, fetch(e["files"][arch]["url"], e["files"][arch]["sha256"], cache_dir))
-               for e in entries]
+    fetched = [(e, fetch(f["url"], f["sha256"], cache_dir)) for e, f in zip(entries, chosen)]
 
     layer = _Layer()
     manifest = []
@@ -152,6 +198,10 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
             elif entry["kind"] == "binary":
                 layer.add(prefix, "dir", 0o755)
                 layer.add(f"{prefix}/{launchers[0] if launchers else name}", "file", 0o755, path)
+            elif entry["kind"] == "wheel":
+                staging = Path(tmp) / name
+                staging.mkdir()
+                _install_wheel(entry, path, layer, staging)
             else:
                 raise ValueError(f"{name}: unknown kind {entry['kind']!r}")
             if launchers:
@@ -161,7 +211,7 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
                 layer.add(f"{prefix}/launch.json", "file", 0o644, recipe)
                 for launcher in launchers:
                     layer.add(f"usr/bin/{launcher}", "file", 0o755, Path(launcher_bin))
-            f = entry["files"][arch]
+            f = _pick_file(entry, arch)
             manifest.append({"name": name, "version": entry["version"], "arch": arch,
                              "url": f["url"], "sha256": f["sha256"]})
         # The launcher is also env(1): the runtime image has no coreutils, and scripts such

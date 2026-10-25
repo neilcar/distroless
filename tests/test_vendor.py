@@ -158,3 +158,104 @@ def test_vendor_layer_cli(vendor, tmp_path, launcher, launch_dir):
                  "--out", str(tmp_path / "l.tar.gz"), "--manifest", str(tmp_path / "m.json"),
                  "--launch-dir", str(launch_dir)]) == 0
     assert json.loads((tmp_path / "m.json").read_text())["vendor"][0]["name"] == "darktable"
+
+
+def make_wheel(path, extra=None):
+    import zipfile
+    files = {
+        "pkg/__init__.py": b"VALUE = 1\n",
+        "pkg-1.0.dist-info/METADATA": b"Name: pkg\nVersion: 1.0\n",
+        "pkg-1.0.dist-info/WHEEL": b"Wheel-Version: 1.0\nTag: py3-none-any\n",
+        "pkg-1.0.dist-info/RECORD": b"pkg/__init__.py,,\npkg-1.0.dist-info/RECORD,,\n",
+        **(extra or {}),
+    }
+    with zipfile.ZipFile(path, "w") as z:
+        for name, data in files.items():
+            z.writestr(name, data)
+    return path
+
+
+def wheel_vendor(wheel, files_key="any"):
+    return {"vendor": [
+        {"name": "pkg", "version": "1.0", "kind": "wheel",
+         "prefix": "/usr/lib/python3.12/site-packages",
+         "files": {files_key: {"url": wheel.as_uri(), "sha256": sha(wheel)}}},
+    ]}
+
+
+SITE = "usr/lib/python3.12/site-packages"
+
+
+def test_wheel_installs_into_site_packages(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-py3-none-any.whl")
+    a, b = tmp_path / "a.tar.gz", tmp_path / "b.tar.gz"
+    build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", a, launcher, env=False)
+    build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", b, launcher, env=False)
+    assert a.read_bytes() == b.read_bytes()
+    ms, data = members(a)
+    assert [m.name for m in ms] == sorted(m.name for m in ms)
+    assert all(m.mtime == 0 and m.uid == 0 and m.gid == 0 for m in ms)
+    # exactly the wheel's members (RECORD as shipped, no .pyc, no launchers) plus parent dirs
+    assert set(data) == {f"{SITE}/pkg/__init__.py", f"{SITE}/pkg-1.0.dist-info/METADATA",
+                         f"{SITE}/pkg-1.0.dist-info/WHEEL", f"{SITE}/pkg-1.0.dist-info/RECORD"}
+    assert data[f"{SITE}/pkg/__init__.py"] == b"VALUE = 1\n"
+    assert data[f"{SITE}/pkg-1.0.dist-info/RECORD"].startswith(b"pkg/__init__.py,,")
+    assert {m.name for m in ms if m.isdir()} >= {SITE, f"{SITE}/pkg", f"{SITE}/pkg-1.0.dist-info"}
+    assert not any(m.name.endswith(".pyc") or m.name.endswith("usr/bin") for m in ms)
+
+
+def test_wheel_any_arch_key_used_for_both_arches(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-py3-none-any.whl")
+    for arch in ("x86_64", "aarch64"):
+        out = tmp_path / f"{arch}.tar.gz"
+        manifest = build_layer(wheel_vendor(wheel), arch, tmp_path / "cache", out, launcher, env=False)
+        assert f"{SITE}/pkg/__init__.py" in members(out)[1]
+        assert manifest["vendor"][0]["arch"] == arch
+
+
+def test_wheel_rejects_platform_wheel(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-cp312-cp312-manylinux_2_17_x86_64.whl")
+    out = tmp_path / "out.tar.gz"
+    with pytest.raises(ValueError, match="pure-Python"):
+        build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", out, launcher, env=False)
+    assert not out.exists()
+
+
+def test_wheel_rejects_bad_sha256(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-py3-none-any.whl")
+    vendor = wheel_vendor(wheel)
+    vendor["vendor"][0]["files"]["any"]["sha256"] = "0" * 64
+    out = tmp_path / "out.tar.gz"
+    with pytest.raises(ValueError, match="sha256"):
+        build_layer(vendor, "x86_64", tmp_path / "cache", out, launcher, env=False)
+    assert not out.exists()
+
+
+def test_wheel_rejects_path_escaping_member(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-py3-none-any.whl", {"../evil.py": b"x"})
+    out = tmp_path / "out.tar.gz"
+    with pytest.raises(ValueError, match="unsafe"):
+        build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", out, launcher, env=False)
+    assert not out.exists()
+
+
+@pytest.mark.parametrize("name", ["pkg-1.0-py3-none-any.whl", "pkg-1.0-py2.py3-none-any.whl"])
+def test_wheel_accepts_pure_tags(tmp_path, launcher, name):
+    wheel = make_wheel(tmp_path / name)
+    out = tmp_path / "out.tar.gz"
+    build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", out, launcher, env=False)
+    assert f"{SITE}/pkg/__init__.py" in members(out)[1]
+
+
+@pytest.mark.parametrize("name", [
+    "pkg-1.0-cp312-cp312-manylinux_2_17_x86_64.whl",
+    "pkg-1.0-py2-none-any.whl",        # no py3 tag
+    "pkg-1.0-py3-abi3-any.whl",        # an ABI
+    "pkg-1.0-py3-none-linux_x86_64.whl",  # a platform
+    "pkg-1.0-cp312-none-any.whl",      # CPython-only
+])
+def test_wheel_rejects_non_pure_tags(tmp_path, launcher, name):
+    wheel = make_wheel(tmp_path / name)
+    with pytest.raises(ValueError, match="pure-Python"):
+        build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", tmp_path / "o.tar.gz",
+                    launcher, env=False)

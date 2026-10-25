@@ -75,3 +75,39 @@ def test_cli_gate_vendor_json_sets_prefixes_and_caveat(tmp_path, capsys):
     out = capsys.readouterr().out
     assert rc == 0 and "CVE-5" in out.split("Vendored (not gated)", 1)[1]
     assert "(darktable 5.6.2, yt-dlp 2026.10.21)" in out
+
+
+def test_cli_gate_wheels_are_gated_not_vendored(tmp_path, capsys):
+    # A wheel's findings (python-pkg under site-packages) count like any package; only the
+    # AppImage/binary entries are listed apart, and only they are named in the caveat.
+    site = "/usr/lib/python3.12/site-packages"
+    vj = tmp_path / "vendor.json"
+    vj.write_text(json.dumps({"vendor": [
+        {"name": "yt-dlp", "version": "2026.10.21", "kind": "binary", "prefix": "/opt/yt-dlp"},
+        {"name": "cloudscraper", "version": "1.2.71", "kind": "wheel", "prefix": site}]}))
+    pub = tmp_path / "p.json"
+    pub.write_text(json.dumps({"Results": []}))
+    cand = tmp_path / "c.json"
+    cand.write_text(json.dumps({"Results": [{"Target": "Python", "Type": "python-pkg",
+        "Vulnerabilities": [{"VulnerabilityID": "CVE-7", "Severity": "MEDIUM",
+                             "PkgName": "cloudscraper", "InstalledVersion": "1.2.71",
+                             "PkgPath": "usr/lib/python3.12/site-packages/"
+                                        "cloudscraper-1.2.71.dist-info/METADATA"}]}]}))
+    rc = cli.main(["gate", "--candidate", str(cand), "--published", str(pub),
+                   "--ignore", str(tmp_path / "none"), "--vendor", str(vj), "--label", "sb"])
+    out = capsys.readouterr().out
+    gated, vendored = out.split("Vendored (not gated)", 1)
+    assert rc == 1  # one more MEDIUM than the published image: the not-worse rule applies
+    assert "| MEDIUM | 1 | 0 |" in gated and "CVE-7" not in vendored
+    assert "(yt-dlp 2026.10.21)" in vendored and "cloudscraper" not in vendored
+
+
+def test_cli_gate_wheels_only_vendor_json_has_no_vendored_section(tmp_path, capsys):
+    vj = tmp_path / "vendor.json"
+    vj.write_text(json.dumps({"vendor": [{"name": "stashapi", "version": "0.2.59", "kind": "wheel",
+                                          "prefix": "/usr/lib/python3.12/site-packages"}]}))
+    cand = tmp_path / "c.json"
+    cand.write_text(json.dumps({"Results": []}))
+    assert cli.main(["gate", "--candidate", str(cand), "--ignore", str(tmp_path / "none"),
+                     "--vendor", str(vj)]) == 0
+    assert "Vendored (not gated)" not in capsys.readouterr().out
