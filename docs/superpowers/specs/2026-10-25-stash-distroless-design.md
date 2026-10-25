@@ -1,6 +1,6 @@
 # Distroless Stash image — design
 
-Status: for owner review, 2026-10-25. Spans `neilcar/distroless` (a new `stash-base`
+Status: approved by the owner, 2026-10-25. Spans `neilcar/distroless` (a new `stash-base`
 image) and a new repo `neilcar/stash-image` (builds Stash from source onto it), plus the
 Fleet values in `neilcar/lxdk8s` (`fleet/arr/arr-values.yaml`).
 
