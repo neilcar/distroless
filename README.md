@@ -22,8 +22,9 @@ Runtime images have no shell and no package manager and run as uid **65532**
 `stash-base` also has a vendor layer: five pure-Python wheels from PyPI (pinned by
 version and sha256 in `catalog.yaml`) unpacked into `/usr/lib/python3.12/site-packages`,
 plus the launcher as `/usr/bin/env` in the runtime variant (so `#!/usr/bin/env python3`
-plugins run). Unlike the AppImages, Trivy can read those wheels, but findings under that
-prefix are listed as *Vendored (not gated)*.
+plugins run). Unlike the AppImages, Trivy reads those wheels' metadata, so their findings
+are gated like any package's; `dl vendor-check` (in the daily rescan) opens the same
+*Vendored tool updates available* issue when PyPI has a newer final release.
 
 `photoprism-base` has one layer that is not a Wolfi package: darktable, RawTherapee
 and yt-dlp from their upstream release files (pinned by sha256 in `catalog.yaml`,
