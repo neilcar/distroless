@@ -1,4 +1,5 @@
-"""Compare vendored tool pins with the newest stable upstream GitHub releases."""
+"""Compare vendored pins with the newest stable upstream releases: GitHub releases for
+tools, PyPI for wheels."""
 
 from __future__ import annotations
 
@@ -6,6 +7,7 @@ import json
 import os
 import re
 import urllib.request
+from pathlib import PurePosixPath
 
 REPOS = {
     "darktable": "darktable-org/darktable",
@@ -60,3 +62,50 @@ def fetch_releases(vendor: dict, token: str | None = None, timeout: float = 30) 
 
 def token() -> str | None:
     return os.environ.get("GH_TOKEN")
+
+
+def pypi_project(entry: dict) -> str:
+    """The PyPI project of a wheel entry, from its wheel file name (PEP 503-normalised):
+    `stashapp_tools-0.2.59-py3-none-any.whl` -> `stashapp-tools`."""
+    files = entry["files"]
+    url = (files.get("any") or next(iter(files.values())))["url"]
+    dist = PurePosixPath(url).name.split("-", 1)[0]
+    return re.sub(r"[-_.]+", "-", dist).lower()
+
+
+def _final_release(version: str) -> tuple[int, ...] | None:
+    """(1, 4, 3) for a final release like `1.4.3`; None for pre/dev/post/local versions."""
+    return tuple(int(p) for p in version.split(".")) if re.fullmatch(r"\d+(\.\d+)*", version) else None
+
+
+def newer_wheels(vendor: dict, projects: dict[str, dict]) -> list[str]:
+    """One message per vendored wheel whose newest final, non-yanked PyPI release is newer
+    than its pin. `projects` maps entry name -> PyPI JSON (https://pypi.org/pypi/<p>/json)."""
+    messages = []
+    for entry in vendor["vendor"]:
+        if entry.get("kind") != "wheel" or entry["name"] not in projects:
+            continue
+        pinned = _final_release(entry["version"])
+        releases = projects[entry["name"]].get("releases", {})
+        candidates = [(v, ver) for ver, files in releases.items()
+                      if files and not all(f.get("yanked") for f in files)
+                      and (v := _final_release(ver)) is not None]
+        if pinned is None or not candidates:
+            continue
+        newest, ver = max(candidates)
+        if newest > pinned:
+            messages.append(f"{entry['name']}: {ver} is available on PyPI "
+                            f"(pinned {entry['version']})")
+    return messages
+
+
+def fetch_pypi(vendor: dict, timeout: float = 30) -> dict[str, dict]:
+    """PyPI JSON for each wheel entry, keyed by entry name."""
+    out = {}
+    for entry in vendor["vendor"]:
+        if entry.get("kind") != "wheel":
+            continue
+        url = f"https://pypi.org/pypi/{pypi_project(entry)}/json"
+        with urllib.request.urlopen(url, timeout=timeout) as resp:
+            out[entry["name"]] = json.loads(resp.read())
+    return out
