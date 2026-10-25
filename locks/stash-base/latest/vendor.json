@@ -1,0 +1,64 @@
+{
+  "vendor": [
+    {
+      "files": {
+        "any": {
+          "sha256": "76f50ca529ed2279e220837befdec892626f9511708e200d48d5bb76ded679b0",
+          "url": "https://files.pythonhosted.org/packages/81/97/fc88803a451029688dffd7eb446dc1b529657577aec13aceff1cc9628c5d/cloudscraper-1.2.71-py2.py3-none-any.whl"
+        }
+      },
+      "kind": "wheel",
+      "name": "cloudscraper",
+      "prefix": "/usr/lib/python3.12/site-packages",
+      "version": "1.2.71"
+    },
+    {
+      "files": {
+        "any": {
+          "sha256": "f460febdffabe24cc36b96dec420def2b30297c6d4663ab33c74e5b67787592d",
+          "url": "https://files.pythonhosted.org/packages/4e/61/969eee3b34e39aa7810608e3d1932b555fa535cffa743cba6498b054453c/mechanicalsoup-1.4.0-py3-none-any.whl"
+        }
+      },
+      "kind": "wheel",
+      "name": "mechanicalsoup",
+      "prefix": "/usr/lib/python3.12/site-packages",
+      "version": "1.4.0"
+    },
+    {
+      "files": {
+        "any": {
+          "sha256": "ebe7819399d4cd264c87de71f23b2bc9338c55e5ae0c8966c2aa7b1ff9202323",
+          "url": "https://files.pythonhosted.org/packages/64/4d/7262a8dd1f96c012c4b3271453d4c3cbde7caa6b291d18b00553fc6ad64a/stashapp_tools-0.2.59-py3-none-any.whl"
+        }
+      },
+      "kind": "wheel",
+      "name": "stashapi",
+      "prefix": "/usr/lib/python3.12/site-packages",
+      "version": "0.2.59"
+    },
+    {
+      "files": {
+        "any": {
+          "sha256": "bbeb2ec02d23d3c06a6c07ed7f0f3939ada6680eb121fae809a69bb42c537a30",
+          "url": "https://files.pythonhosted.org/packages/42/c9/8638db32514dbb9157b3d82680c6faea89283523edf9ed2415ea3884f2ae/apscheduler-3.11.3-py3-none-any.whl"
+        }
+      },
+      "kind": "wheel",
+      "name": "apscheduler",
+      "prefix": "/usr/lib/python3.12/site-packages",
+      "version": "3.11.3"
+    },
+    {
+      "files": {
+        "any": {
+          "sha256": "cbce86c64e0cea5c54c84c015d34c903d46c51bfad50632bf2f05a6141d10c05",
+          "url": "https://files.pythonhosted.org/packages/30/5f/63f927b5ffd1cc2c030fc2bd362bf920890e8806cf42f701198de5b3f9c7/dateparser-1.4.3-py3-none-any.whl"
+        }
+      },
+      "kind": "wheel",
+      "name": "dateparser",
+      "prefix": "/usr/lib/python3.12/site-packages",
+      "version": "1.4.3"
+    }
+  ]
+}

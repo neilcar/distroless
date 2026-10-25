@@ -47,6 +47,12 @@
       "name": "latest",
       "package": "distroless-libvips",
       "version": "8.18.7-r0"
+    },
+    {
+      "image": "stash-base",
+      "name": "latest",
+      "package": "python-3.12",
+      "version": "3.12.15-r6"
     }
   ]
 }
