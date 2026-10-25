@@ -51,6 +51,11 @@ case "$image" in
       # shellcheck disable=SC2086  # each entry is "tool args"
       tool $cmd >/dev/null || fail "$cmd"
     done
+    # distroless-libvips is built with lcms2: colour profiles can be converted.
+    out=$(tool vips -l) || fail "vips -l"
+    grep -q 'icc_transform' <<<"$out" || fail "libvips has no icc_transform"
+    out=$(tool vips --vips-config) || fail "vips --vips-config"
+    grep -q 'ICC profile support with lcms2: true' <<<"$out" || fail "libvips is built without lcms2"
     if [[ "$variant" == "runtime" ]]; then
       # Every script must find its interpreter (no shell in the image, so look from outside).
       root=$(mktemp -d)
@@ -77,10 +82,20 @@ case "$image" in
       tool /usr/bin/env -i /bin/true || fail "dev env -i /bin/true"
     fi
     if [[ "$variant" == "dev" ]]; then
-      for cmd in "go version" "node --version" "make --version" "bash --version"; do
+      for cmd in "go version" "node --version" "npm --version" "make --version" "bash --version" \
+                 "rsync --version" "wget --version"; do
         # shellcheck disable=SC2086
         tool $cmd >/dev/null || fail "$cmd"
       done
+      # PhotoPrism's `make install` needs GNU tar and coreutils, not busybox's applets.
+      out=$(tool tar --version) || fail "tar --version"
+      grep -q 'GNU tar' <<<"$out" || fail "tar is not GNU tar: $out"
+      out=$(tool ls --version) || fail "ls --version"
+      grep -q 'GNU coreutils' <<<"$out" || fail "ls is not GNU coreutils: $out"
+      # The frontend build needs Node >= 24.15.
+      out=$(tool node -p 'const [a, b] = process.versions.node.split(".").map(Number); a > 24 || (a == 24 && b >= 15)') \
+        || fail "node version check"
+      [[ "$out" == "true" ]] || fail "node is older than 24.15: $(tool node --version)"
     fi
     ;;
 esac

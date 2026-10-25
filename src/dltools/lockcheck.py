@@ -2,12 +2,23 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from dltools.wolfi import ARCHES, is_released
 
 # Runtime images must not contain a shell or a package manager.
 RUNTIME_FORBIDDEN = frozenset(
     {"busybox", "bash", "dash", "zsh", "ash", "apk-tools", "wolfi-base", "coreutils", "toybox"}
 )
+
+# Packages one image must never contain, whatever the variant. photoprism-base uses
+# distroless-libvips (built with lcms2); Wolfi's libvips would replace or sit beside it.
+IMAGE_FORBIDDEN = {"photoprism-base": frozenset({"libvips", "libvips-dev"})}
+
+
+def image_forbidden(lock_path) -> frozenset[str]:
+    """Forbidden packages for the image of a `locks/<image>/<line>/<variant>.lock.json`."""
+    return IMAGE_FORBIDDEN.get(Path(lock_path).parent.parent.name, frozenset())
 
 
 def check_lock(

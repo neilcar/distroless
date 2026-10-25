@@ -13,7 +13,7 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/static` | `latest` | CA certificates, tzdata, `/etc/passwd` with `nonroot` (65532). For static binaries. |
 | `ghcr.io/neilcar/distroless/python` | every supported Python (today 3.11–3.15) | Python runtime only. `-dev` tags add busybox, pip and `uv` for build stages. |
 | `ghcr.io/neilcar/distroless/nginx` | `mainline` (`stable` retired 2026-10-24) | nginx listening on **8080**, pid/temp files in `/tmp`, default server in `/etc/nginx/conf.d/default.conf` (replace it with yours). |
-| `ghcr.io/neilcar/distroless/photoprism-base` | `latest` | PhotoPrism's runtime tools: ffmpeg, exiftool, libvips (`vips`), ImageMagick 7, libheif, libjxl, librsvg, the MariaDB client, sqlite, plus vendored darktable 5.6.2, RawTherapee 5.13 and yt-dlp under `/opt` (run through `/usr/bin/darktable-cli`, `rawtherapee-cli`, `yt-dlp`). Runs as **root**. `-dev` adds busybox, bash, Go, Node.js, make, gcc and the libvips/libheif headers. |
+| `ghcr.io/neilcar/distroless/photoprism-base` | `latest` | PhotoPrism's runtime tools: ffmpeg, exiftool, libvips (`vips`, built here with lcms2 so `icc_transform` works), ImageMagick 7, libheif, libjxl, librsvg, the MariaDB client, sqlite, plus vendored darktable 5.6.2, RawTherapee 5.13 and yt-dlp under `/opt` (run through `/usr/bin/darktable-cli`, `rawtherapee-cli`, `yt-dlp`). Runs as **root**. `-dev` adds busybox, bash, GNU coreutils and tar, rsync, wget, curl, git, Go, Node.js 24, npm, make, gcc and the libvips/libheif headers. |
 
 Runtime images have no shell and no package manager and run as uid **65532**
 (`photoprism-base`: uid **0**, the owner's decision).
@@ -104,13 +104,22 @@ Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 
 ### Local melange packages
 
-Two config-only packages live in `melange/`:
+Three packages live in `melange/`:
 
 - `distroless-nginx-config` replaces Wolfi's port-80 nginx config.
 - `distroless-no-shell` is an empty package that provides `cmd:bash`. ffmpeg's
   `libsrt` depends on bash only for unused `srt-*` scripts; the `photoprism-base`
   runtime variant installs this instead so the image stays shell-free (the `-dev`
   variant keeps real bash).
+- `distroless-libvips` (and `-dev`, `-doc`) is libvips built from the upstream release
+  tarball (pinned by sha256) with lcms2. Wolfi's libvips has no lcms2, so it cannot
+  convert Display P3 / Adobe RGB photos to sRGB. It keeps Wolfi's version and build
+  options and provides what `libvips` / `libvips-dev` provide; `photoprism-base`
+  installs it instead and is versioned by it. Sync opens an `automation` issue
+  "distroless-libvips is behind Wolfi libvips <version>" whenever Wolfi's newest released
+  libvips is newer; bump `version` and `expected-sha256` in the melange file to follow.
+  `dl lock-check` fails any photoprism-base lock that contains Wolfi's `libvips` or
+  `libvips-dev`.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

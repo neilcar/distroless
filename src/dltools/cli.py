@@ -14,8 +14,15 @@ from pathlib import Path
 import yaml
 
 from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_markdown
-from dltools.lines import Line, discover, fetch_eol
-from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
+from dltools.lines import (
+    LIBVIPS_MELANGE,
+    Line,
+    discover,
+    fetch_eol,
+    libvips_behind,
+    melange_version,
+)
+from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock, image_forbidden
 from dltools.notify import upsert_issue
 from dltools.ocilayout import append_layer
 from dltools.pinning import apply_pins, released_overrides
@@ -55,8 +62,10 @@ def cmd_sync(args) -> int:
     today = date.fromisoformat(args.today) if args.today else date.today()
     indexes = load_indexes(args.index_dir)
     current = load_state(args.state)
+    libvips = melange_version(args.libvips_melange or Path(args.catalog).parent / LIBVIPS_MELANGE)
     lines, warnings = discover(
-        indexes, fetch_eol(), today, current, catalog["images"]["nginx"].get("lines")
+        indexes, fetch_eol(), today, current, catalog["images"]["nginx"].get("lines"),
+        photoprism_libvips=libvips,
     )
     events = diff(current, lines)
     save_state(args.state, lines)
@@ -138,6 +147,31 @@ def cmd_vendor_check(args) -> int:
     return 0
 
 
+def cmd_libvips_check(args) -> int:
+    """Open one deduped issue when distroless-libvips no longer matches Wolfi's libvips."""
+    local = melange_version(args.melange)
+    if local is None:
+        print(f"warning: {args.melange} not found", file=sys.stderr)
+        return 0
+    wolfi = libvips_behind(load_indexes(args.index_dir), local)
+    if wolfi is None:
+        print(f"distroless-libvips {local} is up to date with Wolfi libvips")
+        return 0
+    title = f"distroless-libvips is behind Wolfi libvips {wolfi}"
+    # No run URL: the body must repeat exactly so dedupe skips repeat comments.
+    body = (f"Wolfi's newest released libvips is {wolfi}; `{LIBVIPS_MELANGE}` builds "
+            f"{local}. Update its version and expected-sha256 (and compare Wolfi's "
+            f"libvips.yaml for new build options); packages.yml then rebuilds it.")
+    if args.dry_run:
+        print(f"{title}\n{body}")
+        return 0
+    try:
+        upsert_issue(title, body, dedupe=True)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        print(f"warning: libvips check could not notify: {exc}", file=sys.stderr)
+    return 0
+
+
 # Inputs that change what sync renders/locks: building now would use stale configs,
 # so the build requests a sync instead (which re-locks, commits and builds).
 RESYNC_INPUTS = ("catalog.yaml", "melange/", "packages/", "melange.rsa.pub")
@@ -175,7 +209,8 @@ def cmd_lock_check(args) -> int:
     failed = False
     forbidden = RUNTIME_FORBIDDEN if args.runtime else frozenset()
     for path in args.locks:
-        for violation in check_lock(json.loads(Path(path).read_text()), forbidden=forbidden):
+        lock = json.loads(Path(path).read_text())
+        for violation in check_lock(lock, forbidden=forbidden | image_forbidden(path)):
             print(f"{path}: {violation}")
             failed = True
     return 1 if failed else 0
@@ -255,6 +290,8 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--today", help="YYYY-MM-DD (default: today)")
     sync.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
     sync.add_argument("--warnings", help="also write warnings to this file")
+    sync.add_argument("--libvips-melange",
+                      help=f"distroless-libvips config (default: {LIBVIPS_MELANGE} next to --catalog)")
     sync.set_defaults(func=cmd_sync)
 
     gate = sub.add_parser("gate", help="apply the scan gate to Trivy JSON reports")
@@ -284,6 +321,13 @@ def build_parser() -> argparse.ArgumentParser:
     vcheck.add_argument("--vendor", required=True, help="locks/<image>/<line>/vendor.json")
     vcheck.add_argument("--dry-run", action="store_true", help="print messages, never notify")
     vcheck.set_defaults(func=cmd_vendor_check)
+
+    vips = sub.add_parser("libvips-check",
+                          help="open an issue when Wolfi libvips is newer than distroless-libvips")
+    vips.add_argument("--melange", default=LIBVIPS_MELANGE)
+    vips.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
+    vips.add_argument("--dry-run", action="store_true", help="print, never notify")
+    vips.set_defaults(func=cmd_libvips_check)
 
     matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
     matrix.add_argument("--locks", default="locks")

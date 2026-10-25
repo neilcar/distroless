@@ -45,8 +45,8 @@
     {
       "image": "photoprism-base",
       "name": "latest",
-      "package": "libvips",
-      "version": "8.18.7-r2"
+      "package": "distroless-libvips",
+      "version": "8.18.7-r0"
     }
   ]
 }

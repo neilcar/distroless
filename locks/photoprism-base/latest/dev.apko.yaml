@@ -9,7 +9,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - libvips=8.18.7-r2
+  - distroless-libvips=8.18.7-r0
   - ffmpeg
   - exiftool
   - perl
@@ -51,13 +51,17 @@ contents:
   - git
   - make
   - go-1.27
-  - nodejs-22
+  - nodejs-24
   - npm
   - gcc
   - glibc-dev
-  - libvips-dev
+  - distroless-libvips-dev
   - libheif-dev
   - pkgconf
+  - gnutar
+  - rsync
+  - wget
+  - coreutils
   - python-3.13-base=3.13.15-r8
   - zlib=1.3.2-r7
   - zlib-dev=1.3.2-r7

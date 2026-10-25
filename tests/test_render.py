@@ -86,9 +86,27 @@ def test_render_vendor_written_per_line():
 
 
 def test_render_photoprism_base_no_shell_stub_in_runtime_only():
-    line = Line("photoprism-base", "latest", "libvips", "8.18.7-r2")
+    line = Line("photoprism-base", "latest", "distroless-libvips", "8.18.7-r0")
     runtime, dev = render(CATALOG, line, "runtime"), render(CATALOG, line, "dev")
     assert "distroless-no-shell" in pkgs(runtime) and "bash" not in pkgs(runtime)
     assert "distroless-no-shell" not in pkgs(dev) and "bash" in pkgs(dev)
     assert "./packages" in runtime["contents"]["repositories"]
     assert "./melange.rsa.pub" in runtime["contents"]["keyring"]
+
+
+def test_render_photoprism_base_uses_local_libvips():
+    line = Line("photoprism-base", "latest", "distroless-libvips", "8.18.7-r0")
+    runtime, dev = render(CATALOG, line, "runtime"), render(CATALOG, line, "dev")
+    for cfg in (runtime, dev):
+        assert "distroless-libvips=8.18.7-r0" in pkgs(cfg)
+        assert not {"libvips", "libvips-dev"} & set(pkgs(cfg))
+    assert "distroless-libvips-dev" in pkgs(dev)
+    assert "distroless-libvips-dev" not in pkgs(runtime)
+
+
+def test_render_photoprism_base_dev_build_tools():
+    line = Line("photoprism-base", "latest", "distroless-libvips", "8.18.7-r0")
+    runtime, dev = pkgs(render(CATALOG, line, "runtime")), pkgs(render(CATALOG, line, "dev"))
+    assert {"gnutar", "rsync", "wget", "coreutils", "nodejs-24", "npm"} <= set(dev)
+    assert "nodejs-22" not in dev
+    assert not {"gnutar", "rsync", "wget", "coreutils", "nodejs-24", "npm"} & set(runtime)

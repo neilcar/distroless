@@ -79,6 +79,12 @@ jobs:
             notify --title "Sync blocked: ${dir#locks/}" \
               --body "Could not produce a released-only lock; the line keeps its previous lock. ($RUN_URL)"
           done < "$RUNNER_TEMP/blocked.txt"
+      - name: Check distroless-libvips against Wolfi libvips
+        run: |
+          set -euo pipefail
+          # One deduped issue per Wolfi version; a branch run only prints what it would file.
+          dry=(); [[ "$GITHUB_REF" == refs/heads/main ]] || dry=(--dry-run)
+          uv run dl libvips-check --index-dir "$RUNNER_TEMP/index" "${dry[@]}"
       - name: Report failure
         if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
         run: uv run dl notify --title "Sync failed" --body "$RUN_URL"

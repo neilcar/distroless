@@ -1,12 +1,16 @@
 import json
+import re
 from datetime import date
 from pathlib import Path
 
 import pytest
 
 from dltools.lines import (
+    LIBVIPS_MELANGE,
     Line,
     discover,
+    libvips_behind,
+    melange_version,
     nginx_lines,
     photoprism_base_lines,
     python_lines,
@@ -144,7 +148,46 @@ def test_unconfigured_nginx_line_is_retired(indexes, eol):
     assert [ln.name for ln in lines if ln.image == "nginx"] == ["mainline"]
 
 
-def test_photoprism_base_line(indexes):
-    assert photoprism_base_lines(indexes) == [
-        Line("photoprism-base", "latest", "libvips", "8.18.7-r0")
+ROOT = Path(__file__).parent.parent
+
+
+def test_photoprism_base_line_is_the_local_libvips():
+    assert photoprism_base_lines("8.18.7-r0") == [
+        Line("photoprism-base", "latest", "distroless-libvips", "8.18.7-r0")
     ]
+    assert photoprism_base_lines(None) == []
+
+
+def test_discover_versions_photoprism_base_by_local_libvips(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[], photoprism_libvips="8.18.7-r0")
+    pb = [ln for ln in lines if ln.image == "photoprism-base"]
+    assert pb == [Line("photoprism-base", "latest", "distroless-libvips", "8.18.7-r0")]
+
+
+def test_melange_version(tmp_path):
+    cfg = tmp_path / "pkg.yaml"
+    cfg.write_text('package:\n  name: x\n  version: "8.18.7"\n  epoch: 2\n')
+    assert melange_version(cfg) == "8.18.7-r2"
+    assert melange_version(tmp_path / "missing.yaml") is None
+
+
+def test_repo_libvips_package_version_format():
+    # Format only: the version is bumped by hand to follow Wolfi.
+    assert re.fullmatch(r"\d+\.\d+\.\d+-r\d+", melange_version(ROOT / LIBVIPS_MELANGE))
+
+
+def test_libvips_behind_compares_upstream_versions_only(indexes):
+    # Fixture Wolfi: libvips 8.18.7-r0 released (8.18.8_rc1 is not a release).
+    assert libvips_behind(indexes, "8.18.7-r0") is None
+    assert libvips_behind(indexes, "8.18.7-r5") is None  # Wolfi epoch bumps don't count
+    assert libvips_behind(indexes, "8.18.6-r0") == "8.18.7"
+    assert libvips_behind(indexes, "8.18.8-r0") is None  # ahead of Wolfi: not behind
+    assert libvips_behind(indexes, "8.18.10-r0") is None  # compared as versions, not strings
+    newer = {a: {**idx, "libvips": idx["libvips"] + ["8.19.0-r1"]} for a, idx in indexes.items()}
+    assert libvips_behind(newer, "8.18.7-r0") == "8.19.0"
+
+
+def test_libvips_behind_needs_every_arch(indexes):
+    one = {"x86_64": {**indexes["x86_64"], "libvips": ["8.19.0-r0"]}, "aarch64": indexes["aarch64"]}
+    assert libvips_behind(one, "8.18.7-r0") is None
+    assert libvips_behind({"x86_64": {}, "aarch64": {}}, "8.18.7-r0") is None
