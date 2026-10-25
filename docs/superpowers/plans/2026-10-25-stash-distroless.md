@@ -135,7 +135,7 @@ the runner (never in the image), Rancher Fleet.
 
 - [ ] **Step 1: Push `initial`** and open the PR into `main` (body ends with the Claude Code line). Expected: build, check, smoke green on both arches; compare table posted and passing.
 - [ ] **Step 2: Record** the compare table in the ledger. If it fails the Trivy rule, stop and report.
-- [ ] **Step 3: Merge with the owner's OK**; confirm `ghcr.io/neilcar/stash:v0.31.1` is published, signed, both arches; record the digest. Make the package public if the owner agrees (GHCR packages start private; the cluster pulls without a secret for other public images).
+- [ ] **Step 3: Merge with the owner's OK**; confirm `ghcr.io/neilcar/stash:v0.31.1` is published, signed, both arches; record the digest. The package stays private (owner's decision); the cluster pulls it with the existing `apps/ghcr-pull` secret (Task 7).
 - [ ] **Step 4: Commit** (with Step 1) — `CI: build, compare, publish and watch for releases`; after the merge, `gh workflow run watch.yml` with nothing new → no commit (log `nothing to do`).
 
 ### Task 6: The `arr` chart follows stash-image and opens Fleet PRs
@@ -161,6 +161,7 @@ the runner (never in the image), Rancher Fleet.
 ### Task 7: First switch and checks
 
 - [ ] **Step 1: Back up the database:** GraphQL `backupDatabase` mutation on the running Stash (writes a dated copy next to `stash-go.sqlite` in `/config`); confirm the file exists and record its name.
+- [ ] **Step 1b: Pull secret:** in `lxdk8s` `fleet/arr/arr-values.yaml` set `common.imagePullSecrets: [{name: ghcr-pull}]` (the `arr` chart applies it to every app pod; `apps/ghcr-pull` already pulls private `ghcr.io/neilcar/*`), via a PR merged with the owner's OK, after pull-testing `ghcr.io/neilcar/stash@<digest>` with that secret in a throwaway pod in `apps` on an amd64 node.
 - [ ] **Step 2: The first Fleet PR** is opened by `arr-helm`'s release after Task 6 merges; review its diff (only `version:` in `fleet/arr/fleet.yaml`) and `helm diff`/`helm template` between the old and new chart versions (only Stash's image changes, plus any other app the daily update moved — list them for the owner); merge with the owner's OK; wait for the `homelab-apps` GitRepo to reach the CI-promoted `deploy` commit and `homelab-apps-fleet-arr` to be Ready.
 - [ ] **Step 3: Verify on the real pod:** the pod runs `ghcr.io/neilcar/stash@<digest>`; `/healthz` 200; the library's scene count equals the pre-switch count (GraphQL `findScenes` count, recorded in Step 1); `jobQueue` empty or progressing; a live-transcode request for one HEVC/non-browser scene from the library returns a decodable stream (`ffprobe` from the runner image); the stash-scheduler plugin's next scheduled run appears in the logs; one real scrape succeeds. Ask the owner to play a file that needs transcoding in their browser and confirm.
 - [ ] **Step 4: Trivy in cluster:** the trivy-operator VulnerabilityReport for the new image is below v0.31.1's per the Trivy rule; record both.
