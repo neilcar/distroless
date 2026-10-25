@@ -9,7 +9,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - libvips=8.18.7-r2
+  - distroless-libvips=8.18.7-r0
   - distroless-no-shell
   - ffmpeg
   - exiftool
