@@ -1,8 +1,9 @@
 # Distroless Stash image — design
 
 Status: approved by the owner, 2026-10-25. Spans `neilcar/distroless` (a new `stash-base`
-image) and a new repo `neilcar/stash-image` (builds Stash from source onto it), plus the
-Fleet values in `neilcar/lxdk8s` (`fleet/arr/arr-values.yaml`).
+image), a new repo `neilcar/stash-image` (builds Stash from source onto it), the `arr`
+chart `neilcar/arr-helm` (`images.yaml`, its release workflow), and the chart pin in
+`neilcar/lxdk8s` (`fleet/arr/fleet.yaml`).
 
 ## Intent
 
@@ -35,15 +36,23 @@ Sunday afternoons; scheduled jobs index new content.
    (owner's decision) at an upstream **release tag** with the current Go and the UI
    (frontend) build, and copies the binary onto `stash-base`. Publishes
    `ghcr.io/neilcar/stash` signed, with SBOM, tag = Stash version plus a build suffix.
-3. **Automatic upgrades** (owner's decision): when Stash publishes a new release (or
-   `stash-base` gets a new digest), CI builds the new image, runs the checks below, and
-   opens a PR on `neilcar/lxdk8s` (into `main`) bumping the `stash` image tag and digest
-   in `fleet/arr/arr-values.yaml`. The owner merges; the existing render check promotes
-   `main` to `deploy`; Fleet deploys. Every release gets a PR; its body says whether the
-   release migrates the database (the owner's merge is the gate). Credential: a
-   fine-grained PAT created by the owner, scoped to `neilcar/lxdk8s` only, Contents and
-   Pull requests read/write, stored as secret `LXDK8S_PR_TOKEN` in `neilcar/stash-image`
-   by the owner (`gh secret set`), never handled by the builder.
+3. **Automatic upgrades** (owner's decision), through the existing `arr` chart
+   (owner's correction, 2026-10-25 — a release rebuilds the chart before Fleet):
+   - `stash-image` builds each new Stash release (and rebuilds when `stash-base` moves),
+     publishes `ghcr.io/neilcar/stash:<version>`, and creates a GitHub release in
+     `neilcar/stash-image` named after the Stash version. It does not touch `lxdk8s`.
+   - `neilcar/arr-helm`: `images.yaml` points `stash` at `ghcr.io/neilcar/stash`, and
+     `.github/scripts/update-images.py` follows `neilcar/stash-image` releases instead of
+     `stashapp/stash`, keeping its 5-day cooldown, the Critical/High-CVE skip, digest
+     pinning, the chart patch bump and publish.
+   - New in `arr-helm`'s `release.yml`: after publishing a chart version it opens or
+     updates one PR on `neilcar/lxdk8s` bumping `version:` in `fleet/arr/fleet.yaml`.
+     The owner merges; the render check promotes `main` to `deploy`; Fleet deploys. This
+     also automates chart bumps for the other arr apps (manual today). The PR body says
+     which images changed and whether a Stash bump migrates the database.
+   - Credential: the owner's fine-grained PAT (Contents + Pull requests read/write on
+     `neilcar/lxdk8s` only) stored as `LXDK8S_PR_TOKEN` in `neilcar/arr-helm` by the
+     owner; the copy in `neilcar/stash-image` is no longer needed.
 4. **Same runtime contract as today:** uid/gid 1000 (`runAsUser`/`runAsGroup` in the
    chart), `HOME=/config`, `STASH_CONFIG_FILE=/config/config.yml`, `STASH_PORT=9998`,
    `USER=stash`, the same volumes (`/config`, `/pr0n`, `/public`, `/complete`,
@@ -131,7 +140,8 @@ Any of these breaking makes the switch a failure even if the findings drop:
 - Trivy: same rule as the owner's other switches — no severity higher than v0.31.1's and
   the total lower, same Trivy DB for both.
 - Rollback: v0.31.1 built from source has v0.31.1's schema, so no migration; copy the
-  sqlite DB before the switch; rollback = restore the upstream image line in the values.
+  sqlite DB before the switch; rollback = pin `fleet/arr/fleet.yaml` back to the previous
+  chart version.
 
 ## Left to the builder
 

@@ -11,8 +11,10 @@ libvips, Python 3.12 with the scrapers'/plugins' libraries; pure-Python wheels n
 Wolfi come in through the vendor layer) with a `-dev` variant that has Go and Node.
 `neilcar/stash-image` builds Stash from an upstream release tag on `stash-base:latest-dev`,
 copies it onto `stash-base:latest`, smoke-tests it (scan, live transcode, plugin, scraper),
-publishes `ghcr.io/neilcar/stash`, and opens a PR on `neilcar/lxdk8s` bumping
-`stash.image` in `fleet/arr/arr-values.yaml`.
+publishes `ghcr.io/neilcar/stash` with a matching GitHub release. The `arr` chart
+(`neilcar/arr-helm`) follows those releases through its existing daily update (cooldown,
+CVE skip, digest pin, chart release), and its release workflow opens a PR on
+`neilcar/lxdk8s` bumping the chart version in `fleet/arr/fleet.yaml`.
 
 **Tech Stack:** apko/melange/`dltools` (existing distroless pipeline), Docker buildx,
 Go (CGO, sqlite), Node 24 + pnpm, GitHub Actions, Trivy, cosign, bash test scripts on
@@ -26,7 +28,8 @@ the runner (never in the image), Rancher Fleet.
 |---|---|---|---|
 | `neilcar/distroless` (`~/code/home/distroless`) | `main` | `stash-base` (has the spec and this plan) | PR, owner merges |
 | `neilcar/stash-image` (clone to `~/code/home/stash-image`) | `main` (README only) | `initial` | PR, owner merges |
-| `neilcar/lxdk8s` (`~/code/home/lxdk8s`) | `main` | opened by CI (Task 6) | owner merges; CI promotes to `deploy` |
+| `neilcar/arr-helm` (`~/code/home/arr-helm`) | `main` | `stash-image-source` | PR, owner merges |
+| `neilcar/lxdk8s` (`~/code/home/lxdk8s`) | `main` | opened by arr-helm CI (Task 6) | owner merges; CI promotes to `deploy` |
 
 ## Global Constraints
 
@@ -37,8 +40,8 @@ the runner (never in the image), Rancher Fleet.
 - Must keep working (owner's failure conditions): **live transcoding in the browser player**, the **stash-scheduler** plugin, the **Python scrapers**, the enabled plugins (PythonDepManager, date_parser, stashdb-performer-gallery, tagScenesWithPerfTags, filenameParser).
 - `stash-gen` and the Alpine helper Jobs are out of scope.
 - Trivy rule: no severity higher than `docker.io/stashapp/stash:v0.31.1@sha256:df744af5a0c976e2ec671052ecc1f8a9aa757fa12b8f9930b59910b7295f0da6` and the total lower, same Trivy DB.
-- Image values in the chart: `stash.image.repository`, `stash.image.tag`, `stash.image.digest` (chart `arr` 0.9.0, `templates/_helpers.tpl` `arr.image`).
-- Cross-repo PRs use secret `LXDK8S_PR_TOKEN` in `neilcar/stash-image` (owner-created, already set). Never print it.
+- Stash's image reaches the cluster only through the `arr` chart: `images.yaml` `stash:` (`repository`/`tag`/`digest`) in `neilcar/arr-helm`, updated by its `release.yml` + `.github/scripts/update-images.py` (5-day cooldown, Critical/High-CVE skip), then the chart pin `version:` in `lxdk8s` `fleet/arr/fleet.yaml`. No `stash.image` override in `arr-values.yaml`.
+- Cross-repo PRs use secret `LXDK8S_PR_TOKEN` in `neilcar/arr-helm` (owner-created, set). Never print it.
 - Deploy only via Fleet (PR to `lxdk8s` `main`); never `helm upgrade`. Merges and pushes to `main` of any repo need the owner's OK.
 - Commit trailers: `distroless` uses `Co-Authored-By: <model> <noreply@anthropic.com>`; `stash-image` the same; `lxdk8s` follow its existing commit style.
 
@@ -48,7 +51,7 @@ the runner (never in the image), Rancher Fleet.
 2. Files a browser can't play directly (HEVC in MKV, MPEG-4 Part 2 in AVI, WMV): the live transcode stream must start and be decodable. Test in Task 4.
 3. Plugin and scraper commands invoking `python` vs `python3`, and scripts with `#!/usr/bin/env python3` shebangs (the runtime's `/usr/bin/env` is the minimal launcher): both names must resolve. Test in Task 2 (base smoke) and Task 4.
 4. Wheels: a vendored wheel that is not pure-Python (`py3-none-any`) or whose sha256 doesn't match must fail the build, not install. Test in Task 1.
-5. Upgrade automation on an unchanged state: a scheduled watcher run with no new Stash release and unchanged base digests must make no commit and open no PR; an existing open lxdk8s PR is updated, not duplicated. Test in Task 6.
+5. Upgrade automation on an unchanged state: a scheduled stash-image watcher run with no new Stash release and unchanged base digests makes no commit and no release; an arr-helm run that publishes nothing opens no lxdk8s PR, and an existing open bump PR is updated, not duplicated. Tests in Tasks 5 and 6.
 
 ---
 
@@ -126,37 +129,40 @@ the runner (never in the image), Rancher Fleet.
 
 **Interfaces:**
 - Triggers: push to `main`, PRs, `workflow_dispatch`, `workflow_call` (Task 6).
-- Jobs: per arch on native runners (`ubuntu-24.04`, `ubuntu-24.04-arm`): build, `check.sh`, `smoke.sh`, Trivy JSON of the candidate; one `compare` job: Trivy of the candidate (amd64) vs `docker.io/stashapp/stash:v0.31.1@sha256:df744af5…` with the same DB (`--skip-db-update` after one download) → table in the job summary; fails if any severity is higher or the total isn't lower; `publish` (main only): push by digest, multi-arch manifest `ghcr.io/neilcar/stash`, tags `<STASH_VERSION>` and `<STASH_VERSION>-<short git sha of stash-image>`, `cosign sign --recursive`, SBOM attestation; outputs `digest` and `tag`.
+- Jobs: per arch on native runners (`ubuntu-24.04`, `ubuntu-24.04-arm`): build, `check.sh`, `smoke.sh`, Trivy JSON of the candidate; one `compare` job: Trivy of the candidate (amd64) vs `docker.io/stashapp/stash:v0.31.1@sha256:df744af5…` with the same DB (`--skip-db-update` after one download) → table in the job summary; fails if any severity is higher or the total isn't lower; `publish` (main only): push by digest, multi-arch manifest `ghcr.io/neilcar/stash`, tags `<STASH_VERSION>` and `<STASH_VERSION>-<short git sha of stash-image>`, `cosign sign --recursive`, SBOM attestation; then creates or updates the GitHub release `<STASH_VERSION>` in `neilcar/stash-image` (a rebuild for a new base digest updates the same release's notes with the new digest and keeps its tag, so the chart follows the digest like other moving images); outputs `digest` and `tag`.
+- `.github/workflows/watch.yml` (daily + dispatch) + `scripts/watch.py` (stdlib): `latest_release(releases: list[dict]) -> str | None` (newest non-draft, non-prerelease `vX.Y.Z` of `stashapp/stash`); `plan_bump(current_version, current_commit, latest, base_digests_now, base_digests_pinned) -> dict` (`{}` when nothing changed); writes `STASH_VERSION`, `STASH_COMMIT` (tags API) and the two `FROM` digests; the workflow commits only when something changed (bot identity, `chore: Stash <ver>` / `chore: stash-base digests`) and pushes to `main`, triggering the build. Tests `tests/test_watch.py`: `test_latest_release_skips_prereleases_and_drafts`, `test_plan_bump_no_change_is_empty` (Review Focus 5), `test_plan_bump_new_release`, `test_plan_bump_base_digest_only`.
 - Actions pinned by commit SHA.
 
 - [ ] **Step 1: Push `initial`** and open the PR into `main` (body ends with the Claude Code line). Expected: build, check, smoke green on both arches; compare table posted and passing.
 - [ ] **Step 2: Record** the compare table in the ledger. If it fails the Trivy rule, stop and report.
 - [ ] **Step 3: Merge with the owner's OK**; confirm `ghcr.io/neilcar/stash:v0.31.1` is published, signed, both arches; record the digest. Make the package public if the owner agrees (GHCR packages start private; the cluster pulls without a secret for other public images).
-- [ ] **Step 4: Commit** (with Step 1) — `CI: build, compare and publish`.
+- [ ] **Step 4: Commit** (with Step 1) — `CI: build, compare, publish and watch for releases`; after the merge, `gh workflow run watch.yml` with nothing new → no commit (log `nothing to do`).
 
-### Task 6: Release watcher and Fleet PR
+### Task 6: The `arr` chart follows stash-image and opens Fleet PRs
 
-**Files:**
-- Create: `.github/workflows/watch.yml` (daily schedule + dispatch), `scripts/watch.py` (stdlib only), `scripts/fleet_pr.py` (stdlib only), `tests/test_watch.py`, `tests/test_fleet_pr.py` (pytest, run in CI)
-- Modify: `.github/workflows/build.yml` (call `fleet_pr.py` after `publish` on main)
+**Files** (repo `neilcar/arr-helm`, branch `stash-image-source`):
+- Modify: `images.yaml` (`stash.repository: ghcr.io/neilcar/stash`, tag/digest of the Task 5 release), `.github/scripts/update-images.py` (source map: `ghcr.io/neilcar/stash` → GitHub releases of `neilcar/stash-image`), `.github/workflows/release.yml` (a `fleet-pr` step after publishing), `README.md` (Image versions and releases)
+- Create: `.github/scripts/fleet_pr.py` (stdlib only), `.github/scripts/test_fleet_pr.py`
+- Modify: `.github/scripts/test_update_images.py`
 
 **Interfaces:**
-- `watch.py`: `latest_release(releases: list[dict]) -> str | None` (newest non-draft, non-prerelease `vX.Y.Z`); `plan_bump(current_version, current_commit, latest, base_digests_now, base_digests_pinned) -> dict` (what to change, or `{}`); writes `STASH_VERSION`, `STASH_COMMIT` (resolved via the tags API) and the two `FROM` digests in `Dockerfile` (`crane digest`); the workflow commits only when something changed (bot identity, `chore: Stash <ver>` / `chore: stash-base digests`) and pushes to `main`, which triggers `build.yml`.
-- `fleet_pr.py`: `update_values(text: str, repository: str, tag: str, digest: str) -> str` edits only `stash.image.{repository,tag,digest}` in `arr-values.yaml` (adds the `image:` block under `stash:` if absent, keeps comments and everything else byte-identical); `migration_note(prev_tag, new_tag) -> str` (compares the number of files in `pkg/sqlite/migrations` between the two tags via the contents API: "This release migrates the database (N new migrations); Stash backs it up first." or "No database migration."); opens or updates one PR on `neilcar/lxdk8s` from branch `stash-image/bump` into `main` with `LXDK8S_PR_TOKEN`, title `Stash <tag>`, body with the version, digest, compare table link and migration note.
+- `update-images.py`: the existing per-image logic, with the new mapping; cooldown and the CVE-aware skip apply unchanged (a stash-image release's age is its `published_at`; a rebuilt digest under the same tag is "a rebuilt image" in the existing logic).
+- `fleet_pr.py`: `bump_fleet(text: str, version: str) -> str` edits only the `version:` under `helm:` in `fleet/arr/fleet.yaml` (keeps comments and the rest byte-identical); `pr_body(old_images: dict, new_images: dict, migrations: dict[str, int]) -> str` lists changed images (old → new tag/digest) and, for a Stash tag change, the number of new files in `pkg/sqlite/migrations` between the two Stash tags (contents API): "This Stash release migrates the database (N migrations); Stash backs it up first." / "No database migration."; `open_or_update_pr(token, version, body)` uses branch `arr-chart/bump` into `main` on `neilcar/lxdk8s`, title `arr chart <version>`, updating the existing open PR if there is one; reads `LXDK8S_PR_TOKEN` from the env and never prints it.
+- `release.yml`: runs `fleet_pr.py` only when the workflow published a new chart version (not on runs that publish nothing).
 
-- [ ] **Step 1: Write the failing tests:** `test_latest_release_skips_prereleases_and_drafts`; `test_plan_bump_no_change_is_empty` (Review Focus 5); `test_plan_bump_new_release`; `test_plan_bump_base_digest_only`; `test_update_values_adds_image_block_and_keeps_rest` (on a copy of today's `arr-values.yaml`: only lines under `stash:` change, the rest is byte-identical); `test_update_values_replaces_existing_image`; `test_migration_note_counts_new_files`; `test_fleet_pr_updates_existing_pr` (Review Focus 5; HTTP calls faked at the `urllib` boundary).
-- [ ] **Step 2: Run them to see them fail.** `python -m pytest tests -q` → FAIL.
-- [ ] **Step 3: Implement** both scripts and the workflow wiring.
-- [ ] **Step 4: Verify.** Tests pass; `gh workflow run watch.yml` on `main` (after Task 5's merge) with no new release → no commit, no PR (log says `nothing to do`).
-- [ ] **Step 5: Commit** via a PR into `main` — `Watch for Stash releases and open Fleet PRs`; merge with the owner's OK.
+- [ ] **Step 1: Write the failing tests:** in `test_update_images.py`, `test_stash_follows_stash_image_releases` (a fake `neilcar/stash-image` release list → the newest release older than the cooldown is picked, a newer CVE-fixing one is taken at once, matching the existing tests' fixtures style); in `test_fleet_pr.py`, `test_bump_fleet_only_changes_version` (on a copy of today's `fleet/arr/fleet.yaml`), `test_pr_body_reports_migrations`, `test_pr_body_no_migration`, `test_open_or_update_pr_updates_existing` and `test_no_publish_no_pr` (Review Focus 5; HTTP faked at the `urllib` boundary).
+- [ ] **Step 2: Run them to see them fail.** `python -m pytest .github/scripts -q` → the new ones FAIL.
+- [ ] **Step 3: Implement**, and switch `images.yaml` to the Task 5 image (tag `v0.31.1`, its digest). Do not bump `Chart.yaml` by hand — the release workflow does it.
+- [ ] **Step 4: Verify.** Tests pass; `helm template` with the chart renders Stash as `ghcr.io/neilcar/stash:v0.31.1@sha256:<Task 5 digest>`; `helm lint` clean; the repo's `lint.yml` and `readonly-check.yml` pass on the PR.
+- [ ] **Step 5: Commit** and open the PR into `arr-helm` `main` — `Build Stash from neilcar/stash-image and open Fleet PRs for chart releases`. Merging it (owner's OK) publishes the next chart version, which opens the first `lxdk8s` PR (Task 7).
 
 ## Part 3 — Cutover
 
 ### Task 7: First switch and checks
 
 - [ ] **Step 1: Back up the database:** GraphQL `backupDatabase` mutation on the running Stash (writes a dated copy next to `stash-go.sqlite` in `/config`); confirm the file exists and record its name.
-- [ ] **Step 2: Open the first Fleet PR** by dispatching the `fleet_pr` step for the published `v0.31.1` image (or let Task 6's flow do it); review its diff (only `stash.image`); merge with the owner's OK; wait for the `homelab-apps` GitRepo to reach the CI-promoted `deploy` commit and the `homelab-apps-fleet-arr` bundle to be Ready.
+- [ ] **Step 2: The first Fleet PR** is opened by `arr-helm`'s release after Task 6 merges; review its diff (only `version:` in `fleet/arr/fleet.yaml`) and `helm diff`/`helm template` between the old and new chart versions (only Stash's image changes, plus any other app the daily update moved — list them for the owner); merge with the owner's OK; wait for the `homelab-apps` GitRepo to reach the CI-promoted `deploy` commit and `homelab-apps-fleet-arr` to be Ready.
 - [ ] **Step 3: Verify on the real pod:** the pod runs `ghcr.io/neilcar/stash@<digest>`; `/healthz` 200; the library's scene count equals the pre-switch count (GraphQL `findScenes` count, recorded in Step 1); `jobQueue` empty or progressing; a live-transcode request for one HEVC/non-browser scene from the library returns a decodable stream (`ffprobe` from the runner image); the stash-scheduler plugin's next scheduled run appears in the logs; one real scrape succeeds. Ask the owner to play a file that needs transcoding in their browser and confirm.
 - [ ] **Step 4: Trivy in cluster:** the trivy-operator VulnerabilityReport for the new image is below v0.31.1's per the Trivy rule; record both.
-- [ ] **Step 5: Rollback (only if a check fails):** revert the Fleet PR (restoring the chart default image), wait for Fleet, confirm the old image runs; restore the Step 1 backup only if the database was changed by the new image.
+- [ ] **Step 5: Rollback (only if a check fails):** revert the Fleet PR (pinning `fleet/arr/fleet.yaml` back to the previous chart version), wait for Fleet, confirm the old image runs; restore the Step 1 backup only if the database was changed by the new image.
 - [ ] **Step 6: Record** the results in `stash-image` `README.md` (Results section) and `distroless` `README.md` (Results row) via PRs.
