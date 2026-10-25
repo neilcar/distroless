@@ -152,6 +152,7 @@ Trivy, Critical/High/Medium/Low, same database for each before/after pair.
 | tailnet-egress-watcher (`distroless/static-debian12`) | 0/0/0/0 + 3 unrated Debian advisories | 0/0/0/0 | switched |
 | node-capacity-watcher (`distroless/static`) | 0/0/0/0 | 0/0/0/0 | switched |
 | atpass-web (`nginx:1.30-alpine-slim` → `nginx:mainline`) | 0/0/0/0 | 0/0/1/0 | switched; the zlib Medium also affects Alpine's zlib 1.3.2-r1, but Alpine's feed only lists CVEs once fixed |
+| Stash v0.31.1 (`stashapp/stash` → [`neilcar/stash`](https://github.com/neilcar/stash-image) on `stash-base`) | 13/78/44/6 | 0/2/3/1 | switched 2026-10-25; cluster trivy-operator report. CI Trivy with every package type (Go modules included): 13/190/191/56 → 0/21/24/1 |
 
 ## Development
 
