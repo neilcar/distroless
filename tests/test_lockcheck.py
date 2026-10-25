@@ -65,3 +65,8 @@ def test_image_forbidden_photoprism_base():
     from dltools.lockcheck import image_forbidden
     assert image_forbidden("locks/photoprism-base/latest/dev.lock.json") == {"libvips", "libvips-dev"}
     assert image_forbidden("locks/python/3.12/runtime.lock.json") == frozenset()
+
+
+def test_image_forbidden_stash_base():
+    from dltools.lockcheck import image_forbidden
+    assert image_forbidden("locks/stash-base/latest/runtime.lock.json") == {"libvips", "libvips-dev"}

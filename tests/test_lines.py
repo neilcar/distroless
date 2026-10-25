@@ -14,6 +14,7 @@ from dltools.lines import (
     nginx_lines,
     photoprism_base_lines,
     python_lines,
+    stash_base_lines,
     static_lines,
 )
 from dltools.wolfi import parse_apkindex
@@ -191,3 +192,17 @@ def test_libvips_behind_needs_every_arch(indexes):
     one = {"x86_64": {**indexes["x86_64"], "libvips": ["8.19.0-r0"]}, "aarch64": indexes["aarch64"]}
     assert libvips_behind(one, "8.18.7-r0") is None
     assert libvips_behind({"x86_64": {}, "aarch64": {}}, "8.18.7-r0") is None
+
+
+def test_stash_base_line(indexes):
+    # One `latest` line headed by Python 3.12 at its newest version on both arches.
+    assert stash_base_lines(indexes) == [Line("stash-base", "latest", "python-3.12", "3.12.15-r6")]
+    assert stash_base_lines({"x86_64": {}, "aarch64": {}}) == []
+    snap = {a: {"python-3.12": ["3.12.15-r6", "3.12.16_rc1-r0"]} for a in ("x86_64", "aarch64")}
+    assert stash_base_lines(snap)[0].version == "3.12.15-r6"  # pre-releases are skipped
+
+
+def test_discover_includes_stash_base(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert [ln for ln in lines if ln.image == "stash-base"] == [
+        Line("stash-base", "latest", "python-3.12", "3.12.15-r6")]

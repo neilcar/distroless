@@ -11,9 +11,13 @@ RUNTIME_FORBIDDEN = frozenset(
     {"busybox", "bash", "dash", "zsh", "ash", "apk-tools", "wolfi-base", "coreutils", "toybox"}
 )
 
-# Packages one image must never contain, whatever the variant. photoprism-base uses
-# distroless-libvips (built with lcms2); Wolfi's libvips would replace or sit beside it.
-IMAGE_FORBIDDEN = {"photoprism-base": frozenset({"libvips", "libvips-dev"})}
+# Packages one image must never contain, whatever the variant. photoprism-base and
+# stash-base use distroless-libvips (built with lcms2); Wolfi's libvips would replace or
+# sit beside it.
+IMAGE_FORBIDDEN = {
+    "photoprism-base": frozenset({"libvips", "libvips-dev"}),
+    "stash-base": frozenset({"libvips", "libvips-dev"}),
+}
 
 
 def image_forbidden(lock_path) -> frozenset[str]:

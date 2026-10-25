@@ -85,6 +85,18 @@ def _pick_file(entry: dict, arch: str) -> dict:
     raise KeyError(f"{entry['name']}: no file for {arch}")
 
 
+def is_pure_wheel(filename: str) -> bool:
+    """True for a pure-Python wheel name: a py3 python tag (e.g. `py3`, `py2.py3`), abi
+    `none`, platform `any`."""
+    if not filename.endswith(".whl"):
+        return False
+    parts = filename[: -len(".whl")].split("-")
+    if len(parts) < 5:
+        return False
+    python, abi, platform = parts[-3:]
+    return "py3" in python.split(".") and abi == "none" and platform == "any"
+
+
 def _install_wheel(entry: dict, wheel: Path, layer: "_Layer", tmp: Path) -> None:
     """Add exactly the wheel's members under the entry prefix (RECORD stays as shipped)."""
     name, prefix = entry["name"], entry["prefix"]
@@ -168,8 +180,9 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
     entries = vendor["vendor"]
     chosen = [_pick_file(e, arch) for e in entries]
     for e, f in zip(entries, chosen):
-        if e["kind"] == "wheel" and not PurePosixPath(f["url"]).name.endswith("-py3-none-any.whl"):
-            raise ValueError(f"{e['name']}: only pure-Python (py3-none-any) wheels are supported")
+        if e["kind"] == "wheel" and not is_pure_wheel(PurePosixPath(f["url"]).name):
+            raise ValueError(f"{e['name']}: only pure-Python wheels (py3[...]-none-any) "
+                             "are supported")
     # Download and verify everything before unpacking any of it.
     fetched = [(e, fetch(f["url"], f["sha256"], cache_dir)) for e, f in zip(entries, chosen)]
 

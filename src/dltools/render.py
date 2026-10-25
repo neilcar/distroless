@@ -30,6 +30,11 @@ def render(catalog: dict, line: Line, variant: str) -> dict:
         packages.append(pin)
 
     accounts = dict(catalog["accounts"])
+    # An image may add its own accounts beside the shared nonroot one.
+    for kind in ("groups", "users"):
+        extra = image.get("accounts", {}).get(kind, [])
+        if extra:
+            accounts[kind] = [dict(a) for a in accounts.get(kind, [])] + [dict(a) for a in extra]
     if "run_as" in image:
         accounts["run-as"] = image["run_as"]
 
