@@ -117,7 +117,9 @@ Three packages live in `melange/`:
   options and provides what `libvips` / `libvips-dev` provide; `photoprism-base`
   installs it instead and is versioned by it. Sync opens an `automation` issue
   "distroless-libvips is behind Wolfi libvips <version>" whenever Wolfi's newest released
-  libvips differs; bump `version` and `expected-sha256` in the melange file to follow.
+  libvips is newer; bump `version` and `expected-sha256` in the melange file to follow.
+  `dl lock-check` fails any photoprism-base lock that contains Wolfi's `libvips` or
+  `libvips-dev`.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

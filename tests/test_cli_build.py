@@ -121,3 +121,22 @@ def test_state_revert_restores_previous_entry(tmp_path):
                      "--image", "python", "--line", "3.15"]) == 0
     lines = json.loads(cur.read_text())["lines"]
     assert lines == [dict(entry, version="3.12.15-r6")]  # 3.15 was new: dropped
+
+
+@pytest.mark.parametrize("variant", ["runtime", "dev"])
+@pytest.mark.parametrize("wolfi_pkg", ["libvips", "libvips-dev"])
+def test_lock_check_rejects_wolfi_libvips_in_photoprism_base(tmp_path, capsys, variant, wolfi_pkg):
+    def write(image, names):
+        lock = tmp_path / f"locks/{image}/latest/{variant}.lock.json"
+        lock.parent.mkdir(parents=True, exist_ok=True)
+        lock.write_text(json.dumps({"contents": {"packages": [
+            {"name": n, "version": "8.18.7-r2", "architecture": a}
+            for a in ("x86_64", "aarch64") for n in names]}}))
+        return str(lock)
+    ok = write("photoprism-base", ["distroless-libvips", "distroless-libvips-dev"])
+    assert cli.main(["lock-check", ok]) == 0
+    bad = write("photoprism-base", ["distroless-libvips", wolfi_pkg])
+    assert cli.main(["lock-check", bad]) == 1
+    assert f"{wolfi_pkg} is not allowed in this image" in capsys.readouterr().out
+    # Other images may use Wolfi's libvips.
+    assert cli.main(["lock-check", write("other", [wolfi_pkg])]) == 0

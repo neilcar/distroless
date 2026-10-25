@@ -16,6 +16,11 @@ package:
       - lcms2
     provides:
       - libvips=${{package.full-version}}
+    # Prefer this over Wolfi's libvips (whose -rN sorts higher) wherever apk picks a
+    # provider of libvips / so:libvips.so.42. A dependency on the bare name `libvips`
+    # can still select Wolfi's package, so `dl lock-check` also fails any photoprism-base
+    # lock that contains libvips or libvips-dev.
+    provider-priority: 100
 
 environment:
   contents:
@@ -68,6 +73,7 @@ subpackages:
     dependencies:
       provides:
         - libvips-dev=${{package.full-version}}
+      provider-priority: 100
     pipeline:
       - uses: split/dev
 

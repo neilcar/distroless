@@ -59,3 +59,9 @@ def test_lockcheck_runtime_still_rejects_real_bash():
     lock = _runtime_lock("libsrt", "distroless-no-shell", "bash")
     v = check_lock(lock, forbidden=RUNTIME_FORBIDDEN)
     assert len(v) == 2 and all("bash" in x for x in v)
+
+
+def test_image_forbidden_photoprism_base():
+    from dltools.lockcheck import image_forbidden
+    assert image_forbidden("locks/photoprism-base/latest/dev.lock.json") == {"libvips", "libvips-dev"}
+    assert image_forbidden("locks/python/3.12/runtime.lock.json") == frozenset()

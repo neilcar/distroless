@@ -22,7 +22,7 @@ from dltools.lines import (
     libvips_behind,
     melange_version,
 )
-from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock
+from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock, image_forbidden
 from dltools.notify import upsert_issue
 from dltools.ocilayout import append_layer
 from dltools.pinning import apply_pins, released_overrides
@@ -209,7 +209,8 @@ def cmd_lock_check(args) -> int:
     failed = False
     forbidden = RUNTIME_FORBIDDEN if args.runtime else frozenset()
     for path in args.locks:
-        for violation in check_lock(json.loads(Path(path).read_text()), forbidden=forbidden):
+        lock = json.loads(Path(path).read_text())
+        for violation in check_lock(lock, forbidden=forbidden | image_forbidden(path)):
             print(f"{path}: {violation}")
             failed = True
     return 1 if failed else 0
@@ -322,7 +323,7 @@ def build_parser() -> argparse.ArgumentParser:
     vcheck.set_defaults(func=cmd_vendor_check)
 
     vips = sub.add_parser("libvips-check",
-                          help="open an issue when distroless-libvips differs from Wolfi libvips")
+                          help="open an issue when Wolfi libvips is newer than distroless-libvips")
     vips.add_argument("--melange", default=LIBVIPS_MELANGE)
     vips.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
     vips.add_argument("--dry-run", action="store_true", help="print, never notify")

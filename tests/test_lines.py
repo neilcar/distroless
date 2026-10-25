@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date
 from pathlib import Path
 
@@ -170,8 +171,9 @@ def test_melange_version(tmp_path):
     assert melange_version(tmp_path / "missing.yaml") is None
 
 
-def test_repo_libvips_package_matches_wolfi_version():
-    assert melange_version(ROOT / LIBVIPS_MELANGE).startswith("8.18.7-r")
+def test_repo_libvips_package_version_format():
+    # Format only: the version is bumped by hand to follow Wolfi.
+    assert re.fullmatch(r"\d+\.\d+\.\d+-r\d+", melange_version(ROOT / LIBVIPS_MELANGE))
 
 
 def test_libvips_behind_compares_upstream_versions_only(indexes):
@@ -179,7 +181,8 @@ def test_libvips_behind_compares_upstream_versions_only(indexes):
     assert libvips_behind(indexes, "8.18.7-r0") is None
     assert libvips_behind(indexes, "8.18.7-r5") is None  # Wolfi epoch bumps don't count
     assert libvips_behind(indexes, "8.18.6-r0") == "8.18.7"
-    assert libvips_behind(indexes, "8.18.8-r0") == "8.18.7"  # any difference is reported
+    assert libvips_behind(indexes, "8.18.8-r0") is None  # ahead of Wolfi: not behind
+    assert libvips_behind(indexes, "8.18.10-r0") is None  # compared as versions, not strings
     newer = {a: {**idx, "libvips": idx["libvips"] + ["8.19.0-r1"]} for a, idx in indexes.items()}
     assert libvips_behind(newer, "8.18.7-r0") == "8.19.0"
 

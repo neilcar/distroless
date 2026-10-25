@@ -89,14 +89,16 @@ def melange_version(path) -> str | None:
 
 
 def libvips_behind(indexes, local_version: str) -> str | None:
-    """Wolfi's newest released libvips upstream version (on every arch) when it differs
-    from distroless-libvips's; None when they match or Wolfi has no released libvips.
-    Epochs (-rN) are ignored: only the upstream version has to follow Wolfi."""
+    """Wolfi's newest released libvips upstream version (on every arch) when it is newer
+    than distroless-libvips's; None otherwise. Epochs (-rN) are ignored: only the
+    upstream version has to follow Wolfi."""
     wolfi = newest_released_all_arches(indexes, WOLFI_LIBVIPS)
     if wolfi is None:
         return None
     wolfi_upstream = upstream_version(wolfi)
-    return None if wolfi_upstream == upstream_version(local_version) else wolfi_upstream
+    if version_key(wolfi_upstream) > version_key(upstream_version(local_version)):
+        return wolfi_upstream
+    return None
 
 
 def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:
