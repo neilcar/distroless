@@ -63,3 +63,41 @@ def test_several_vendor_files_one_issue_with_wheels(tmp_path, monkeypatch):
     (_title, body), kw = calls[0]
     assert len(calls) == 1 and kw == {"dedupe": True}
     assert "darktable: 5.6.3" in body and "stashapi: 0.2.60 is available on PyPI" in body
+
+
+def test_one_failed_source_does_not_hide_the_others(tmp_path, monkeypatch, capsys):
+    # GitHub fails for photoprism-base's file; stash-base's PyPI check still reports.
+    tools = tmp_path / "pp.json"
+    tools.write_text(json.dumps(VENDOR))
+    wheels = tmp_path / "stash.json"
+    wheels.write_text(json.dumps({"vendor": [{
+        "name": "stashapi", "version": "0.2.59", "kind": "wheel",
+        "files": {"any": {"url": "https://x/stashapp_tools-0.2.59-py3-none-any.whl"}}}]}))
+
+    def github(v, t):
+        if v["vendor"][0]["name"] == "darktable":
+            raise urllib.error.HTTPError("https://api.github.com", 403, "rate limited", {}, None)
+        return {}
+
+    calls = []
+    monkeypatch.setattr(cli, "fetch_releases", github)
+    monkeypatch.setattr(cli, "fetch_pypi", lambda v: {"stashapi": {"releases": {
+        "0.2.60": [{"yanked": False}]}}} if v["vendor"][0]["name"] == "stashapi" else {})
+    monkeypatch.setattr(cli, "upsert_issue", lambda *a, **k: calls.append((a, k)))
+    assert cli.main(["vendor-check", "--vendor", str(tools), "--vendor", str(wheels)]) == 0
+    assert len(calls) == 1 and "stashapi: 0.2.60 is available on PyPI" in calls[0][0][1]
+    err = capsys.readouterr().err
+    assert "warning" in err and "pp.json (GitHub)" in err
+
+
+def test_unreadable_vendor_file_warns_and_continues(tmp_path, monkeypatch, capsys):
+    good = tmp_path / "pp.json"
+    good.write_text(json.dumps(VENDOR))
+    calls = []
+    monkeypatch.setattr(cli, "fetch_releases", lambda v, t: NEWER)
+    monkeypatch.setattr(cli, "fetch_pypi", lambda v: {})
+    monkeypatch.setattr(cli, "upsert_issue", lambda *a, **k: calls.append((a, k)))
+    assert cli.main(["vendor-check", "--vendor", str(tmp_path / "missing.json"),
+                     "--vendor", str(good)]) == 0
+    assert len(calls) == 1 and "darktable: 5.6.3" in calls[0][0][1]
+    assert "missing.json" in capsys.readouterr().err

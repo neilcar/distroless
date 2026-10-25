@@ -97,7 +97,7 @@ def is_pure_wheel(filename: str) -> bool:
     return "py3" in python.split(".") and abi == "none" and platform == "any"
 
 
-def _install_wheel(entry: dict, wheel: Path, layer: "_Layer", tmp: Path) -> None:
+def _install_wheel(entry: dict, wheel: Path, layer: _Layer, tmp: Path) -> None:
     """Add exactly the wheel's members under the entry prefix (RECORD stays as shipped)."""
     name, prefix = entry["name"], entry["prefix"]
     layer.add(prefix, "dir", 0o755)

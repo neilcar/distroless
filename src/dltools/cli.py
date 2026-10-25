@@ -137,21 +137,33 @@ def cmd_notify(args) -> int:
 
 
 def cmd_vendor_check(args) -> int:
-    try:
-        messages = []
-        for path in args.vendor:  # every image's vendor.json: one issue covers them all
+    """One deduped issue for every vendor.json. Each source (a file, its GitHub releases, its
+    PyPI wheels) is checked on its own: a failure warns and the rest is still reported."""
+    messages: list[str] = []
+
+    def check(what: str, fn, vendor: dict) -> None:
+        try:
+            messages.extend(fn(vendor))
+        except (OSError, ValueError) as exc:  # network, bad response, unreadable file
+            print(f"warning: vendored release check failed for {what}: {exc}", file=sys.stderr)
+
+    for path in args.vendor:  # every image's vendor.json: one issue covers them all
+        try:
             vendor = json.loads(Path(path).read_text())
-            messages += newer_releases(vendor, fetch_releases(vendor, token()))
-            messages += newer_wheels(vendor, fetch_pypi(vendor))
-        messages = list(dict.fromkeys(messages))
-        if args.dry_run:
-            print("\n".join(messages) if messages else "no newer releases")
-        elif messages:
+        except (OSError, ValueError) as exc:
+            print(f"warning: vendored release check failed for {path}: {exc}", file=sys.stderr)
+            continue
+        check(f"{path} (GitHub)", lambda v: newer_releases(v, fetch_releases(v, token())), vendor)
+        check(f"{path} (PyPI)", lambda v: newer_wheels(v, fetch_pypi(v)), vendor)
+    messages = list(dict.fromkeys(messages))
+    if args.dry_run:
+        print("\n".join(messages) if messages else "no newer releases")
+    elif messages:
+        try:
             upsert_issue("Vendored tool updates available",
                          "\n".join(f"- {m}" for m in messages), dedupe=True)
-    except (OSError, ValueError, subprocess.CalledProcessError) as exc:
-        # network, bad response or gh failure: warn, don't fail the job
-        print(f"warning: vendored release check failed: {exc}", file=sys.stderr)
+        except (OSError, subprocess.CalledProcessError) as exc:  # gh failure: warn only
+            print(f"warning: vendored release check could not notify: {exc}", file=sys.stderr)
     return 0
 
 

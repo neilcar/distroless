@@ -131,18 +131,19 @@ print("imports ok")'
     # The EmbeddedMetadata scraper: PyExifTool runs exiftool (`#!/usr/bin/env perl`).
     tool exiftool -ver >/dev/null || fail "exiftool -ver as uid $user"
     # PythonDepManager and py_common pip-install packages at runtime as uid 1000 (no compiler);
-    # EmbeddedMetadata's pyexiv2 is a manylinux wheel. Needs PyPI: skipped when offline.
+    # EmbeddedMetadata's pyexiv2 is a manylinux wheel. This only proves runtime pip can fetch
+    # and load a glibc wheel, so the versions are pinned (a new upstream release must not fail
+    # the base build). Needs PyPI: skipped when offline.
     if curl -s -o /dev/null --max-time 10 https://pypi.org/simple/pip/; then
-      pip_run() { docker run --rm -e HOME=/tmp --entrypoint python3 "$ref" -m pip "$@" \
-        --no-input --quiet --disable-pip-version-check; }
-      pip_run install --target /tmp/deps --no-deps idna==3.10 || fail "pip install as uid 1000"
-      pip_run download pyexiv2 --no-deps --only-binary=:all: -d /tmp/x \
+      docker run --rm -e HOME=/tmp --entrypoint python3 "$ref" -m pip download --no-input --quiet \
+        --disable-pip-version-check pyexiv2==2.16.0 --no-deps --only-binary=:all: -d /tmp/x \
         || fail "pip found no pyexiv2 wheel for this platform"
       # ... and the scraper's whole path works: pyexiv2 loads, PyExifTool drives exiftool.
       out=$(docker run --rm -e HOME=/tmp -e TZ=Etc/UTC --entrypoint python3 "$ref" -c '
 import subprocess, sys
-subprocess.run([sys.executable, "-m", "pip", "install", "--quiet", "--no-input",
-                "--disable-pip-version-check", "--target", "/tmp/d", "pyexiv2", "pyexiftool"], check=True)
+subprocess.run([sys.executable, "-m", "pip", "install", "--quiet", "--no-input", "--no-deps",
+                "--disable-pip-version-check", "--only-binary=:all:", "--target", "/tmp/d",
+                "pyexiv2==2.16.0", "pyexiftool==0.5.6"], check=True)
 sys.path.insert(0, "/tmp/d")
 import pyexiv2, exiftool
 with exiftool.ExifToolHelper() as et:
