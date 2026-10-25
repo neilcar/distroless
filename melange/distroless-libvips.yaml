@@ -1,0 +1,80 @@
+# libvips built with lcms2, so it has icc_transform/icc_import/icc_export and PhotoPrism can
+# convert Display P3 / Adobe RGB photos to sRGB. Wolfi's libvips is built without lcms2.
+# Otherwise it follows Wolfi's own recipe (wolfi-dev/os libvips.yaml at 8.18.7: same build
+# packages, `-Dheif=enabled`, same -dev and -doc split) and keeps Wolfi's version, so it
+# provides what libvips / libvips-dev provide. `dl libvips-check` (sync.yml) opens an issue
+# when Wolfi's newest released libvips is newer than this version.
+package:
+  name: distroless-libvips
+  version: "8.18.7"
+  epoch: 0
+  description: A fast image processing library with low memory needs (built with lcms2)
+  copyright:
+    - license: LGPL-2.1-or-later
+  dependencies:
+    runtime:
+      - lcms2
+    provides:
+      - libvips=${{package.full-version}}
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - bubblewrap
+      - build-base
+      - busybox
+      - cmake
+      - expat-dev
+      - freetype-dev
+      - glib-dev
+      - glibc-2.44-dev
+      - lcms2-dev
+      - libexif-dev
+      - libheif-dev
+      - libjpeg-turbo-dev
+      - librsvg-dev
+      - meson
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/libvips/libvips/releases/download/v${{package.version}}/vips-${{package.version}}.tar.xz
+      expected-sha256: 5baaead3b0bb20ffdb9e9ff09aa9fda08620923df77b63b436654cb5e0b3bf94
+
+  - uses: meson/configure
+    with:
+      opts: -Dheif=enabled -Dlcms=enabled
+
+  - uses: meson/compile
+
+  - uses: meson/install
+
+  - uses: strip
+
+  - name: Check that colour management is built in
+    runs: |
+      export LD_LIBRARY_PATH="${{targets.destdir}}/usr/lib"
+      vips="${{targets.destdir}}/usr/bin/vips"
+      "$vips" --vips-config | grep -F "ICC profile support with lcms2: true"
+      "$vips" -l | grep -F icc_transform
+
+subpackages:
+  - name: distroless-libvips-dev
+    description: libvips headers and pkg-config files (built with lcms2)
+    dependencies:
+      provides:
+        - libvips-dev=${{package.full-version}}
+    pipeline:
+      - uses: split/dev
+
+  - name: distroless-libvips-doc
+    description: libvips manual pages
+    dependencies:
+      provides:
+        - libvips-doc=${{package.full-version}}
+    pipeline:
+      - uses: split/manpages

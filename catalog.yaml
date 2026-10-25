@@ -46,6 +46,8 @@ images:
 
   photoprism-base:
     # PhotoPrism's runtime tools; runs as root (owner's decision), unlike every other image.
+    # `{package}` is distroless-libvips (melange/, built with lcms2 for icc_transform; Wolfi's
+    # libvips has no lcms2), versioned from its melange config; it provides libvips/libvips-dev.
     run_as: "0"
     lines: [latest]
     # ghostscript is deliberately left out: it pulls gtk-3 -> cups-libs -> avahi-libs, which has
@@ -60,8 +62,10 @@ images:
         # distroless-no-shell provides cmd:bash so ffmpeg's libsrt (which needs bash only
         # for its unused srt-* scripts) installs without a shell. Runtime only; dev keeps bash.
         packages: ["{package}", "distroless-no-shell", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu", "libx11", "libxcb", "wayland-libs-client", "harfbuzz", "libfontconfig1", "freetype", "fribidi", "alsa-lib", "libdrm-libs", "mesa-gbm", "libglvnd", "gmp", "libgpg-error", "libcom_err", "libusb", "libuuid"]
+      # dev: gnutar, rsync, wget and coreutils for PhotoPrism's `make install`; Node >= 24.15
+      # for its frontend build.
       dev:
-        packages: ["{package}", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu", "libx11", "libxcb", "wayland-libs-client", "harfbuzz", "libfontconfig1", "freetype", "fribidi", "alsa-lib", "libdrm-libs", "mesa-gbm", "libglvnd", "gmp", "libgpg-error", "libcom_err", "libusb", "libuuid", "busybox", "bash", "curl", "git", "make", "go-1.27", "nodejs-22", "npm", "gcc", "glibc-dev", "libvips-dev", "libheif-dev", "pkgconf"]
+        packages: ["{package}", "ffmpeg", "exiftool", "perl", "libheif", "imagemagick-7", "libjxl-tools", "librsvg", "rsvg-convert", "mariadb-11.8-client", "sqlite", "x265", "dav1d", "aom", "libde265", "libva", "glibc-locale-posix", "libstdc++", "fontconfig", "ttf-dejavu", "libx11", "libxcb", "wayland-libs-client", "harfbuzz", "libfontconfig1", "freetype", "fribidi", "alsa-lib", "libdrm-libs", "mesa-gbm", "libglvnd", "gmp", "libgpg-error", "libcom_err", "libusb", "libuuid", "busybox", "bash", "curl", "git", "make", "go-1.27", "nodejs-24", "npm", "gcc", "glibc-dev", "{package}-dev", "libheif-dev", "pkgconf", "gnutar", "rsync", "wget", "coreutils"]
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
     # Upstream files with no Wolfi package, pinned by sha256 (see locks/<image>/<line>/vendor.json).
