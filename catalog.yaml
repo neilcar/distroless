@@ -122,17 +122,24 @@ images:
     variants:
       # py3.12-tzlocal .. -pytz: dependencies of the dateparser and apscheduler wheels
       # (date_parser, stash-scheduler); py3.12-pyparsing: cloudscraper's.
+      # exiftool + perl: the EmbeddedMetadata scraper (PyExifTool runs `exiftool`, a
+      # `#!/usr/bin/env perl` script; its pyexiv2 is pip-installed at runtime by the scraper).
       runtime:
         # distroless-no-shell: ffmpeg's libsrt needs cmd:bash only for unused scripts.
-        packages: ["{package}", "distroless-no-shell", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz"]
+        packages: ["{package}", "distroless-no-shell", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl"]
       # dev: Go (Stash's go.mod wants >= 1.24.3), Node.js 24 and npm for the UI build.
       dev:
-        packages: ["{package}", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "busybox", "bash", "coreutils", "git", "make", "gcc", "glibc-dev", "go-1.27", "nodejs-24", "npm"]
+        packages: ["{package}", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl", "busybox", "bash", "coreutils", "git", "make", "gcc", "glibc-dev", "go-1.27", "nodejs-24", "npm"]
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
       - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
       # No /usr/bin/python symlink here: Wolfi's python-3.12 already ships python -> python3
       # (plugins run both); apko refuses a path that a package installs.
+      # CPython 3.12 ships its stdlib cgi.py executable with `#! /usr/local/bin/python`; give
+      # that shebang a target so the shebang audit holds (cgi is only ever imported).
+      # apko chmods through the link, so `permissions` must stay python3.12's own 0755.
+      - {path: /usr/local/bin, type: directory, permissions: 0755, uid: 0, gid: 0}
+      - {path: /usr/local/bin/python, type: symlink, source: /usr/bin/python3.12, permissions: 0755}
     # Pure-Python wheels not in Wolfi, pinned by sha256 (see locks/stash-base/latest/vendor.json).
     vendor:
       - name: cloudscraper

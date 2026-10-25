@@ -14,9 +14,16 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/python` | every supported Python (today 3.11–3.15) | Python runtime only. `-dev` tags add busybox, pip and `uv` for build stages. |
 | `ghcr.io/neilcar/distroless/nginx` | `mainline` (`stable` retired 2026-10-24) | nginx listening on **8080**, pid/temp files in `/tmp`, default server in `/etc/nginx/conf.d/default.conf` (replace it with yours). |
 | `ghcr.io/neilcar/distroless/photoprism-base` | `latest` | PhotoPrism's runtime tools: ffmpeg, exiftool, libvips (`vips`, built here with lcms2 so `icc_transform` works), ImageMagick 7, libheif, libjxl, librsvg, the MariaDB client, sqlite, plus vendored darktable 5.6.2, RawTherapee 5.13 and yt-dlp under `/opt` (run through `/usr/bin/darktable-cli`, `rawtherapee-cli`, `yt-dlp`). Runs as **root**. `-dev` adds busybox, bash, GNU coreutils and tar, rsync, wget, curl, git, Go, Node.js 24, npm, make, gcc and the libvips/libheif headers. |
+| `ghcr.io/neilcar/distroless/stash-base` | `latest` (versioned by Python 3.12) | Base for the shell-free Stash build: ffmpeg, ffprobe, libvips (`vips`, `vipsthumbnail`; the same lcms2 build as photoprism-base), exiftool and perl, Python 3.12 as `python` and `python3` with pip, requests, requests-toolbelt, lxml, beautifulsoup4, tzlocal, regex, python-dateutil, pytz, plus vendored pure-Python wheels cloudscraper, mechanicalsoup, stashapi (stashapp-tools), apscheduler and dateparser. Runs as **1000** (`stash`, home `/config`). `-dev` adds busybox, bash, GNU coreutils, git, make, gcc, Go, Node.js 24 and npm. |
 
 Runtime images have no shell and no package manager and run as uid **65532**
-(`photoprism-base`: uid **0**, the owner's decision).
+(`photoprism-base`: uid **0**, the owner's decision; `stash-base`: uid **1000**, as Stash's pod).
+
+`stash-base` also has a vendor layer: five pure-Python wheels from PyPI (pinned by
+version and sha256 in `catalog.yaml`) unpacked into `/usr/lib/python3.12/site-packages`,
+plus the launcher as `/usr/bin/env` in the runtime variant (so `#!/usr/bin/env python3`
+plugins run). Unlike the AppImages, Trivy can read those wheels, but findings under that
+prefix are listed as *Vendored (not gated)*.
 
 `photoprism-base` has one layer that is not a Wolfi package: darktable, RawTherapee
 and yt-dlp from their upstream release files (pinned by sha256 in `catalog.yaml`,
@@ -118,8 +125,8 @@ Three packages live in `melange/`:
   installs it instead and is versioned by it. Sync opens an `automation` issue
   "distroless-libvips is behind Wolfi libvips <version>" whenever Wolfi's newest released
   libvips is newer; bump `version` and `expected-sha256` in the melange file to follow.
-  `dl lock-check` fails any photoprism-base lock that contains Wolfi's `libvips` or
-  `libvips-dev`.
+  `dl lock-check` fails any photoprism-base or stash-base lock that contains Wolfi's
+  `libvips` or `libvips-dev`. stash-base installs distroless-libvips too.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

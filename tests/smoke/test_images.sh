@@ -128,9 +128,29 @@ print("imports ok")'
       [[ "$out" == "imports ok" ]] || fail "$py imports printed: $out"
     done
     tool python -m pip --version >/dev/null || fail "python -m pip --version"
-    # PythonDepManager and py_common pip-install pure packages at runtime as uid 1000 (no compiler).
-    docker run --rm -e HOME=/tmp --entrypoint python "$ref" -m pip install --no-input --quiet \
-      --disable-pip-version-check --target /tmp/deps --no-deps idna==3.10 || fail "pip install as uid 1000"
+    # The EmbeddedMetadata scraper: PyExifTool runs exiftool (`#!/usr/bin/env perl`).
+    tool exiftool -ver >/dev/null || fail "exiftool -ver as uid $user"
+    # PythonDepManager and py_common pip-install packages at runtime as uid 1000 (no compiler);
+    # EmbeddedMetadata's pyexiv2 is a manylinux wheel. Needs PyPI: skipped when offline.
+    if curl -s -o /dev/null --max-time 10 https://pypi.org/simple/pip/; then
+      pip_run() { docker run --rm -e HOME=/tmp --entrypoint python3 "$ref" -m pip "$@" \
+        --no-input --quiet --disable-pip-version-check; }
+      pip_run install --target /tmp/deps --no-deps idna==3.10 || fail "pip install as uid 1000"
+      pip_run download pyexiv2 --no-deps --only-binary=:all: -d /tmp/x \
+        || fail "pip found no pyexiv2 wheel for this platform"
+      # ... and the scraper's whole path works: pyexiv2 loads, PyExifTool drives exiftool.
+      out=$(docker run --rm -e HOME=/tmp -e TZ=Etc/UTC --entrypoint python3 "$ref" -c '
+import subprocess, sys
+subprocess.run([sys.executable, "-m", "pip", "install", "--quiet", "--no-input",
+                "--disable-pip-version-check", "--target", "/tmp/d", "pyexiv2", "pyexiftool"], check=True)
+sys.path.insert(0, "/tmp/d")
+import pyexiv2, exiftool
+with exiftool.ExifToolHelper() as et:
+    print("embedded ok", bool(et.version))' 2>&1) || fail "EmbeddedMetadata libraries: $out"
+      [[ "$out" == "embedded ok True" ]] || fail "EmbeddedMetadata libraries printed: $out"
+    else
+      echo "smoke note ($image/$variant): PyPI unreachable, skipped the runtime pip checks"
+    fi
     # Plugins start with `#!/usr/bin/env python3` (the runtime env is the launcher).
     dir=$(mktemp -d)
     printf '#!/usr/bin/env python3\nimport sys; print("env ok", sys.version_info[:2])\n' > "$dir/hello.py"

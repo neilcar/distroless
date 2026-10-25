@@ -119,6 +119,8 @@ STASH_RUNTIME_PKGS = {
     "py3.12-pip", "py3.12-pyparsing",
     # dateparser and apscheduler (Step 1 audit)
     "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz",
+    # the EmbeddedMetadata scraper (owner's decision)
+    "exiftool", "perl",
 }
 
 
@@ -134,6 +136,9 @@ def test_render_stash_base_runtime():
     assert "/usr/bin/python" not in {p["path"] for p in cfg["paths"]}
     assert {"path": "/config", "type": "directory", "permissions": 0o755, "uid": 1000,
             "gid": 1000} in cfg["paths"]
+    # target for the stdlib cgi.py shebang (`#! /usr/local/bin/python`)
+    assert {"path": "/usr/local/bin/python", "type": "symlink",
+            "source": "/usr/bin/python3.12", "permissions": 0o755} in cfg["paths"]
     assert "./packages" in cfg["contents"]["repositories"]
     assert "./melange.rsa.pub" in cfg["contents"]["keyring"]
     wheels = {v["name"]: v for v in render_vendor(CATALOG, STASH)["vendor"]}
