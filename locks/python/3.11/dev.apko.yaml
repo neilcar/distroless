@@ -7,7 +7,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - python-3.11=3.11.17-r4
+  - python-3.11=3.11.18-r0
   - busybox
   - py3.11-pip
   - uv

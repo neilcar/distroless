@@ -4,19 +4,19 @@
       "image": "static",
       "name": "latest",
       "package": "ca-certificates-bundle",
-      "version": "20260909-r3"
+      "version": "20261020-r0"
     },
     {
       "image": "python",
       "name": "3.11",
       "package": "python-3.11",
-      "version": "3.11.17-r4"
+      "version": "3.11.18-r0"
     },
     {
       "image": "python",
       "name": "3.12",
       "package": "python-3.12",
-      "version": "3.12.15-r6"
+      "version": "3.12.16-r0"
     },
     {
       "image": "python",
@@ -52,7 +52,7 @@
       "image": "stash-base",
       "name": "latest",
       "package": "python-3.12",
-      "version": "3.12.15-r6"
+      "version": "3.12.16-r0"
     }
   ]
 }
