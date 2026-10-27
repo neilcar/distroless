@@ -15,8 +15,8 @@ from dltools.lines import (
     photoprism_base_lines,
     python_lines,
     stash_base_lines,
-    tesseract_lines,
     static_lines,
+    tesseract_lines,
 )
 from dltools.wolfi import parse_apkindex
 
