@@ -16,6 +16,7 @@ from dltools.lines import (
     python_lines,
     stash_base_lines,
     static_lines,
+    tesseract_lines,
 )
 from dltools.wolfi import parse_apkindex
 
@@ -206,3 +207,14 @@ def test_discover_includes_stash_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
     assert [ln for ln in lines if ln.image == "stash-base"] == [
         Line("stash-base", "latest", "python-3.12", "3.12.15-r6")]
+
+
+def test_tesseract_line(indexes):
+    # One `latest` line headed by tesseract's newest released version on both arches.
+    assert tesseract_lines(indexes) == [Line("tesseract", "latest", "tesseract", "5.5.2-r8")]
+    assert tesseract_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_tesseract_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
