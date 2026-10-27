@@ -187,6 +187,8 @@ images:
   tesseract:
     # Tesseract OCR with English data and Python 3.12, for the Stash Text Reader's OCR service
     # (lxdk8s fleet/stash-ocr mounts its small stdlib HTTP server as a ConfigMap). Runtime only.
+    # Also the fast English model (tessdata_fast) in /usr/share/tessdata-fast: on video
+    # watermarks it read 18 of 25 test scenes against 14 for Wolfi's standard model.
     # OMP_THREAD_LIMIT=1: one thread per page; the service runs pages in parallel instead.
     lines: [latest]
     variants:
@@ -198,3 +200,18 @@ images:
       OMP_THREAD_LIMIT: "1"
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+    # Not a Wolfi package: the 4.1.0 tessdata_fast English model, pinned by sha256. Use it with
+    # `tesseract --tessdata-dir /usr/share/tessdata-fast` (that directory holds no configs, so
+    # ask for TSV with `-c tessedit_create_tsv=1` rather than the `tsv` config name).
+    vendor:
+      - name: eng.traineddata
+        version: 4.1.0
+        kind: binary
+        prefix: /usr/share/tessdata-fast
+        files:
+          x86_64:
+            url: https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata
+            sha256: 7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2
+          aarch64:
+            url: https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata
+            sha256: 7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2

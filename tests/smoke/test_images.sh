@@ -188,6 +188,14 @@ r = subprocess.run(["tesseract", "/tmp/b.pgm", "stdout", "--psm", "11", "tsv"], 
 assert r.stdout.startswith("level"), r.stdout[:80]
 print("ocr ok")') || fail "python -> tesseract tsv: $out"
     [[ "$out" == "ocr ok" ]] || fail "ocr check printed: $out"
+    # The vendored fast model, as the OCR service runs it (no configs dir there).
+    out=$(docker run --rm "$ref" -c '
+import subprocess
+open("/tmp/b.pgm", "wb").write(b"P5 64 32 255\n" + bytes([255]) * 64 * 32)
+r = subprocess.run(["tesseract", "/tmp/b.pgm", "stdout", "--tessdata-dir", "/usr/share/tessdata-fast", "--psm", "11", "-c", "tessedit_create_tsv=1"], capture_output=True, text=True, check=True)
+assert r.stdout.startswith("level"), r.stdout[:80]
+print("fast ok")') || fail "fast model tsv: $out"
+    [[ "$out" == "fast ok" ]] || fail "fast model check printed: $out"
     ;;
 esac
 echo "smoke ok: $image/$variant"
