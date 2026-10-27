@@ -694,22 +694,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.5-r1.apk",
-        "version": "0.13.5-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.6-r0.apk",
+        "version": "0.13.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12046",
-          "checksum": "sha1-BuIE4ETswZcFFg+c1inZsUmrQXg="
+          "range": "bytes=0-17632",
+          "checksum": "sha1-fYYT/7GALeb8VD+Gqj9GE6Z8/x8="
         },
         "data": {
-          "range": "bytes=12047-19698498",
-          "checksum": "sha256-rx91C3j7bfhGSnSF+TkqLlzrxFL4smid9n1vRokJ1o8="
+          "range": "bytes=17633-19611553",
+          "checksum": "sha256-NIko8R5qovXgOLZMo8cCTy1jsMmLcKV7c3X/L26NypM="
         },
-        "checksum": "Q1BuIE4ETswZcFFg+c1inZsUmrQXg="
+        "checksum": "Q1fYYT/7GALeb8VD+Gqj9GE6Z8/x8="
       },
       {
         "name": "wolfi-baselayout",
@@ -1378,22 +1378,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.5-r1.apk",
-        "version": "0.13.5-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.6-r0.apk",
+        "version": "0.13.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12086",
-          "checksum": "sha1-v0VgynCzZJLSsBR4pDsaB7vTLa8="
+          "range": "bytes=0-17660",
+          "checksum": "sha1-4xlLs69bgaPp05si6byO1ELN7to="
         },
         "data": {
-          "range": "bytes=12087-18511725",
-          "checksum": "sha256-pZYyxHEsV2n9g/OQvoKVogYYq6Gl4hNg2sJ86Ig96fY="
+          "range": "bytes=17661-18432875",
+          "checksum": "sha256-aumfG1bKJxHKF2ReyoX0YZLeygC73/P/KeXwoi3mir8="
         },
-        "checksum": "Q1v0VgynCzZJLSsBR4pDsaB7vTLa8="
+        "checksum": "Q14xlLs69bgaPp05si6byO1ELN7to="
       }
     ]
   }

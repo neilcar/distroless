@@ -53,6 +53,12 @@
       "name": "latest",
       "package": "python-3.12",
       "version": "3.12.16-r1"
+    },
+    {
+      "image": "tesseract",
+      "name": "latest",
+      "package": "tesseract",
+      "version": "5.5.2-r8"
     }
   ]
 }
