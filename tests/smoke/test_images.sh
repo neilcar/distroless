@@ -175,5 +175,19 @@ with exiftool.ExifToolHelper() as et:
       done
     fi
     ;;
+  tesseract)
+    out=$(tool tesseract --version 2>&1) || fail "tesseract --version"
+    grep -q '^tesseract 5' <<<"$out" || fail "not tesseract 5: $out"
+    out=$(tool tesseract --list-langs 2>&1) || fail "tesseract --list-langs"
+    grep -qx 'eng' <<<"$out" || fail "no eng traineddata: $out"
+    # The service's path: Python runs tesseract on a page (a blank PGM) and reads TSV.
+    out=$(docker run --rm "$ref" -c '
+import subprocess
+open("/tmp/b.pgm", "wb").write(b"P5 64 32 255\n" + bytes([255]) * 64 * 32)
+r = subprocess.run(["tesseract", "/tmp/b.pgm", "stdout", "--psm", "11", "tsv"], capture_output=True, text=True, check=True)
+assert r.stdout.startswith("level"), r.stdout[:80]
+print("ocr ok")') || fail "python -> tesseract tsv: $out"
+    [[ "$out" == "ocr ok" ]] || fail "ocr check printed: $out"
+    ;;
 esac
 echo "smoke ok: $image/$variant"
