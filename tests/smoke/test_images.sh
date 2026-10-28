@@ -9,6 +9,8 @@ if [[ "$image" == "photoprism-base" ]]; then  # runs as root (owner's decision)
   [[ "$user" == "0" || "$user" == "root" || "$user" == "0:0" ]] || fail "user is '$user'"
 elif [[ "$image" == "stash-base" ]]; then  # Stash's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "stash" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "sabnzbd-base" ]]; then  # SABnzbd's pod runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "sabnzbd" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -196,6 +198,52 @@ r = subprocess.run(["tesseract", "/tmp/b.pgm", "stdout", "--tessdata-dir", "/usr
 assert r.stdout.startswith("level"), r.stdout[:80]
 print("fast ok")') || fail "fast model tsv: $out"
     [[ "$out" == "fast ok" ]] || fail "fast model check printed: $out"
+    ;;
+  sabnzbd-base)
+    # SABnzbd's Python: 3.14 as python3, with the stdlib modules it needs.
+    out=$(tool python3 -c '
+import sys, ssl, sqlite3, ctypes, zoneinfo, lzma, bz2, zlib, json, uuid
+assert sys.version_info[:2] == (3, 14), sys.version
+zoneinfo.ZoneInfo("Europe/London")
+for lib in ("libstdc++.so.6", "libgcc_s.so.1", "libgomp.so.1"):
+    ctypes.CDLL(lib)  # what unrar and par2cmdline-turbo (built by sabnzbd-image) link
+print("python ok", ssl.OPENSSL_VERSION)' 2>&1) || fail "python3 check: $out"
+    [[ "$out" == "python ok OpenSSL "* ]] || fail "python3 check printed: $out"
+    # 7-Zip as SABnzbd looks for it (`7zz` on PATH).
+    out=$(tool 7zz i 2>&1) || fail "7zz i: $out"
+    grep -q '^7-Zip' <<<"$out" || fail "7zz is not 7-Zip: $(head -1 <<<"$out")"
+    # A round trip through 7zz, as uid 1000 in /tmp.
+    out=$(tool python3 -c '
+import os, subprocess
+os.chdir("/tmp"); open("a.txt", "w").write("sabnzbd-base\n")
+subprocess.run(["7zz", "a", "-bd", "-y", "t.7z", "a.txt"], check=True, capture_output=True)
+os.remove("a.txt")
+subprocess.run(["7zz", "x", "-bd", "-y", "t.7z"], check=True, capture_output=True)
+print(open("a.txt").read().strip())' 2>&1) || fail "7zz round trip: $out"
+    [[ "$out" == "sabnzbd-base" ]] || fail "7zz round trip printed: $out"
+    # /config is the home and belongs to 1000.
+    out=$(tool python3 -c 'import os; s = os.stat("/config"); print(s.st_uid, s.st_gid, os.path.expanduser("~"))') \
+      || fail "stat /config"
+    [[ "$out" == "1000 1000 /config" ]] || fail "/config: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+    else
+      # sabnzbd-image builds unrar and par2cmdline-turbo (C++ with OpenMP) and installs
+      # SABnzbd's requirements with uv.
+      for cmd in "gcc --version" "g++ --version" "make --version" "uv --version" "xz --version" \
+                 "bash --version" "python3 -m pip --version"; do
+        # shellcheck disable=SC2086
+        tool $cmd >/dev/null || fail "$cmd"
+      done
+      out=$(docker run -i --rm --entrypoint /bin/sh "$ref" \
+        -c 'cd /tmp && cat > t.cpp && g++ -O2 -fopenmp -o t t.cpp && ./t' 2>&1 <<'CPP'
+#include <omp.h>
+#include <cstdio>
+int main() { std::printf("omp %d\n", omp_get_max_threads() > 0); }
+CPP
+) || fail "g++ -fopenmp: $out"
+      [[ "$out" == "omp 1" ]] || fail "g++ -fopenmp printed: $out"
+    fi
     ;;
 esac
 echo "smoke ok: $image/$variant"

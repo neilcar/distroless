@@ -14,6 +14,7 @@ from dltools.lines import (
     nginx_lines,
     photoprism_base_lines,
     python_lines,
+    sabnzbd_base_lines,
     stash_base_lines,
     static_lines,
     tesseract_lines,
@@ -215,6 +216,17 @@ def test_tesseract_line(indexes):
     assert tesseract_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_tesseract_last(indexes, eol):
+def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-2] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+
+
+def test_sabnzbd_base_line(indexes):
+    # One `latest` line headed by Python 3.14's newest released version on both arches.
+    assert sabnzbd_base_lines(indexes) == [Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")]
+    assert sabnzbd_base_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_sabnzbd_base_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
