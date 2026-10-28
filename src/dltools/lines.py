@@ -22,6 +22,8 @@ WOLFI_LIBVIPS = "libvips"
 STASH_BASE_PACKAGE = "python-3.12"
 # tesseract is versioned by Wolfi's tesseract (the OCR engine is what callers depend on).
 TESSERACT_PACKAGE = "tesseract"
+# sabnzbd-base is versioned by its Python (SABnzbd is a Python program).
+SABNZBD_BASE_PACKAGE = "python-3.14"
 
 
 @dataclass(frozen=True)
@@ -95,6 +97,12 @@ def tesseract_lines(indexes) -> list[Line]:
     return [Line("tesseract", "latest", TESSERACT_PACKAGE, v)] if v else []
 
 
+def sabnzbd_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Python 3.14's newest released version."""
+    v = newest_released_all_arches(indexes, SABNZBD_BASE_PACKAGE)
+    return [Line("sabnzbd-base", "latest", SABNZBD_BASE_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -145,7 +153,8 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 
 def _order(line: Line) -> tuple:
-    rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5}.get(line.image, 9)
+    rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
+            "sabnzbd-base": 6}.get(line.image, 9)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -173,7 +182,7 @@ def discover(
     lines = (
         static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
         + photoprism_base_lines(photoprism_libvips) + stash_base_lines(indexes)
-        + tesseract_lines(indexes)
+        + tesseract_lines(indexes) + sabnzbd_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

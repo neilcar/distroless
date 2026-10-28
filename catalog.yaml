@@ -186,6 +186,30 @@ images:
             url: https://files.pythonhosted.org/packages/30/5f/63f927b5ffd1cc2c030fc2bd362bf920890e8806cf42f701198de5b3f9c7/dateparser-1.4.3-py3-none-any.whl
             sha256: cbce86c64e0cea5c54c84c015d34c903d46c51bfad50632bf2f05a6141d10c05
 
+  sabnzbd-base:
+    # Base for the shell-free SABnzbd build (neilcar/sabnzbd-image): Python 3.14 (SABnzbd runs on
+    # 3.14 today), 7-Zip (`7zz`), and the shared libraries of the unrar and par2cmdline-turbo
+    # binaries that image builds from source (libstdc++, libgcc; par2's OpenMP: libgomp).
+    # Versioned by python-3.14. Runs as uid/gid 1000 (`sabnzbd`, home /config), like the chart's pod.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: sabnzbd, gid: 1000}]
+      users: [{username: sabnzbd, uid: 1000, gid: 1000, homedir: /config}]
+    variants:
+      runtime:
+        packages: ["{package}", "7zip", "libstdc++", "libgcc", "libgomp"]
+      # dev: compilers for unrar and par2cmdline-turbo, pip and uv for SABnzbd's hash-locked
+      # requirements (its C extensions come as manylinux wheels), xz for par2's .tar.xz.
+      dev:
+        packages: ["{package}", "7zip", "libstdc++", "libgcc", "libgomp", "busybox", "bash", "gcc", "make", "glibc-dev", "py3.14-pip", "uv", "xz"]
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      # CPython ships encodings/rot_13.py executable with `#!/usr/bin/env python3`; it is only
+      # ever imported, and the runtime has no env, so drop its execute bit (shebang audit).
+      - {path: /usr/lib/python3.14/encodings/rot_13.py, type: permissions, permissions: 0644}
+
   tesseract:
     # Tesseract OCR with English data and Python 3.12, for the Stash Text Reader's OCR service
     # (lxdk8s fleet/stash-ocr mounts its small stdlib HTTP server as a ConfigMap). Runtime only.

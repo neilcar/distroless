@@ -59,6 +59,12 @@
       "name": "latest",
       "package": "tesseract",
       "version": "5.5.2-r8"
+    },
+    {
+      "image": "sabnzbd-base",
+      "name": "latest",
+      "package": "python-3.14",
+      "version": "3.14.7-r8"
     }
   ]
 }
