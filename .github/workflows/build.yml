@@ -238,7 +238,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && env.SKIPPED != '1'
         run: |
           set -euo pipefail
-          cosign sign --yes --recursive "$REPO@$DIGEST"   # the index and each per-arch image
+          cosign sign --yes --recursive --registry-referrers-mode=legacy "$REPO@$DIGEST"   # the index and each per-arch image
           cosign attest --yes --type spdxjson --predicate sbom/sbom-index.spdx.json "$REPO@$DIGEST"
           for pair in x86_64:amd64 aarch64:arm64; do
             a=${pair%%:*}; p=${pair##*:}
