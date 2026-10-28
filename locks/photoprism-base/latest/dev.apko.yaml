@@ -18,7 +18,7 @@ contents:
   - libjxl-tools
   - librsvg
   - rsvg-convert
-  - mariadb-11.8-client
+  - mariadb-13.1-client
   - sqlite
   - x265
   - dav1d
