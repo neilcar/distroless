@@ -118,6 +118,15 @@ jobs:
           path: ${{ runner.temp }}/vendor-cache
           key: vendor-${{ hashFiles(env.VENDOR_JSON) }}
 
+      # photoprism-base (dev above all, with the MariaDB 13.1 client) outgrew the hosted
+      # runner's free root disk while apko wrote both arches' layers to /tmp.
+      - name: Free disk
+        if: matrix.image == 'photoprism-base'
+        run: |
+          df -h / | tail -1
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h / | tail -1
+
       - name: Build (both arches, plus a docker tarball for the smoke test)
         run: |
           set -euo pipefail
