@@ -4,3 +4,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      python:
+        patterns: ["*"]
+    # 3-day cooldown on new releases (supply-chain: let fresh versions
+    # bake so a compromised/typosquatted release is likely caught before
+    # adoption); Dependabot security updates bypass the cooldown.
+    cooldown:
+      default-days: 3
