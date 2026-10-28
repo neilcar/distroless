@@ -204,6 +204,9 @@ images:
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
       - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      # CPython ships encodings/rot_13.py executable with `#!/usr/bin/env python3`; it is only
+      # ever imported, and the runtime has no env, so drop its execute bit (shebang audit).
+      - {path: /usr/lib/python3.14/encodings/rot_13.py, type: permissions, permissions: 0644}
 
   tesseract:
     # Tesseract OCR with English data and Python 3.12, for the Stash Text Reader's OCR service

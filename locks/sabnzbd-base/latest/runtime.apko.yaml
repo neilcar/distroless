@@ -45,3 +45,6 @@ paths:
   permissions: 493
   uid: 1000
   gid: 1000
+- path: /usr/lib/python3.14/encodings/rot_13.py
+  type: permissions
+  permissions: 420

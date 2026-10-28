@@ -2,7 +2,7 @@
   "version": "v1",
   "config": {
     "name": "locks/sabnzbd-base/latest/runtime.apko.yaml",
-    "checksum": "sha256-EryglHQIR9kSzrBd2gdllreRmrdhDKaGnytn/Uki8lU="
+    "checksum": "sha256-yFRXFrhssSMiFiL6bE6//528sTGir+MNDs/ly1bILkk="
   },
   "contents": {
     "keyring": [
