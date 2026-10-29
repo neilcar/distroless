@@ -210,6 +210,45 @@ images:
       # ever imported, and the runtime has no env, so drop its execute bit (shebang audit).
       - {path: /usr/lib/python3.14/encodings/rot_13.py, type: permissions, permissions: 0644}
 
+  servarr-base:
+    # Base for the shell-free Servarr apps (neilcar/servarr-image): Prowlarr, Radarr, Sonarr, Whisparr and
+    # Lidarr, whose official linux tarballs are self-contained .NET builds. Only the system libraries they
+    # load: ICU (globalization), OpenSSL (TLS), zlib, SQLite, libstdc++/libgcc, plus the CA bundle and
+    # tzdata. Lidarr fingerprints new files with fpcalc: chromaprint's static release build (vendor below;
+    # Wolfi has no chromaprint). Versioned by libicu79. Runs as uid/gid 1000 (`servarr`, home /config),
+    # like the chart's pods. Runtime only: servarr-image downloads the tarballs in its own build stage.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: servarr, gid: 1000}]
+      users: [{username: servarr, uid: 1000, gid: 1000, homedir: /config}]
+    variants:
+      runtime:
+        packages: ["{package}", "libssl3", "libcrypto3", "zlib", "sqlite-libs", "libstdc++", "libgcc", "ca-certificates-bundle", "tzdata"]
+    environment:
+      # .NET uses the system ICU (never invariant mode: the apps sort and compare titles by culture).
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "false"
+      XDG_CONFIG_HOME: /config
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      - {path: /run, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+    # Not a Wolfi package: chromaprint's statically linked fpcalc 1.6.2, pinned by sha256.
+    vendor:
+      - name: fpcalc
+        version: 1.6.2
+        kind: tar-binary
+        prefix: /usr/bin
+        files:
+          x86_64:
+            url: https://github.com/acoustid/chromaprint/releases/download/v1.6.2/chromaprint-fpcalc-1.6.2-linux-x86_64.tar.gz
+            sha256: c968ad4a0821592a79b158fb2e1f46cbe0a22a0a1dbc0743c67d68e75d15d2bb
+            member: chromaprint-fpcalc-1.6.2-linux-x86_64/fpcalc
+          aarch64:
+            url: https://github.com/acoustid/chromaprint/releases/download/v1.6.2/chromaprint-fpcalc-1.6.2-linux-arm64.tar.gz
+            sha256: 3aa1498126ed272d805bc9d081c77965c9e1e1a0891bb112c13b56ef2ad47bad
+            member: chromaprint-fpcalc-1.6.2-linux-arm64/fpcalc
+
   tesseract:
     # Tesseract OCR with English data and Python 3.12, for the Stash Text Reader's OCR service
     # (lxdk8s fleet/stash-ocr mounts its small stdlib HTTP server as a ConfigMap). Runtime only.

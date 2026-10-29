@@ -259,3 +259,34 @@ def test_wheel_rejects_non_pure_tags(tmp_path, launcher, name):
     with pytest.raises(ValueError, match="pure-Python"):
         build_layer(wheel_vendor(wheel), "x86_64", tmp_path / "cache", tmp_path / "o.tar.gz",
                     launcher, env=False)
+
+
+def test_tar_binary_installs_one_member(tmp_path, launcher, launch_dir):
+    """kind tar-binary: one executable taken out of a pinned release tarball (e.g. fpcalc)."""
+    src = tmp_path / "fpcalc-src"
+    src.mkdir()
+    (src / "fpcalc").write_bytes(b"\x7fELF-fpcalc")
+    (src / "LICENSE.md").write_text("license")
+    tgz = tmp_path / "chromaprint-fpcalc.tar.gz"
+    with tarfile.open(tgz, "w:gz") as tar:
+        tar.add(src / "fpcalc", arcname="chromaprint-fpcalc-1.6.2-linux-x86_64/fpcalc")
+        tar.add(src / "LICENSE.md", arcname="chromaprint-fpcalc-1.6.2-linux-x86_64/LICENSE.md")
+    vendor = {"vendor": [{"name": "fpcalc", "version": "1.6.2", "kind": "tar-binary", "prefix": "/usr/bin",
+                          "files": {"x86_64": {"url": tgz.as_uri(), "sha256": sha(tgz),
+                                               "member": "chromaprint-fpcalc-1.6.2-linux-x86_64/fpcalc"}}}]}
+    out = tmp_path / "layer.tar.gz"
+    build_layer(vendor, "x86_64", tmp_path / "cache", out, launcher, launch_dir)
+    ms, data = members(out)
+    by_name = {m.name: m for m in ms}
+    assert data["usr/bin/fpcalc"] == b"\x7fELF-fpcalc" and by_name["usr/bin/fpcalc"].mode == 0o755
+    assert not any("LICENSE" in n for n in by_name)
+
+
+def test_tar_binary_missing_member_fails(tmp_path, launcher, launch_dir):
+    tgz = tmp_path / "empty.tar.gz"
+    with tarfile.open(tgz, "w:gz"):
+        pass
+    vendor = {"vendor": [{"name": "fpcalc", "version": "1", "kind": "tar-binary", "prefix": "/usr/bin",
+                          "files": {"x86_64": {"url": tgz.as_uri(), "sha256": sha(tgz), "member": "x/fpcalc"}}}]}
+    with pytest.raises(KeyError):
+        build_layer(vendor, "x86_64", tmp_path / "cache", tmp_path / "l.tar.gz", launcher, launch_dir)

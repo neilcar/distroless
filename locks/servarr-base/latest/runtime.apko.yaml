@@ -1,0 +1,58 @@
+contents:
+  repositories:
+  - https://packages.wolfi.dev/os
+  keyring:
+  - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  packages:
+  - wolfi-baselayout
+  - ca-certificates-bundle
+  - tzdata
+  - libicu79=79.1-r0
+  - libssl3
+  - libcrypto3
+  - zlib=1.3.2-r7
+  - sqlite-libs
+  - libstdc++
+  - libgcc
+  - ca-certificates-bundle
+  - tzdata
+accounts:
+  groups:
+  - groupname: nonroot
+    gid: 65532
+  - groupname: servarr
+    gid: 1000
+  users:
+  - username: nonroot
+    uid: 65532
+    gid: 65532
+  - username: servarr
+    uid: 1000
+    gid: 1000
+    homedir: /config
+  run-as: '1000'
+archs:
+- x86_64
+- aarch64
+annotations:
+  org.opencontainers.image.source: https://github.com/neilcar/distroless
+  org.opencontainers.image.title: servarr-base:latest
+environment:
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 'false'
+  XDG_CONFIG_HOME: /config
+paths:
+- path: /tmp
+  type: directory
+  permissions: 1023
+  uid: 0
+  gid: 0
+- path: /config
+  type: directory
+  permissions: 493
+  uid: 1000
+  gid: 1000
+- path: /run
+  type: directory
+  permissions: 493
+  uid: 1000
+  gid: 1000

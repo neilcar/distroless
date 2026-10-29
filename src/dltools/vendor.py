@@ -198,6 +198,15 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
             elif entry["kind"] == "binary":
                 layer.add(prefix, "dir", 0o755)
                 layer.add(f"{prefix}/{launchers[0] if launchers else name}", "file", 0o755, path)
+            elif entry["kind"] == "tar-binary":
+                # One executable out of a release tarball (e.g. chromaprint's static fpcalc).
+                member = _pick_file(entry, arch)["member"]
+                dest = Path(tmp) / f"{name}.bin"
+                with tarfile.open(path) as tar:
+                    src = tar.extractfile(tar.getmember(member))  # KeyError when it isn't there
+                    dest.write_bytes(src.read())
+                layer.add(prefix, "dir", 0o755)
+                layer.add(f"{prefix}/{name}", "file", 0o755, dest)
             elif entry["kind"] == "wheel":
                 staging = Path(tmp) / name
                 staging.mkdir()

@@ -1,0 +1,22 @@
+{
+  "vendor": [
+    {
+      "files": {
+        "aarch64": {
+          "member": "chromaprint-fpcalc-1.6.2-linux-arm64/fpcalc",
+          "sha256": "3aa1498126ed272d805bc9d081c77965c9e1e1a0891bb112c13b56ef2ad47bad",
+          "url": "https://github.com/acoustid/chromaprint/releases/download/v1.6.2/chromaprint-fpcalc-1.6.2-linux-arm64.tar.gz"
+        },
+        "x86_64": {
+          "member": "chromaprint-fpcalc-1.6.2-linux-x86_64/fpcalc",
+          "sha256": "c968ad4a0821592a79b158fb2e1f46cbe0a22a0a1dbc0743c67d68e75d15d2bb",
+          "url": "https://github.com/acoustid/chromaprint/releases/download/v1.6.2/chromaprint-fpcalc-1.6.2-linux-x86_64.tar.gz"
+        }
+      },
+      "kind": "tar-binary",
+      "name": "fpcalc",
+      "prefix": "/usr/bin",
+      "version": "1.6.2"
+    }
+  ]
+}
