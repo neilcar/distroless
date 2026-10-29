@@ -13,6 +13,7 @@
 ## Global Constraints
 
 - Shared base: apko/Wolfi, released packages only, no shell, Trivy-gated (strict: no Critical/High with a released fix), cosign-signed with **cosign 2.4.3, `--registry-referrers-mode=legacy` on `sign`** (no flag on `attest`).
+- **No `sign-image.yml`** in servarr-image: `build.yml` signs every published digest itself (cosign 2.4.3, as above) and runs `cosign verify` right after. The manual re-signing workflow was retired from every other neilcar image repo on 2026-10-29, and the cluster's `verify-neilcar-images` policy only accepts the normal build workflow's signer, so add the servarr-image entry in lxdk8s for `build.yml` only.
 - App images: `ghcr.io/neilcar/{prowlarr,radarr,sonarr,whisparr,lidarr}`, **private** packages, tagged with the app version (plus `<version>-<sha7>`), amd64 + arm64 on native runners, signed as above.
 - Each app follows today's branch and starts at today's running version: Prowlarr `master` 2.7.0.5723, Radarr `master` 6.4.4.10685, Sonarr `main` 4.0.20.3014, Whisparr `eros` 3.6.5.1886 (hotio `v3-3.6.5-release.1886`), Lidarr `master` 3.1.6.5079. If a vendor tag moved before its app's switch, use the version the pin step (Task 6) records.
 - Runtime: uid/gid 1000, `/config` owned 1000:1000, read-only root, writable `/config`, `/run`, `/tmp` (volumes the chart already mounts). Ports: Prowlarr 9696, Radarr 7878, Sonarr 8989, Whisparr 6969, Lidarr 8686.
@@ -42,7 +43,7 @@
 | servarr-image `Dockerfile` | `ARG APP`; tarball onto `servarr-base` |
 | servarr-image `tests/elfcheck.py`, `tests/smoke.sh`, `tests/fixtures/<app>/config.xml` | image tests |
 | servarr-image `tests/test_fetch.py`, `tests/test_watch.py` | script unit tests (run on the Mac with uv/pytest) |
-| servarr-image `.github/workflows/build.yml`, `sign-image.yml`, `watch.yml`, `scripts/assert-private.sh`, `scripts/trivy-compare.py` | CI |
+| servarr-image `.github/workflows/build.yml`, `watch.yml`, `scripts/assert-private.sh`, `scripts/trivy-compare.py` | CI |
 | arr-helm `.github/scripts/update-images.py`, `test_update_images.py`, `images.yaml`, `defaults.yaml`, `README.md` | follow the new images (per app, after its switch) |
 | lxdk8s `fleet/arr/arr-values.yaml` | per-app pin / trial override / rollback |
 
@@ -77,7 +78,7 @@
 
 ### Task 3: servarr-image CI — build, test, Trivy compare, publish, sign
 
-**Files:** `.github/workflows/build.yml`, `.github/workflows/sign-image.yml`, `scripts/assert-private.sh`, `scripts/trivy-compare.py`, `tests/test_trivy_compare.py`, `tests/test_assert_private.py` (adapt sabnzbd-image's).
+**Files:** `.github/workflows/build.yml`, `scripts/assert-private.sh`, `scripts/trivy-compare.py`, `tests/test_trivy_compare.py`, `tests/test_assert_private.py` (adapt sabnzbd-image's).
 
 **Interfaces:** matrix `app × arch` (`ubuntu-24.04`, `ubuntu-24.04-arm`); job outputs per app the manifest digest; publishes only on `main` and `v*` tags; `trivy-compare.py NEW.json OLD.json` exits 1 when the new image has more unique (ID, package) Critical+High pairs than the old one, or any Critical/High in OS packages (Wolfi layer); prints a Markdown table for the release notes. Vendor images to compare against: today's linuxserver/hotio images by digest (from the cluster's running pods, written into the workflow env).
 
