@@ -561,22 +561,22 @@
       },
       {
         "name": "py3-pip-wheel",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3-pip-wheel-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3-pip-wheel-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14555",
-          "checksum": "sha1-MDc1dIGRthl39o3F3XxvmL1+gLo="
+          "range": "bytes=0-35740",
+          "checksum": "sha1-QjTpKbOXAhcW0hUNUZEOer1uIEQ="
         },
         "data": {
-          "range": "bytes=14556-1815650",
-          "checksum": "sha256-PNIq69JzbX0jpUOrHVEz8CQf02vFsOBqQ5IYI0JLK/o="
+          "range": "bytes=35741-1838029",
+          "checksum": "sha256-zHEQDjGcUUiBgk8nGDFT6w8vwTwsTisYpmmSik/ZzJ8="
         },
-        "checksum": "Q1MDc1dIGRthl39o3F3XxvmL1+gLo="
+        "checksum": "Q1QjTpKbOXAhcW0hUNUZEOer1uIEQ="
       },
       {
         "name": "python-3.11-base",
@@ -618,41 +618,41 @@
       },
       {
         "name": "py3.11-pip-base",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3.11-pip-base-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3.11-pip-base-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14593",
-          "checksum": "sha1-SAmlEPSa/uJUSpP4qkl9oUQF+64="
+          "range": "bytes=0-35776",
+          "checksum": "sha1-ZUWtAiRnvghVC1dykMcDPPOv0u0="
         },
         "data": {
-          "range": "bytes=14594-4077528",
-          "checksum": "sha256-lrR9Sh6fBsam0rddOZ7x22OrCiYrTH1Zva++B+eAz5Y="
+          "range": "bytes=35777-4099680",
+          "checksum": "sha256-FsW2WZxWg0Efe7ngSBiXAjNEZ4QJeg64uZzRGD/H0Ns="
         },
-        "checksum": "Q1SAmlEPSa/uJUSpP4qkl9oUQF+64="
+        "checksum": "Q1ZUWtAiRnvghVC1dykMcDPPOv0u0="
       },
       {
         "name": "py3.11-pip",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3.11-pip-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3.11-pip-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14610",
-          "checksum": "sha1-37OfdTfCcEvr1OaI7AMXd62CmbM="
+          "range": "bytes=0-35793",
+          "checksum": "sha1-Y8Jsg4nJjTwadJln/VHoBlyzCeA="
         },
         "data": {
-          "range": "bytes=14611-16545",
-          "checksum": "sha256-sx62LcM1rJujW1OIFh+JBb2Cap8Qcd2BgXftP/7NPqQ="
+          "range": "bytes=35794-37724",
+          "checksum": "sha256-cDE1uxUOfr9/nhZi0lofYCXu6VVGP7aF6SvitrB8878="
         },
-        "checksum": "Q137OfdTfCcEvr1OaI7AMXd62CmbM="
+        "checksum": "Q1Y8Jsg4nJjTwadJln/VHoBlyzCeA="
       },
       {
         "name": "python-3.11",
@@ -1245,22 +1245,22 @@
       },
       {
         "name": "py3-pip-wheel",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3-pip-wheel-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3-pip-wheel-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14583",
-          "checksum": "sha1-vKOt4ko5e9jTuB0ItMcnrfsMuBg="
+          "range": "bytes=0-35784",
+          "checksum": "sha1-0aXNXUAtQg0vMdeGc1Y4491/1ZM="
         },
         "data": {
-          "range": "bytes=14584-1815670",
-          "checksum": "sha256-rMLESTmaLkdxyjPfT2dTJS7+5snSWGhsHeAskG4MhuQ="
+          "range": "bytes=35785-1838068",
+          "checksum": "sha256-pTwH3lR0WbP6NJRA4LEsMMo0zYgoNaH02y+39S0+ZrE="
         },
-        "checksum": "Q1vKOt4ko5e9jTuB0ItMcnrfsMuBg="
+        "checksum": "Q10aXNXUAtQg0vMdeGc1Y4491/1ZM="
       },
       {
         "name": "python-3.11-base",
@@ -1302,41 +1302,41 @@
       },
       {
         "name": "py3.11-pip-base",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3.11-pip-base-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3.11-pip-base-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14623",
-          "checksum": "sha1-HNQP+XEGsjA0useBeb2XPiCHtLk="
+          "range": "bytes=0-35817",
+          "checksum": "sha1-7V6TTgTkHJkvNP9xZXZXNHDJ47M="
         },
         "data": {
-          "range": "bytes=14624-4077557",
-          "checksum": "sha256-+fSEwZ52osyajxJymYWVM2efv6vCKkO6xIcU1VInLNk="
+          "range": "bytes=35818-4099715",
+          "checksum": "sha256-cWxPQ8U5RomPgR2EcfOhtH43+AopadGt6gyAqt8TrG4="
         },
-        "checksum": "Q1HNQP+XEGsjA0useBeb2XPiCHtLk="
+        "checksum": "Q17V6TTgTkHJkvNP9xZXZXNHDJ47M="
       },
       {
         "name": "py3.11-pip",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3.11-pip-26.2.2-r0.apk",
-        "version": "26.2.2-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3.11-pip-26.2.2-r1.apk",
+        "version": "26.2.2-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14635",
-          "checksum": "sha1-a7SW+r+hKwia5J6hDx0fB+s0gy0="
+          "range": "bytes=0-35834",
+          "checksum": "sha1-/n5mIBFX5yY32MJ700vXxAOageU="
         },
         "data": {
-          "range": "bytes=14636-16571",
-          "checksum": "sha256-kwxtgkcpGAIEcqHN6TCaepJKHj1fbIjn/+UtxL/ML8Y="
+          "range": "bytes=35835-37767",
+          "checksum": "sha256-tm1nZX4WvRNRN8twT1KrgfTXe8bUZsDi8/I38wAEcLs="
         },
-        "checksum": "Q1a7SW+r+hKwia5J6hDx0fB+s0gy0="
+        "checksum": "Q1/n5mIBFX5yY32MJ700vXxAOageU="
       },
       {
         "name": "python-3.11",
