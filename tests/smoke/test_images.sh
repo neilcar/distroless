@@ -11,6 +11,8 @@ elif [[ "$image" == "stash-base" ]]; then  # Stash's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "stash" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "sabnzbd-base" ]]; then  # SABnzbd's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "sabnzbd" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "servarr-base" ]]; then  # the Servarr pods run as 1000:1000
+  [[ "$user" == "1000" || "$user" == "servarr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -176,6 +178,27 @@ with exiftool.ExifToolHelper() as et:
         tool $cmd >/dev/null || fail "$cmd"
       done
     fi
+    ;;
+  servarr-base)
+    # Lidarr's fingerprinter (chromaprint's static release build).
+    out=$(tool fpcalc -version 2>&1) || fail "fpcalc -version: $out"
+    grep -q '^fpcalc version 1\.6\.2' <<<"$out" || fail "fpcalc printed: $out"
+    # What the .NET apps load, looked for from outside (no shell or Python in the image).
+    root=$(mktemp -d)
+    cid=$(docker create --entrypoint /none "$ref")
+    docker export "$cid" | tar -x -C "$root" --exclude='dev' --exclude='dev/*'
+    docker rm "$cid" >/dev/null
+    for f in usr/lib/libicuuc.so.79 usr/lib/libicui18n.so.79 usr/lib/libicudata.so.79 usr/lib/libssl.so.3 \
+             usr/lib/libcrypto.so.3 usr/lib/libz.so.1 usr/lib/libsqlite3.so.0 usr/lib/libstdc++.so.6 \
+             usr/lib/libgcc_s.so.1 usr/share/zoneinfo/Europe/London etc/ssl/certs/ca-certificates.crt; do
+      [[ -e "$root/$f" ]] || fail "missing /$f"
+    done
+    rm -rf "$root"
+    # Ownership from the tar listing (an unprivileged extract would chown to the runner).
+    cid=$(docker create --entrypoint /none "$ref")
+    owner=$(docker export "$cid" | tar -tv --numeric-owner | awk '$NF == "config/" {print $2}')
+    docker rm "$cid" >/dev/null
+    [[ "$owner" == "1000/1000" ]] || fail "/config owner is '$owner'"
     ;;
   tesseract)
     out=$(tool tesseract --version 2>&1) || fail "tesseract --version"

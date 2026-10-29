@@ -18,6 +18,7 @@ from dltools.lines import (
     stash_base_lines,
     static_lines,
     tesseract_lines,
+    servarr_base_lines,
 )
 from dltools.wolfi import parse_apkindex
 
@@ -218,7 +219,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-2] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-3] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -227,6 +228,17 @@ def test_sabnzbd_base_line(indexes):
     assert sabnzbd_base_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_sabnzbd_base_last(indexes, eol):
+def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-2] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+
+
+def test_servarr_base_line(indexes):
+    # One `latest` line headed by ICU 79's newest released version on both arches (the .NET apps load libicu).
+    assert servarr_base_lines(indexes) == [Line("servarr-base", "latest", "libicu79", "79.1-r1")]
+    assert servarr_base_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_servarr_base_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
