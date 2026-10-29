@@ -15,10 +15,10 @@ from dltools.lines import (
     photoprism_base_lines,
     python_lines,
     sabnzbd_base_lines,
+    servarr_base_lines,
     stash_base_lines,
     static_lines,
     tesseract_lines,
-    servarr_base_lines,
 )
 from dltools.wolfi import parse_apkindex
 
