@@ -1453,23 +1453,42 @@
         "checksum": "Q1rMD8Azi4PeJZXgNSn3BjOb+aMLg="
       },
       {
-        "name": "heimdal-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/heimdal-libs-7.8.0-r54.apk",
-        "version": "7.8.0-r54",
+        "name": "lmdb",
+        "url": "https://packages.wolfi.dev/os/x86_64/lmdb-0.9.35-r3.apk",
+        "version": "0.9.35-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10185",
-          "checksum": "sha1-buPSVRlgpy8OHAi008QQ5VhNNcI="
+          "range": "bytes=0-8643",
+          "checksum": "sha1-V0XfTN1JDlshI1+TyHnkS2T0Ge8="
         },
         "data": {
-          "range": "bytes=10186-1474527",
-          "checksum": "sha256-M81msceWbC3FcMwmykI2sljq8upa/NVZUDuNAUwtuQw="
+          "range": "bytes=8644-65853",
+          "checksum": "sha256-kle2K+pbExvDx6nENGgmwAiXcyVV0JVaWLjRFRCBpZo="
         },
-        "checksum": "Q1buPSVRlgpy8OHAi008QQ5VhNNcI="
+        "checksum": "Q1V0XfTN1JDlshI1+TyHnkS2T0Ge8="
+      },
+      {
+        "name": "heimdal-libs",
+        "url": "https://packages.wolfi.dev/os/x86_64/heimdal-libs-7.8.0-r55.apk",
+        "version": "7.8.0-r55",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-19807",
+          "checksum": "sha1-UeySuHDx/CaKpIfcvcN6/Zs5XYY="
+        },
+        "data": {
+          "range": "bytes=19808-1487048",
+          "checksum": "sha256-GDKxNfRjFH0UPAbysLoOjuNLCN3Pow2UgeY/lATMlKI="
+        },
+        "checksum": "Q1UeySuHDx/CaKpIfcvcN6/Zs5XYY="
       },
       {
         "name": "cyrus-sasl-heimdal-libs",
@@ -3011,23 +3030,42 @@
         "checksum": "Q10pP7YtzB2jS/J7Qzagd/GrPiylU="
       },
       {
-        "name": "heimdal-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/heimdal-libs-7.8.0-r54.apk",
-        "version": "7.8.0-r54",
+        "name": "lmdb",
+        "url": "https://packages.wolfi.dev/os/aarch64/lmdb-0.9.35-r3.apk",
+        "version": "0.9.35-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10230",
-          "checksum": "sha1-rJaS9PU2Jstowd6CHNbaZrU2Z4c="
+          "range": "bytes=0-8684",
+          "checksum": "sha1-0KJYgn4UIVbHPol5ORhPjAvD0Xc="
         },
         "data": {
-          "range": "bytes=10231-1411372",
-          "checksum": "sha256-tPXqi9+knBWPCO1fX1dw7K2cWl1KYEvfdDJBvSgZ1T8="
+          "range": "bytes=8685-63708",
+          "checksum": "sha256-ZfkTwpN9A3sMiViDnzvcTdaKRa6dcBcSafKGC74Dcis="
         },
-        "checksum": "Q1rJaS9PU2Jstowd6CHNbaZrU2Z4c="
+        "checksum": "Q10KJYgn4UIVbHPol5ORhPjAvD0Xc="
+      },
+      {
+        "name": "heimdal-libs",
+        "url": "https://packages.wolfi.dev/os/aarch64/heimdal-libs-7.8.0-r55.apk",
+        "version": "7.8.0-r55",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-19847",
+          "checksum": "sha1-/UYWRdK4YZN3aLZx8kd/z0JYTQY="
+        },
+        "data": {
+          "range": "bytes=19848-1423810",
+          "checksum": "sha256-wEK1fYnOTixAaAjh5ae0mDhCl3l/ZyL10M7bNuqfmS8="
+        },
+        "checksum": "Q1/UYWRdK4YZN3aLZx8kd/z0JYTQY="
       },
       {
         "name": "cyrus-sasl-heimdal-libs",
