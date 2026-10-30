@@ -485,22 +485,22 @@
       },
       {
         "name": "libuuid",
-        "url": "https://packages.wolfi.dev/os/x86_64/libuuid-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/libuuid-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12923",
-          "checksum": "sha1-Iw0G6iqM4Kw9TSzZtsXNj8sabmI="
+          "range": "bytes=0-18726",
+          "checksum": "sha1-RMgxwtEheWi8izRUHv/oGNNwqKA="
         },
         "data": {
-          "range": "bytes=12924-34163",
-          "checksum": "sha256-rgkEkFaGu7+m16HkWyZ4cl9r7uR+fQW6uuQvlfkIJcc="
+          "range": "bytes=18727-39967",
+          "checksum": "sha256-uGJbNiTtZNSh+oG//yOA+GNGTpfRQkVR8RV2ptFYEds="
         },
-        "checksum": "Q1Iw0G6iqM4Kw9TSzZtsXNj8sabmI="
+        "checksum": "Q1RMgxwtEheWi8izRUHv/oGNNwqKA="
       },
       {
         "name": "py3-pip-wheel",
@@ -1036,22 +1036,22 @@
       },
       {
         "name": "fribidi",
-        "url": "https://packages.wolfi.dev/os/x86_64/fribidi-1.0.17-r2.apk",
-        "version": "1.0.17-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/fribidi-1.0.18-r0.apk",
+        "version": "1.0.18-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15046",
-          "checksum": "sha1-vTrWup9OkDHZKYdpRQs3kNGUa4c="
+          "range": "bytes=0-15059",
+          "checksum": "sha1-lowoToLvLKH4Zkvx5vn7cFV6xEk="
         },
         "data": {
-          "range": "bytes=15047-57718",
-          "checksum": "sha256-Ni2BlLL7V9wryGdQV88KcwNDmkFgnxYJDHrQFQrqGBs="
+          "range": "bytes=15060-58217",
+          "checksum": "sha256-DLYyO/Ceo1xk/dsqlKOJYoLE6Amx6RkXbLRZacGQKME="
         },
-        "checksum": "Q1vTrWup9OkDHZKYdpRQs3kNGUa4c="
+        "checksum": "Q1lowoToLvLKH4Zkvx5vn7cFV6xEk="
       },
       {
         "name": "libpcre2-8-0",
@@ -1112,41 +1112,41 @@
       },
       {
         "name": "libblkid",
-        "url": "https://packages.wolfi.dev/os/x86_64/libblkid-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/libblkid-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12916",
-          "checksum": "sha1-Bk4hLyWWmwBZhVfc6EwQtXHlJG0="
+          "range": "bytes=0-18718",
+          "checksum": "sha1-F0GeFu3lWosY0z6H+iH+ocAbivU="
         },
         "data": {
-          "range": "bytes=12917-237075",
-          "checksum": "sha256-P63sMn0Db7UWyIt0uOXcNVCDXLmaZPxUtim7SE6OSgs="
+          "range": "bytes=18719-242878",
+          "checksum": "sha256-gycHUxwhgUsRVSnyoiuEkw4jY4Te3Qg5B1LpxlSdwrY="
         },
-        "checksum": "Q1Bk4hLyWWmwBZhVfc6EwQtXHlJG0="
+        "checksum": "Q1F0GeFu3lWosY0z6H+iH+ocAbivU="
       },
       {
         "name": "libmount",
-        "url": "https://packages.wolfi.dev/os/x86_64/libmount-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/libmount-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12929",
-          "checksum": "sha1-O8alsemGGNh8SCCHLxrcS+L6NXA="
+          "range": "bytes=0-18732",
+          "checksum": "sha1-+54Aovdx+XvVE+mh3Oyh737dIiI="
         },
         "data": {
-          "range": "bytes=12930-298603",
-          "checksum": "sha256-0oC3nGptSIMz8Hxwk0KCGd7fketVuEsHXMdE/gFg0rI="
+          "range": "bytes=18733-304404",
+          "checksum": "sha256-pc2X2bfMDdICbj84nS1yz4mlHZRjYrlRE7IoTy0klEM="
         },
-        "checksum": "Q1O8alsemGGNh8SCCHLxrcS+L6NXA="
+        "checksum": "Q1+54Aovdx+XvVE+mh3Oyh737dIiI="
       },
       {
         "name": "glib",
@@ -2062,22 +2062,22 @@
       },
       {
         "name": "libuuid",
-        "url": "https://packages.wolfi.dev/os/aarch64/libuuid-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/libuuid-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12969",
-          "checksum": "sha1-ISncHZFvTPvNUa2mDkQM/Yqn1xU="
+          "range": "bytes=0-18765",
+          "checksum": "sha1-gRKPSbz5jnlOkE5J1kmDIF+6lxA="
         },
         "data": {
-          "range": "bytes=12970-33980",
-          "checksum": "sha256-KI8UrQdWY+qAAnOlDmEQvSK0xSW3fDH6IEBLwS2N1WM="
+          "range": "bytes=18766-39770",
+          "checksum": "sha256-srd+as1DmbyBwBPD1qvW+CMuFoKGL9w9HOIxH6VFC3Q="
         },
-        "checksum": "Q1ISncHZFvTPvNUa2mDkQM/Yqn1xU="
+        "checksum": "Q1gRKPSbz5jnlOkE5J1kmDIF+6lxA="
       },
       {
         "name": "py3-pip-wheel",
@@ -2613,22 +2613,22 @@
       },
       {
         "name": "fribidi",
-        "url": "https://packages.wolfi.dev/os/aarch64/fribidi-1.0.17-r2.apk",
-        "version": "1.0.17-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/fribidi-1.0.18-r0.apk",
+        "version": "1.0.18-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15077",
-          "checksum": "sha1-vBT4wX3Dkx2ZlrWI8ZZGkWNCDMA="
+          "range": "bytes=0-15093",
+          "checksum": "sha1-R4q7fCwNij8HCVGZ2mHNIQiVu4Q="
         },
         "data": {
-          "range": "bytes=15078-58161",
-          "checksum": "sha256-AJd80uWae8PmbQmQA1ClPepKSjWfk/pNlXOmRi4fmlA="
+          "range": "bytes=15094-58687",
+          "checksum": "sha256-BYgxLh2MYovkCI9i153QFF19mt2oIuqsn/UFZBJiTIw="
         },
-        "checksum": "Q1vBT4wX3Dkx2ZlrWI8ZZGkWNCDMA="
+        "checksum": "Q1R4q7fCwNij8HCVGZ2mHNIQiVu4Q="
       },
       {
         "name": "libpcre2-8-0",
@@ -2689,41 +2689,41 @@
       },
       {
         "name": "libblkid",
-        "url": "https://packages.wolfi.dev/os/aarch64/libblkid-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/libblkid-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12960",
-          "checksum": "sha1-Evw/Eiv9xQw3pQPvK92rOJsPk2Q="
+          "range": "bytes=0-18762",
+          "checksum": "sha1-YEaBZUzDCA8fuusvCKLz/svlLv4="
         },
         "data": {
-          "range": "bytes=12961-231470",
-          "checksum": "sha256-PzngM2AFdZ2AGsLyXhaobeGeXLuS2BeqdiTnDbH5aV0="
+          "range": "bytes=18763-237277",
+          "checksum": "sha256-35j7+IgK0HkewJoxDvph9l6hTHmGW4rx9LQmPKKl9XQ="
         },
-        "checksum": "Q1Evw/Eiv9xQw3pQPvK92rOJsPk2Q="
+        "checksum": "Q1YEaBZUzDCA8fuusvCKLz/svlLv4="
       },
       {
         "name": "libmount",
-        "url": "https://packages.wolfi.dev/os/aarch64/libmount-2.42.4-r1.apk",
-        "version": "2.42.4-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/libmount-2.42.4-r2.apk",
+        "version": "2.42.4-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-12965",
-          "checksum": "sha1-ZS16tg8hXCsXmX59MLPqrGjPLaA="
+          "range": "bytes=0-18769",
+          "checksum": "sha1-8o3Ns5co/JF8ncpfTUTmJqxLmFU="
         },
         "data": {
-          "range": "bytes=12966-281958",
-          "checksum": "sha256-pv2kv3I6OOiWTQHZ7mPxDSYQf7Bn2nRHeMHTCB/2DSY="
+          "range": "bytes=18770-287762",
+          "checksum": "sha256-HOJrcZwq7lBJd2YTpapeqkgx7uLrPLiUCMfM40UeHJM="
         },
-        "checksum": "Q1ZS16tg8hXCsXmX59MLPqrGjPLaA="
+        "checksum": "Q18o3Ns5co/JF8ncpfTUTmJqxLmFU="
       },
       {
         "name": "glib",
