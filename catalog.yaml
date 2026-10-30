@@ -249,6 +249,22 @@ images:
             sha256: 3aa1498126ed272d805bc9d081c77965c9e1e1a0891bb112c13b56ef2ad47bad
             member: chromaprint-fpcalc-1.6.2-linux-arm64/fpcalc
 
+  debug:
+    # Break-glass toolbox for troubleshooting shell-free containers: attached to a pod with
+    # `kubectl debug --target=<container>` (or as a temporary sidecar), only with the owner's OK
+    # each time. It shares the target's process and network namespaces and reaches its files
+    # through /proc/<pid>/root, so it runs as root. Unlike every other image it has a shell, so
+    # its only variant is `tools`, not `runtime` (the no-shell checks apply to runtime variants).
+    # Versioned by bash.
+    run_as: "0"
+    lines: [latest]
+    variants:
+      tools:
+        packages: ["{package}", "coreutils", "findutils", "grep", "sed", "gawk", "procps", "less", "file", "gnutar", "gzip", "util-linux-misc", "nsenter", "curl", "openssl", "jq", "yq", "sqlite", "bind-tools", "netcat-openbsd", "iproute2", "tcpdump", "strace", "lsof"]
+        entrypoint: "/bin/bash"
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+
   tesseract:
     # Tesseract OCR with English data and Python 3.12, for the Stash Text Reader's OCR service
     # (lxdk8s fleet/stash-ocr mounts its small stdlib HTTP server as a ConfigMap). Runtime only.
