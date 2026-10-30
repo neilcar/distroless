@@ -76,6 +76,29 @@ cosign verify-attestation --type spdxjson ghcr.io/neilcar/distroless/python:3.12
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
+### Debugging a shell-free container with `debug`
+
+Break glass only, with the owner's OK each time. Pin the index digest that the
+`latest-tools` tag points to. A per-arch manifest digest runs that arch on every
+node, which fails with `exec format error` on the other one.
+
+```bash
+kubectl -n apps debug <pod> --target=<container> --container=dbg1 --profile=general \
+  --image=ghcr.io/neilcar/distroless/debug@sha256:<index digest> -- sleep 900
+kubectl -n apps exec -it <pod> -c dbg1 -- bash
+```
+
+The debug container shares the target's process and network namespaces, so
+`ps`, `curl localhost:<port>` and `/proc/<pid>/root/...` (the target's files)
+work as the pod's own user. strace needs root, so add
+`--custom root.json` with
+`{"securityContext":{"runAsUser":0,"runAsGroup":0,"runAsNonRoot":false}}`.
+tcpdump needs `--profile=netadmin` and the same root file. The lxdk8s Kyverno
+exception `debug-toolbox-capabilities` lets only this image, pinned by digest,
+add SYS_PTRACE, NET_RAW and NET_ADMIN to ephemeral containers. Each container
+name can be used once, and ephemeral containers stay in the pod until it's
+recreated.
+
 ## How it stays current
 
 - **Sync** (daily 06:17 UTC, `sync.yml`): `dl sync` reads the Wolfi index for both
