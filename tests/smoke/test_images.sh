@@ -5,7 +5,7 @@ ref=$1 image=$2 variant=$3
 fail() { echo "SMOKE FAIL ($image/$variant): $*" >&2; exit 1; }
 
 user=$(docker inspect --format '{{.Config.User}}' "$ref")
-if [[ "$image" == "photoprism-base" ]]; then  # runs as root (owner's decision)
+if [[ "$image" == "photoprism-base" || "$image" == "debug" ]]; then  # root (photoprism-base: owner's decision; debug: reaches a target's files)
   [[ "$user" == "0" || "$user" == "root" || "$user" == "0:0" ]] || fail "user is '$user'"
 elif [[ "$image" == "stash-base" ]]; then  # Stash's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "stash" || "$user" == "1000:1000" ]] || fail "user is '$user'"
@@ -199,6 +199,20 @@ with exiftool.ExifToolHelper() as et:
     owner=$(docker export "$cid" | tar -tv --numeric-owner | awk '$NF == "config/" {print $2}')
     docker rm "$cid" >/dev/null
     [[ "$owner" == "1000/1000" ]] || fail "/config owner is '$owner'"
+    ;;
+  debug)
+    # The toolbox: every tool is there and runs (bash is the entrypoint).
+    docker run --rm "$ref" -c '
+      set -e
+      for t in ls find grep sed awk ps less file tar gzip nsenter curl openssl jq yq sqlite3 dig nc ss ip \
+               tcpdump strace lsof; do
+        command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }
+      done
+      curl --version >/dev/null; jq --version >/dev/null; yq --version >/dev/null
+      dig -v >/dev/null 2>&1; tcpdump --version >/dev/null; strace -V >/dev/null; nsenter --version >/dev/null
+      echo "{\"a\":1}" | jq -e ".a == 1" >/dev/null
+      [ "$(sqlite3 :memory: "select 1")" = 1 ]
+    ' || fail "debug tools"
     ;;
   tesseract)
     out=$(tool tesseract --version 2>&1) || fail "tesseract --version"

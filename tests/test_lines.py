@@ -8,6 +8,7 @@ import pytest
 from dltools.lines import (
     LIBVIPS_MELANGE,
     Line,
+    debug_lines,
     discover,
     libvips_behind,
     melange_version,
@@ -219,7 +220,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-3] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-4] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -230,7 +231,7 @@ def test_sabnzbd_base_line(indexes):
 
 def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-2] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-3] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
 
 
 def test_servarr_base_line(indexes):
@@ -239,6 +240,17 @@ def test_servarr_base_line(indexes):
     assert servarr_base_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_servarr_base_last(indexes, eol):
+def test_discover_includes_servarr_base_before_debug(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+    assert lines[-2] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+
+
+def test_debug_line(indexes):
+    # One `latest` line headed by bash's newest released version on both arches (the debug toolbox's shell).
+    assert debug_lines(indexes) == [Line("debug", "latest", "bash", "5.3-r14")]
+    assert debug_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_debug_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("debug", "latest", "bash", "5.3-r14")

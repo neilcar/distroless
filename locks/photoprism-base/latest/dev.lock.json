@@ -538,22 +538,22 @@
       },
       {
         "name": "coreutils",
-        "url": "https://packages.wolfi.dev/os/x86_64/coreutils-9.12-r6.apk",
-        "version": "9.12-r6",
+        "url": "https://packages.wolfi.dev/os/x86_64/coreutils-9.12-r7.apk",
+        "version": "9.12-r7",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18926",
-          "checksum": "sha1-0qDHngquPtbR5UjM7mFnx8iWXn0="
+          "range": "bytes=0-18980",
+          "checksum": "sha1-XNrZA062zO2gRS7FdpjILQ9uwYM="
         },
         "data": {
-          "range": "bytes=18927-828678",
-          "checksum": "sha256-Rqil2sw3p2f4mQ6CN9iNj2ixJUvdNp7w7nMpSQINCTU="
+          "range": "bytes=18981-828731",
+          "checksum": "sha256-nSBQubwrk1UpTrlps18lwC2C2p2xEd1Q/fA62TO9chE="
         },
-        "checksum": "Q10qDHngquPtbR5UjM7mFnx8iWXn0="
+        "checksum": "Q1XNrZA062zO2gRS7FdpjILQ9uwYM="
       },
       {
         "name": "zlib",
@@ -2894,22 +2894,22 @@
       },
       {
         "name": "py3-pip-wheel",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3-pip-wheel-26.2.2-r1.apk",
-        "version": "26.2.2-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3-pip-wheel-26.2.2-r2.apk",
+        "version": "26.2.2-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-35740",
-          "checksum": "sha1-QjTpKbOXAhcW0hUNUZEOer1uIEQ="
+          "range": "bytes=0-44166",
+          "checksum": "sha1-BWb5vwrbg4NJu9UjvsQh38ETTAc="
         },
         "data": {
-          "range": "bytes=35741-1838029",
-          "checksum": "sha256-zHEQDjGcUUiBgk8nGDFT6w8vwTwsTisYpmmSik/ZzJ8="
+          "range": "bytes=44167-1845333",
+          "checksum": "sha256-5LSfrB89D8i4jrSFRgQTgjIeEzMr4yr2MRzYPqEME1Y="
         },
-        "checksum": "Q1QjTpKbOXAhcW0hUNUZEOer1uIEQ="
+        "checksum": "Q1BWb5vwrbg4NJu9UjvsQh38ETTAc="
       },
       {
         "name": "openssl-3.6-libcrypto",
@@ -5858,22 +5858,22 @@
       },
       {
         "name": "coreutils",
-        "url": "https://packages.wolfi.dev/os/aarch64/coreutils-9.12-r6.apk",
-        "version": "9.12-r6",
+        "url": "https://packages.wolfi.dev/os/aarch64/coreutils-9.12-r7.apk",
+        "version": "9.12-r7",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18960",
-          "checksum": "sha1-2aVFVI7wabKAFKQKwhcHQh8CLD8="
+          "range": "bytes=0-19007",
+          "checksum": "sha1-vi1JFb6uTIUI7eEsHmGVs5l4Vpc="
         },
         "data": {
-          "range": "bytes=18961-792485",
-          "checksum": "sha256-kSRKnEVYLwgkBEy9FQH8+8/EWnkGn1EjOip6ovghakE="
+          "range": "bytes=19008-792535",
+          "checksum": "sha256-dovDbAJSE/+Zp6S5zTtADw1+EtRMr+OvXKCVkixim3U="
         },
-        "checksum": "Q12aVFVI7wabKAFKQKwhcHQh8CLD8="
+        "checksum": "Q1vi1JFb6uTIUI7eEsHmGVs5l4Vpc="
       },
       {
         "name": "zlib",
@@ -8214,22 +8214,22 @@
       },
       {
         "name": "py3-pip-wheel",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3-pip-wheel-26.2.2-r1.apk",
-        "version": "26.2.2-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3-pip-wheel-26.2.2-r2.apk",
+        "version": "26.2.2-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-35784",
-          "checksum": "sha1-0aXNXUAtQg0vMdeGc1Y4491/1ZM="
+          "range": "bytes=0-44181",
+          "checksum": "sha1-IIJLbmzKSh5E82XTLoLHHgIvv5A="
         },
         "data": {
-          "range": "bytes=35785-1838068",
-          "checksum": "sha256-pTwH3lR0WbP6NJRA4LEsMMo0zYgoNaH02y+39S0+ZrE="
+          "range": "bytes=44182-1845347",
+          "checksum": "sha256-EzS6zqRoO2bPK57b+8eGh7Tuw47us3RLqXRpCj7hqdc="
         },
-        "checksum": "Q10aXNXUAtQg0vMdeGc1Y4491/1ZM="
+        "checksum": "Q1IIJLbmzKSh5E82XTLoLHHgIvv5A="
       },
       {
         "name": "openssl-3.6-libcrypto",

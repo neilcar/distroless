@@ -45,11 +45,12 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         "sabnzbd-base/latest/runtime.apko.yaml",
         "sabnzbd-base/latest/dev.apko.yaml",
         "servarr-base/latest/runtime.apko.yaml",
+        "debug/latest/tools.apko.yaml",
     ]:
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
     assert not (locks / "nginx/stable").exists()  # not in the catalog's nginx lines
-    assert sum(e["kind"] == "line_added" for e in events) == 12  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base
+    assert sum(e["kind"] == "line_added" for e in events) == 13  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base + debug
 
 
 def test_cli_sync_second_run_is_a_no_op(tmp_path, offline, capsys):
