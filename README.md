@@ -172,6 +172,7 @@ Trivy, Critical/High/Medium/Low, same database for each before/after pair.
 | `python:3.14` | 0/0/9/0 | |
 | `nginx:mainline` | 0/0/1/0 | zlib, as above |
 | `nginx:stable` | 0/6/7/0 | 3 unique Highs (counted twice: nginx + mime-types); public Wolfi stopped at 1.30.2, fixes are in 1.30.3–1.30.5 builds that aren't published |
+| `servarr-base:latest` | 0/0/1/0 | zlib, as above |
 
 | Consumer | Before | After | |
 |---|---|---|---|
@@ -181,6 +182,7 @@ Trivy, Critical/High/Medium/Low, same database for each before/after pair.
 | atpass-web (`nginx:1.30-alpine-slim` → `nginx:mainline`) | 0/0/0/0 | 0/0/1/0 | switched; the zlib Medium also affects Alpine's zlib 1.3.2-r1, but Alpine's feed only lists CVEs once fixed |
 | Stash v0.31.1 (`stashapp/stash` → [`neilcar/stash`](https://github.com/neilcar/stash-image) on `stash-base`) | 13/78/44/6 | 0/2/3/1 | switched 2026-10-25; cluster trivy-operator report. CI Trivy with every package type (Go modules included): 13/190/191/56 → 0/21/24/1 |
 | PhotoPrism index Jobs 261007 (`photoprism-k8s`, Ubuntu → [`neilcar/photoprism-index`](https://github.com/neilcar/photoprism) on `photoprism-base`) | 12/288/3202/638 | 3/5/9/0 | switched 2026-10-25; CI Trivy, non-vendored findings (vendored darktable/RawTherapee/yt-dlp files are not seen by Trivy). The PhotoPrism server still runs the official image. All Criticals and Highs left are in the MariaDB 11.8 client, replaced by 13.1 in #43 (applies when the index image is rebuilt) |
+| Servarr apps (linuxserver / hotio → [`neilcar/<app>`](https://github.com/neilcar/servarr-image) on `servarr-base`, same versions) | Prowlarr 2/19/8/44, Radarr 2/23/10/44, Sonarr 1/14/8/44, Whisparr (hotio) 2/11/3/0, Lidarr 2/23/10/44 | Prowlarr 2/18/8/0, Radarr 2/22/10/0, Sonarr 0/12/7/0, Whisparr 2/11/4/0, Lidarr 2/22/10/0 | switched 2026-10-29/30 (Prowlarr, Radarr, Sonarr, Whisparr, Lidarr), each permanent after a 4-hour soak; CI Trivy amd64 from each `<app>-v<version>` release. The OS packages go (the only one left is zlib's Medium); the Criticals and most Highs are in the .NET runtime and libraries the publishers bundle, which only a new upstream release fixes. Trivy counts one High and one Medium more in our Prowlarr/Radarr/Lidarr bundles than in linuxserver's, from the same publisher build |
 
 ## Development
 
