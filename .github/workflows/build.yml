@@ -99,7 +99,7 @@ jobs:
           uv run dl tags --image "$IMAGE" --line "$LINE" --variant "$VARIANT" --lock "$LOCK" > tags.txt
           cat tags.txt
           echo "PRIMARY=$(head -1 tags.txt)" >> "$GITHUB_ENV"
-          echo "HASHTAG=$(grep -E -- '-[0-9a-f]{8}(-dev)?$|^[0-9a-f]{8}$' tags.txt | head -1)" >> "$GITHUB_ENV"
+          echo "HASHTAG=$(grep -E -- '-[0-9a-f]{8}(-[a-z]+)?$|^[0-9a-f]{8}$' tags.txt | head -1)" >> "$GITHUB_ENV"
 
       - name: Lock check (released-only; no shell or package manager in runtime images)
         run: |
