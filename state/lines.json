@@ -16,7 +16,7 @@
       "image": "python",
       "name": "3.12",
       "package": "python-3.12",
-      "version": "3.12.16-r2"
+      "version": "3.12.16-r3"
     },
     {
       "image": "python",
@@ -52,7 +52,7 @@
       "image": "stash-base",
       "name": "latest",
       "package": "python-3.12",
-      "version": "3.12.16-r2"
+      "version": "3.12.16-r3"
     },
     {
       "image": "tesseract",

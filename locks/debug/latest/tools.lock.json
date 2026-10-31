@@ -1397,22 +1397,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r1.apk",
-        "version": "1.7.3-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r3.apk",
+        "version": "1.7.3-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8798",
-          "checksum": "sha1-MCq2YqYgbkorvMCWB8Ql68MKMiw="
+          "range": "bytes=0-14516",
+          "checksum": "sha1-YJ3caxgPAouNPah2NmEiu+nGk20="
         },
         "data": {
-          "range": "bytes=8799-900683",
-          "checksum": "sha256-RlMyLVhro27WcGomteW+xDXH9LVZCWF40rzK4Ck2UQ0="
+          "range": "bytes=14517-550658",
+          "checksum": "sha256-VlREgiz9HXrrpzA19fNeGBcMbbuoDfxSqOeva18Nikw="
         },
-        "checksum": "Q1MCq2YqYgbkorvMCWB8Ql68MKMiw="
+        "checksum": "Q1YJ3caxgPAouNPah2NmEiu+nGk20="
       },
       {
         "name": "libcap",
@@ -2043,41 +2043,41 @@
       },
       {
         "name": "libsystemd-compression-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/libsystemd-compression-libs-262.1-r2.apk",
-        "version": "262.1-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/libsystemd-compression-libs-262.1-r4.apk",
+        "version": "262.1-r4",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-21725",
-          "checksum": "sha1-OHSnUPoGbm4IYM1g+qHOykuz2JE="
+          "range": "bytes=0-21747",
+          "checksum": "sha1-5H2Me+DGMK6wLLA/T7hbuKZIW68="
         },
         "data": {
-          "range": "bytes=21726-23192",
-          "checksum": "sha256-WhkNvGnecTrsteQG1gt8a/XHmhJmannnBM34OXasZ4w="
+          "range": "bytes=21748-23215",
+          "checksum": "sha256-mYyLuCbULbPlNmgCRaoPQJHOvDTy/AU22UXDA7JC2iw="
         },
-        "checksum": "Q1OHSnUPoGbm4IYM1g+qHOykuz2JE="
+        "checksum": "Q15H2Me+DGMK6wLLA/T7hbuKZIW68="
       },
       {
         "name": "libsystemd",
-        "url": "https://packages.wolfi.dev/os/x86_64/libsystemd-262.1-r2.apk",
-        "version": "262.1-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/libsystemd-262.1-r4.apk",
+        "version": "262.1-r4",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-21763",
-          "checksum": "sha1-edOkt6DUxZ4elB/3k4cYKNszCOg="
+          "range": "bytes=0-21811",
+          "checksum": "sha1-bcxXvQGmvBLM4CLN5uJuU9muWfE="
         },
         "data": {
-          "range": "bytes=21764-847916",
-          "checksum": "sha256-KLT4puXcEgQj4GtGqrbqAU3RQCOkas/6dAXcF/akC/s="
+          "range": "bytes=21812-682675",
+          "checksum": "sha256-6AmtwxpKeWl+Kh1g2j1ZzvSXFvk9SmPVGNJQjVDT+/U="
         },
-        "checksum": "Q1edOkt6DUxZ4elB/3k4cYKNszCOg="
+        "checksum": "Q1bcxXvQGmvBLM4CLN5uJuU9muWfE="
       },
       {
         "name": "util-linux-misc",
@@ -3487,22 +3487,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r1.apk",
-        "version": "1.7.3-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r3.apk",
+        "version": "1.7.3-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8818",
-          "checksum": "sha1-66Gf3YxEp1eRFVc3V3b4z75t7s4="
+          "range": "bytes=0-14539",
+          "checksum": "sha1-AQnz2S68tqhpEbg+apmr+mxmoeY="
         },
         "data": {
-          "range": "bytes=8819-972718",
-          "checksum": "sha256-lY99MCyB5AxtNNSRiT1JP+XEsOBkXsB+CHVp99G+CwQ="
+          "range": "bytes=14540-652337",
+          "checksum": "sha256-d1Ed53AsVGNpUXKJ4CoYH8+Izhjy/xVO6CSpFlzEnuU="
         },
-        "checksum": "Q166Gf3YxEp1eRFVc3V3b4z75t7s4="
+        "checksum": "Q1AQnz2S68tqhpEbg+apmr+mxmoeY="
       },
       {
         "name": "libcap",
@@ -4133,41 +4133,41 @@
       },
       {
         "name": "libsystemd-compression-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/libsystemd-compression-libs-262.1-r2.apk",
-        "version": "262.1-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/libsystemd-compression-libs-262.1-r4.apk",
+        "version": "262.1-r4",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-21761",
-          "checksum": "sha1-dtz5BsRcVhsuEDOmOMvZXSwZkzw="
+          "range": "bytes=0-21788",
+          "checksum": "sha1-eDcgcoCcsZwcSTdfYl3RRKEaSfo="
         },
         "data": {
-          "range": "bytes=21762-23232",
-          "checksum": "sha256-ZrhRd0pWOQoVuwUstFk7o5kNF7TKmxz/zTqPW92G5nY="
+          "range": "bytes=21789-23257",
+          "checksum": "sha256-SpjMDW/wT96yJ7cHRi5hBlB9aYyKBAV/EDFE0ueLuNE="
         },
-        "checksum": "Q1dtz5BsRcVhsuEDOmOMvZXSwZkzw="
+        "checksum": "Q1eDcgcoCcsZwcSTdfYl3RRKEaSfo="
       },
       {
         "name": "libsystemd",
-        "url": "https://packages.wolfi.dev/os/aarch64/libsystemd-262.1-r2.apk",
-        "version": "262.1-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/libsystemd-262.1-r4.apk",
+        "version": "262.1-r4",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-21796",
-          "checksum": "sha1-iLr+E4v/Lhm0WuaVZOkD3fZM8a0="
+          "range": "bytes=0-21843",
+          "checksum": "sha1-Yi+Xu/kJZcNa5anuRDXOwSB1HcA="
         },
         "data": {
-          "range": "bytes=21797-833529",
-          "checksum": "sha256-xiQmvB00HZo0BuLVqp8L+q1tFKHGn5ayPTh0K/kqpsA="
+          "range": "bytes=21844-628346",
+          "checksum": "sha256-WL+vrrhtFozv578UvaAeYIc+x/7Hxql9KS6Hyi6jWaI="
         },
-        "checksum": "Q1iLr+E4v/Lhm0WuaVZOkD3fZM8a0="
+        "checksum": "Q1Yi+Xu/kJZcNa5anuRDXOwSB1HcA="
       },
       {
         "name": "util-linux-misc",

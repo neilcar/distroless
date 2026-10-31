@@ -9,7 +9,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - python-3.12=3.12.16-r2
+  - python-3.12=3.12.16-r3
   - ffmpeg
   - distroless-libvips
   - py3.12-pip
