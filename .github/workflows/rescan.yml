@@ -13,6 +13,8 @@ permissions:
   contents: read
   issues: write
   actions: write
+  # The private images (servarr-base, stash-base, tesseract, ...) need a login to pull.
+  packages: read
 
 jobs:
   rescan:
@@ -32,6 +34,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .rescan
+          # Signed in, so private images can be scanned and an unpublished one answers
+          # NAME_UNKNOWN rather than DENIED. Trivy reads the same docker config.
+          crane auth login ghcr.io -u "$GITHUB_ACTOR" --password-stdin <<<"$GH_TOKEN"
           uv run dl fetch-index --out "$RUNNER_TEMP/index"
           rebuild=()
           failed=()
