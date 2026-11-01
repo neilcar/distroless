@@ -26,6 +26,8 @@ TESSERACT_PACKAGE = "tesseract"
 SABNZBD_BASE_PACKAGE = "python-3.14"
 # servarr-base is versioned by the ICU its .NET apps load (Lidarr, Radarr, Prowlarr, Sonarr, Whisparr).
 SERVARR_BASE_PACKAGE = "libicu79"
+# beets-base is versioned by its Python (beets and its plugins are Python).
+BEETS_BASE_PACKAGE = "python-3.12"
 # debug (the break-glass toolbox for kubectl debug) is versioned by its shell.
 DEBUG_PACKAGE = "bash"
 # python-ssh (stdlib scripts that shell out to ssh) is versioned by its Python.
@@ -115,6 +117,12 @@ def servarr_base_lines(indexes) -> list[Line]:
     return [Line("servarr-base", "latest", SERVARR_BASE_PACKAGE, v)] if v else []
 
 
+def beets_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Python 3.12's newest released version."""
+    v = newest_released_all_arches(indexes, BEETS_BASE_PACKAGE)
+    return [Line("beets-base", "latest", BEETS_BASE_PACKAGE, v)] if v else []
+
+
 def debug_lines(indexes) -> list[Line]:
     """The single `latest` line, headed by bash's newest released version."""
     v = newest_released_all_arches(indexes, DEBUG_PACKAGE)
@@ -178,7 +186,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
-            "sabnzbd-base": 6, "servarr-base": 7, "debug": 8, "python-ssh": 9}.get(line.image, 10)
+            "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10}.get(line.image, 11)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -207,7 +215,7 @@ def discover(
         static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
         + photoprism_base_lines(photoprism_libvips) + stash_base_lines(indexes)
         + tesseract_lines(indexes) + sabnzbd_base_lines(indexes) + servarr_base_lines(indexes)
-        + debug_lines(indexes) + python_ssh_lines(indexes)
+        + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
