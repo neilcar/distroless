@@ -1093,41 +1093,41 @@
       },
       {
         "name": "libcurl-openssl4",
-        "url": "https://packages.wolfi.dev/os/x86_64/libcurl-openssl4-8.23.0-r2.apk",
-        "version": "8.23.0-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/libcurl-openssl4-8.23.0-r3.apk",
+        "version": "8.23.0-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18372",
-          "checksum": "sha1-KIbvm8OoKd333z86qwIqJg4Wo6k="
+          "range": "bytes=0-29916",
+          "checksum": "sha1-FFfnB1sVWR4lll8iWoEz2xunvUU="
         },
         "data": {
-          "range": "bytes=18373-607957",
-          "checksum": "sha256-ox4+WLuWPMcqe17p2VnEJocaTRxGhFctDIxnKgXRijk="
+          "range": "bytes=29917-619549",
+          "checksum": "sha256-A6PqBI+jez2QdoBn6I3ocaKea3LlFiiCV7FYkMBEzAM="
         },
-        "checksum": "Q1KIbvm8OoKd333z86qwIqJg4Wo6k="
+        "checksum": "Q1FFfnB1sVWR4lll8iWoEz2xunvUU="
       },
       {
         "name": "curl",
-        "url": "https://packages.wolfi.dev/os/x86_64/curl-8.23.0-r2.apk",
-        "version": "8.23.0-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/curl-8.23.0-r3.apk",
+        "version": "8.23.0-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18289",
-          "checksum": "sha1-UzxO2j4PXm/7RtGAiM108cXpAF8="
+          "range": "bytes=0-29828",
+          "checksum": "sha1-hu3fXp/Hz+dI6VjXDfTZ02+y0mk="
         },
         "data": {
-          "range": "bytes=18290-242535",
-          "checksum": "sha256-mpSd0GyBn7in4SvNWjMJYH4caqqH5/FBn1nhqQYigWU="
+          "range": "bytes=29829-254116",
+          "checksum": "sha256-Emzr+uyoq+QB6XBQmsOpXZCPt8LEN7wq5RsVLimYljY="
         },
-        "checksum": "Q1UzxO2j4PXm/7RtGAiM108cXpAF8="
+        "checksum": "Q1hu3fXp/Hz+dI6VjXDfTZ02+y0mk="
       },
       {
         "name": "libmagic",
@@ -3183,41 +3183,41 @@
       },
       {
         "name": "libcurl-openssl4",
-        "url": "https://packages.wolfi.dev/os/aarch64/libcurl-openssl4-8.23.0-r2.apk",
-        "version": "8.23.0-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/libcurl-openssl4-8.23.0-r3.apk",
+        "version": "8.23.0-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18421",
-          "checksum": "sha1-L4PPV19Y/D0KYrzUuy1hXsh8DKo="
+          "range": "bytes=0-29956",
+          "checksum": "sha1-WSQAM/gy5To3STuK+M0KLnidB94="
         },
         "data": {
-          "range": "bytes=18422-576680",
-          "checksum": "sha256-qyMhDTytb7oXtxI5tEgnMvWv6nODPruODfOypHerWxQ="
+          "range": "bytes=29957-588268",
+          "checksum": "sha256-KFVGzUx/iWbs1vogRi6ja/HAaS079Dm9eqGN1x7Ipgg="
         },
-        "checksum": "Q1L4PPV19Y/D0KYrzUuy1hXsh8DKo="
+        "checksum": "Q1WSQAM/gy5To3STuK+M0KLnidB94="
       },
       {
         "name": "curl",
-        "url": "https://packages.wolfi.dev/os/aarch64/curl-8.23.0-r2.apk",
-        "version": "8.23.0-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/curl-8.23.0-r3.apk",
+        "version": "8.23.0-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18327",
-          "checksum": "sha1-f38sJemCcU1hpqTuW+5PWfSl0ME="
+          "range": "bytes=0-29859",
+          "checksum": "sha1-+sMys77aijLe6N9xFlCmIwrYTw4="
         },
         "data": {
-          "range": "bytes=18328-237944",
-          "checksum": "sha256-n4GcuzgPl3qX/wgo0/vtaHTVw9ZFu6Hqr6gf59niuJw="
+          "range": "bytes=29860-249531",
+          "checksum": "sha256-+PA7Xe1DLmkIoh4bgRhOKWMOR8ssHbmDyhXA0v6DwmQ="
         },
-        "checksum": "Q1f38sJemCcU1hpqTuW+5PWfSl0ME="
+        "checksum": "Q1+sMys77aijLe6N9xFlCmIwrYTw4="
       },
       {
         "name": "libmagic",

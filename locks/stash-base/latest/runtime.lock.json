@@ -214,25 +214,6 @@
         "checksum": "Q1NCYggh2p9EJgsM9JP5YrdBvzsdo="
       },
       {
-        "name": "lcms2",
-        "url": "https://packages.wolfi.dev/os/x86_64/lcms2-2.19.1-r5.apk",
-        "version": "2.19.1-r5",
-        "architecture": "x86_64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-18187",
-          "checksum": "sha1-FO4UY/KcyCZGtJFraebSAZ3J4Wo="
-        },
-        "data": {
-          "range": "bytes=18188-246765",
-          "checksum": "sha256-7A6y88wHWG1SvEbDVXEqNn4uD+x0ATL07uPblxj5cck="
-        },
-        "checksum": "Q1FO4UY/KcyCZGtJFraebSAZ3J4Wo="
-      },
-      {
         "name": "libxdmcp",
         "url": "https://packages.wolfi.dev/os/x86_64/libxdmcp-1.1.5-r14.apk",
         "version": "1.1.5-r14",
@@ -535,6 +516,25 @@
           "checksum": "sha256-6wxeoczBPh48JXabhQEQYYkRiFds0swhB0Aq9eqEiDk="
         },
         "checksum": "Q17WqBEve0DwwlWJJkIOlvSsWaw8A="
+      },
+      {
+        "name": "lcms2",
+        "url": "https://packages.wolfi.dev/os/x86_64/lcms2-2.20-r0.apk",
+        "version": "2.20-r0",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-18193",
+          "checksum": "sha1-lxWvoWZcOK+VaRUAhk1p1PI75iw="
+        },
+        "data": {
+          "range": "bytes=18194-248005",
+          "checksum": "sha256-F3ur9XF2UlX6VbQT8y6VmvH1/Dhtmz2948Mih0lqMKk="
+        },
+        "checksum": "Q1lxWvoWZcOK+VaRUAhk1p1PI75iw="
       },
       {
         "name": "libxft",
@@ -2798,25 +2798,6 @@
         "checksum": "Q1wFF4ZxmWv5LWADGrnftS/U5RY98="
       },
       {
-        "name": "lcms2",
-        "url": "https://packages.wolfi.dev/os/aarch64/lcms2-2.19.1-r5.apk",
-        "version": "2.19.1-r5",
-        "architecture": "aarch64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-18229",
-          "checksum": "sha1-Bii90vmu57qvztVhgLDcRTQpa/M="
-        },
-        "data": {
-          "range": "bytes=18230-237563",
-          "checksum": "sha256-9r9vuHw4ESDTeV+aGxpA4DXNVOcpoKRhEnMFYAg7tzw="
-        },
-        "checksum": "Q1Bii90vmu57qvztVhgLDcRTQpa/M="
-      },
-      {
         "name": "libxdmcp",
         "url": "https://packages.wolfi.dev/os/aarch64/libxdmcp-1.1.5-r14.apk",
         "version": "1.1.5-r14",
@@ -3119,6 +3100,25 @@
           "checksum": "sha256-jeHbPCLcFzU9Fq5cxsF1xiF6wFeo1nM0yi0Dx++c4rA="
         },
         "checksum": "Q1QaZ1pp8dWVQlodWwVyK7tB/5X1c="
+      },
+      {
+        "name": "lcms2",
+        "url": "https://packages.wolfi.dev/os/aarch64/lcms2-2.20-r0.apk",
+        "version": "2.20-r0",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-18227",
+          "checksum": "sha1-6dbVqQCJiwB9dnj+3o29A1dYmW4="
+        },
+        "data": {
+          "range": "bytes=18228-243361",
+          "checksum": "sha256-nD/zDoQ9jU38kRjcNcKsY5khmpM8XLWvMkwWMGKcjGs="
+        },
+        "checksum": "Q16dbVqQCJiwB9dnj+3o29A1dYmW4="
       },
       {
         "name": "libxft",
