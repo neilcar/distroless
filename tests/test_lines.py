@@ -6,9 +6,9 @@ from pathlib import Path
 import pytest
 
 from dltools.lines import (
-    beets_base_lines,
     LIBVIPS_MELANGE,
     Line,
+    beets_base_lines,
     debug_lines,
     discover,
     libvips_behind,
