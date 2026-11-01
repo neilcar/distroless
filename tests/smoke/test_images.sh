@@ -70,7 +70,7 @@ case "$image" in
   photoprism-base)
     for cmd in "ffmpeg -version" "exiftool -ver" "heif-dec --version" "magick -version" \
                "vips --version" "djxl --version" "rsvg-convert --version" "mariadb --version" \
-               "yt-dlp --version"; do
+               "mariadb-dump --version" "yt-dlp --version"; do
       # shellcheck disable=SC2086  # each entry is "tool args"
       tool $cmd >/dev/null || fail "$cmd"
     done

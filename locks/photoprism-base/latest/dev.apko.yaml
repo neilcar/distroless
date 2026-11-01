@@ -19,6 +19,7 @@ contents:
   - librsvg
   - rsvg-convert
   - mariadb-13.1-client
+  - mariadb-13.1-dump
   - sqlite
   - x265
   - dav1d

@@ -2,7 +2,7 @@
   "version": "v1",
   "config": {
     "name": "locks/photoprism-base/latest/dev.apko.yaml",
-    "checksum": "sha256-AGG5DMM8PBw57OudiKUKt6ebgB+1W+8j1HGPSxauVYg="
+    "checksum": "sha256-tHEMnQQozjsuJD8wRbRvjNlArMmrBXw0fNaX5JGHpAo="
   },
   "contents": {
     "keyring": [
@@ -4962,6 +4962,25 @@
           "checksum": "sha256-wqjEnuqhNfgpNNOgtOvy4IKwn2caXzCGLsFcFbt50/I="
         },
         "checksum": "Q18FZv06EBA+rxkOVfZzmTEDWruWY="
+      },
+      {
+        "name": "mariadb-13.1-dump",
+        "url": "https://packages.wolfi.dev/os/x86_64/mariadb-13.1-dump-13.1.1-r2.apk",
+        "version": "13.1.1-r2",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-12359",
+          "checksum": "sha1-SmzmC6PTppInh/bf9db3wM6q+tM="
+        },
+        "data": {
+          "range": "bytes=12360-1139124",
+          "checksum": "sha256-gUcMkO/k6gwcetMzTouaab+myTGN1qt/Kr8twrQVWgk="
+        },
+        "checksum": "Q1SmzmC6PTppInh/bf9db3wM6q+tM="
       },
       {
         "name": "libLLVM-23",
@@ -10263,6 +10282,25 @@
           "checksum": "sha256-c+Tn2JitOywRLw7OMYGM5QYSpKoWYcTnu4M88qGOiPk="
         },
         "checksum": "Q1L2ncaVIncwtEv4HY5QgbZGO3VII="
+      },
+      {
+        "name": "mariadb-13.1-dump",
+        "url": "https://packages.wolfi.dev/os/aarch64/mariadb-13.1-dump-13.1.1-r2.apk",
+        "version": "13.1.1-r2",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-12378",
+          "checksum": "sha1-7kChXDl5R+uR+aiLp9t+vO/1pZU="
+        },
+        "data": {
+          "range": "bytes=12379-1145509",
+          "checksum": "sha256-zPLE0q2Y+tFih36NgmweuTD4aszM8wJvUj9luqZs07U="
+        },
+        "checksum": "Q17kChXDl5R+uR+aiLp9t+vO/1pZU="
       },
       {
         "name": "libLLVM-23",
