@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import urllib.request
 from dataclasses import asdict, dataclass
 from datetime import date
@@ -34,6 +35,13 @@ DEBUG_PACKAGE = "bash"
 PYTHON_SSH_PACKAGE = "python-3.12"
 # ci-tools (busybox and curl for CI smoke tests) is versioned by curl.
 CI_TOOLS_PACKAGE = "curl"
+# valkey (Redis-compatible; Wolfi has no Redis) is versioned by its server.
+VALKEY_PACKAGE = "valkey-9.0"
+# rust follows Wolfi's newest rust-1.NN with a released version on both arches.
+RUST_PACKAGE = re.compile(r"rust-1\.(\d+)")
+# cc (glibc and libgcc, for dynamically linked Rust/C binaries) is versioned by libgcc: Wolfi's
+# current glibc is a versioned package (glibc-2.44) that libgcc's libc.so.6 dependency resolves.
+CC_PACKAGE = "libgcc"
 
 
 @dataclass(frozen=True)
@@ -143,6 +151,32 @@ def ci_tools_lines(indexes) -> list[Line]:
     return [Line("ci-tools", "latest", CI_TOOLS_PACKAGE, v)] if v else []
 
 
+def valkey_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Valkey 9.0's newest released version."""
+    v = newest_released_all_arches(indexes, VALKEY_PACKAGE)
+    return [Line("valkey", "latest", VALKEY_PACKAGE, v)] if v else []
+
+
+def rust_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by the newest rust-1.NN released on every arch."""
+    minors = {
+        int(m.group(1)): name
+        for index in indexes.values()
+        for name in index
+        if (m := RUST_PACKAGE.fullmatch(name))
+    }
+    for minor in sorted(minors, reverse=True):
+        if v := newest_released_all_arches(indexes, minors[minor]):
+            return [Line("rust", "latest", minors[minor], v)]
+    return []
+
+
+def cc_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by libgcc's newest released version."""
+    v = newest_released_all_arches(indexes, CC_PACKAGE)
+    return [Line("cc", "latest", CC_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -194,7 +228,8 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
-            "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11}.get(line.image, 12)
+            "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
+            "rust": 13, "cc": 14}.get(line.image, 15)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -224,7 +259,7 @@ def discover(
         + photoprism_base_lines(photoprism_libvips) + stash_base_lines(indexes)
         + tesseract_lines(indexes) + sabnzbd_base_lines(indexes) + servarr_base_lines(indexes)
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
-        + ci_tools_lines(indexes)
+        + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

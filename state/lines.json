@@ -95,6 +95,18 @@
       "name": "latest",
       "package": "curl",
       "version": "8.23.0-r3"
+    },
+    {
+      "image": "rust",
+      "name": "latest",
+      "package": "rust-1.99",
+      "version": "1.99.1-r2"
+    },
+    {
+      "image": "cc",
+      "name": "latest",
+      "package": "libgcc",
+      "version": "16.2.0-r2"
     }
   ]
 }
