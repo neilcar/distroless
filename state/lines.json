@@ -89,6 +89,12 @@
       "name": "latest",
       "package": "python-3.12",
       "version": "3.12.16-r3"
+    },
+    {
+      "image": "ci-tools",
+      "name": "latest",
+      "package": "curl",
+      "version": "8.23.0-r3"
     }
   ]
 }
