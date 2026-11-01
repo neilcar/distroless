@@ -252,10 +252,10 @@ jobs:
         run: |
           set -euo pipefail
           cosign sign --yes --recursive --registry-referrers-mode=legacy "$REPO@$DIGEST"   # the index and each per-arch image
-          # Fail the build if the signature isn't discoverable the way Kyverno and consumers look for it.
+          # Fail the build unless the signature verifies as Kyverno checks it: build.yml on main only.
           for ref in "$REPO@$DIGEST" $(jq -r --arg r "$REPO" '"\($r)@\(.manifests[].digest)"' oci/index.json); do
             cosign verify \
-              --certificate-identity-regexp='^https://github\.com/neilcar/[^/]+/\.github/workflows/.+@refs/.+$' \
+              --certificate-identity='https://github.com/neilcar/distroless/.github/workflows/build.yml@refs/heads/main' \
               --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
               "$ref" > /dev/null
           done
