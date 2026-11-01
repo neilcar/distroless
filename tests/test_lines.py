@@ -8,6 +8,7 @@ import pytest
 from dltools.lines import (
     LIBVIPS_MELANGE,
     Line,
+    beets_base_lines,
     debug_lines,
     discover,
     libvips_behind,
@@ -221,7 +222,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-5] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-6] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -232,7 +233,7 @@ def test_sabnzbd_base_line(indexes):
 
 def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-4] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-5] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
 
 
 def test_servarr_base_line(indexes):
@@ -241,9 +242,20 @@ def test_servarr_base_line(indexes):
     assert servarr_base_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_servarr_base_before_debug(indexes, eol):
+def test_discover_includes_servarr_base_before_beets_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-3] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+    assert lines[-4] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+
+
+def test_beets_base_line(indexes):
+    # One `latest` line headed by Python 3.12 at its newest version on both arches (beets runs on 3.12).
+    assert beets_base_lines(indexes) == [Line("beets-base", "latest", "python-3.12", "3.12.15-r6")]
+    assert beets_base_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_beets_base_before_debug(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-3] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_debug_line(indexes):

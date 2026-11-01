@@ -15,6 +15,8 @@ elif [[ "$image" == "servarr-base" ]]; then  # the Servarr pods run as 1000:1000
   [[ "$user" == "1000" || "$user" == "servarr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "python-ssh" ]]; then  # the feral-janitor Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "janitor" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "beets-base" ]]; then  # beets' pod runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "beets" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -179,6 +181,47 @@ with exiftool.ExifToolHelper() as et:
         # shellcheck disable=SC2086
         tool $cmd >/dev/null || fail "$cmd"
       done
+    fi
+    ;;
+  beets-base)
+    # beets' Python: 3.12 as /usr/bin/python3 (the auto-import entry points' shebang), with the stdlib
+    # modules beets and the entry points use.
+    out=$(tool /usr/bin/python3 -c '
+import sys, ssl, sqlite3, fcntl, zoneinfo, json, subprocess
+assert sys.version_info[:2] == (3, 12), sys.version
+zoneinfo.ZoneInfo("Europe/London")
+print("python ok", ssl.OPENSSL_VERSION)' 2>&1) || fail "python3 check: $out"
+    [[ "$out" == "python ok OpenSSL "* ]] || fail "python3 check printed: $out"
+    out=$(tool tini --version 2>&1) || fail "tini --version: $out"
+    grep -q '^tini version' <<<"$out" || fail "tini printed: $out"
+    out=$(tool fpcalc -version 2>&1) || fail "fpcalc -version: $out"
+    grep -q '^fpcalc version 1\.6\.2' <<<"$out" || fail "fpcalc printed: $out"
+    for t in ffmpeg ffprobe; do
+      out=$(tool $t -version 2>&1) || fail "$t -version: $out"
+      grep -q "^$t version" <<<"$out" || fail "$t printed: $(head -1 <<<"$out")"
+    done
+    out=$(tool metaflac --version 2>&1) || fail "metaflac --version: $out"
+    grep -q '^metaflac' <<<"$out" || fail "metaflac printed: $out"
+    out=$(tool magick -version 2>&1) || fail "magick -version: $out"
+    grep -q 'ImageMagick 7' <<<"$out" || fail "magick printed: $(head -1 <<<"$out")"
+    # A round trip through ffmpeg and magick as uid 1000 in /tmp (what convert/fetchart do).
+    out=$(tool /usr/bin/python3 -c '
+import os, subprocess
+os.chdir("/tmp")
+subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono", "-t", "1", "s.flac"], check=True)
+subprocess.run(["magick", "-size", "64x64", "xc:red", "a.png"], check=True)
+subprocess.run(["magick", "a.png", "-resize", "32x32", "b.jpg"], check=True)
+print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || fail "media round trip: $out"
+    [[ "$out" == "True" ]] || fail "media round trip printed: $out"
+    out=$(tool /usr/bin/python3 -c 'import os; s = os.stat("/config"); print(s.st_uid, s.st_gid, os.path.expanduser("~"))') \
+      || fail "stat /config"
+    [[ "$out" == "1000 1000 /config" ]] || fail "/config: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    else
+      out=$(tool python3 -m pip --version 2>&1) || fail "pip: $out"
+      out=$(tool uv --version 2>&1) || fail "uv: $out"
     fi
     ;;
   servarr-base)
