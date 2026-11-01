@@ -1,0 +1,49 @@
+contents:
+  repositories:
+  - https://packages.wolfi.dev/os
+  - ./packages
+  keyring:
+  - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  - ./melange.rsa.pub
+  packages:
+  - wolfi-baselayout
+  - ca-certificates-bundle
+  - tzdata
+  - valkey-9.0=9.0.4-r0
+  - valkey-9.0-cli
+  - distroless-no-libc-utils
+accounts:
+  groups:
+  - groupname: nonroot
+    gid: 65532
+  - groupname: valkey
+    gid: 999
+  users:
+  - username: nonroot
+    uid: 65532
+    gid: 65532
+  - username: valkey
+    uid: 999
+    gid: 999
+    homedir: /data
+  run-as: '999'
+archs:
+- x86_64
+- aarch64
+annotations:
+  org.opencontainers.image.source: https://github.com/neilcar/distroless
+  org.opencontainers.image.title: valkey:latest
+entrypoint:
+  command: /usr/bin/valkey-server
+cmd: --protected-mode no --dir /data
+paths:
+- path: /tmp
+  type: directory
+  permissions: 1023
+  uid: 0
+  gid: 0
+- path: /data
+  type: directory
+  permissions: 493
+  uid: 999
+  gid: 999
