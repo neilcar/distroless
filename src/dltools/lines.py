@@ -28,6 +28,8 @@ SABNZBD_BASE_PACKAGE = "python-3.14"
 SERVARR_BASE_PACKAGE = "libicu79"
 # debug (the break-glass toolbox for kubectl debug) is versioned by its shell.
 DEBUG_PACKAGE = "bash"
+# python-ssh (stdlib scripts that shell out to ssh) is versioned by its Python.
+PYTHON_SSH_PACKAGE = "python-3.12"
 
 
 @dataclass(frozen=True)
@@ -119,6 +121,12 @@ def debug_lines(indexes) -> list[Line]:
     return [Line("debug", "latest", DEBUG_PACKAGE, v)] if v else []
 
 
+def python_ssh_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Python 3.12's newest released version."""
+    v = newest_released_all_arches(indexes, PYTHON_SSH_PACKAGE)
+    return [Line("python-ssh", "latest", PYTHON_SSH_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -170,7 +178,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
-            "sabnzbd-base": 6, "servarr-base": 7, "debug": 8}.get(line.image, 9)
+            "sabnzbd-base": 6, "servarr-base": 7, "debug": 8, "python-ssh": 9}.get(line.image, 10)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -199,7 +207,7 @@ def discover(
         static_lines(indexes) + py + nginx_lines(indexes, nginx_names)
         + photoprism_base_lines(photoprism_libvips) + stash_base_lines(indexes)
         + tesseract_lines(indexes) + sabnzbd_base_lines(indexes) + servarr_base_lines(indexes)
-        + debug_lines(indexes)
+        + debug_lines(indexes) + python_ssh_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
