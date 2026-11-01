@@ -13,6 +13,8 @@ elif [[ "$image" == "sabnzbd-base" ]]; then  # SABnzbd's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "sabnzbd" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "servarr-base" ]]; then  # the Servarr pods run as 1000:1000
   [[ "$user" == "1000" || "$user" == "servarr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "python-ssh" ]]; then  # the feral-janitor Job runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "janitor" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -213,6 +215,24 @@ with exiftool.ExifToolHelper() as et:
       echo "{\"a\":1}" | jq -e ".a == 1" >/dev/null
       [ "$(sqlite3 :memory: "select 1")" = 1 ]
     ' || fail "debug tools"
+    ;;
+  python-ssh)
+    # The Job's path: `python3 main.py` runs ssh (OpenSSH prints its version on stderr).
+    out=$(tool ssh -V 2>&1) || fail "ssh -V: $out"
+    grep -q '^OpenSSH_' <<<"$out" || fail "ssh -V printed: $out"
+    out=$(docker run --rm --entrypoint python3 "$ref" -c '
+import pwd, os, subprocess
+assert pwd.getpwuid(os.getuid()).pw_name == "janitor"
+r = subprocess.run(["ssh", "-V"], capture_output=True, text=True, check=True)
+assert r.stderr.startswith("OpenSSH_"), r.stderr
+# ssh resolves the running uid and parses its (empty) config without a config file.
+r = subprocess.run(["ssh", "-G", "example.invalid"], capture_output=True, text=True, check=True)
+assert "user janitor" in r.stdout, r.stdout[:200]
+print("ssh ok")') || fail "python3 -> ssh: $out"
+    [[ "$out" == "ssh ok" ]] || fail "ssh check printed: $out"
+    # No shebang audit, as for python and tesseract: without /usr/bin/env the CPython stdlib's
+    # `#!/usr/bin/env python3` modules (base64.py, tarfile.py, ...) count as broken, and they
+    # are only ever imported.
     ;;
   tesseract)
     out=$(tool tesseract --version 2>&1) || fail "tesseract --version"
