@@ -368,3 +368,17 @@ images:
       PYTHONUNBUFFERED: "1"
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+
+  ci-tools:
+    # busybox and curl for CI smoke tests (hey-furby's image.yml), in place of Docker Hub's
+    # busybox and curlimages/curl, which hit the anonymous pull rate limit. The entrypoint is
+    # curl, as in curlimages/curl; run busybox applets with `--entrypoint chown` and the like
+    # (`-u 0` where they need root). It has a shell, so, like debug, its only variant is
+    # `tools`. Versioned by curl. Runs as 65532.
+    lines: [latest]
+    variants:
+      tools:
+        packages: ["{package}", "busybox"]
+        entrypoint: "/usr/bin/curl"
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}

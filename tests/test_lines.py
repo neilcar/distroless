@@ -9,6 +9,7 @@ from dltools.lines import (
     LIBVIPS_MELANGE,
     Line,
     beets_base_lines,
+    ci_tools_lines,
     debug_lines,
     discover,
     libvips_behind,
@@ -222,7 +223,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-6] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-7] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -233,7 +234,7 @@ def test_sabnzbd_base_line(indexes):
 
 def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-5] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-6] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
 
 
 def test_servarr_base_line(indexes):
@@ -244,7 +245,7 @@ def test_servarr_base_line(indexes):
 
 def test_discover_includes_servarr_base_before_beets_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-4] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+    assert lines[-5] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
 
 
 def test_beets_base_line(indexes):
@@ -255,7 +256,7 @@ def test_beets_base_line(indexes):
 
 def test_discover_includes_beets_base_before_debug(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-3] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-4] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_debug_line(indexes):
@@ -266,7 +267,7 @@ def test_debug_line(indexes):
 
 def test_discover_includes_debug_before_python_ssh(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-2] == Line("debug", "latest", "bash", "5.3-r14")
+    assert lines[-3] == Line("debug", "latest", "bash", "5.3-r14")
 
 
 def test_python_ssh_line(indexes):
@@ -275,6 +276,17 @@ def test_python_ssh_line(indexes):
     assert python_ssh_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_python_ssh_last(indexes, eol):
+def test_discover_includes_python_ssh_before_ci_tools(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-2] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
+
+
+def test_ci_tools_line(indexes):
+    # One `latest` line headed by curl's newest released version on both arches.
+    assert ci_tools_lines(indexes) == [Line("ci-tools", "latest", "curl", "8.17.0-r1")]
+    assert ci_tools_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_ci_tools_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("ci-tools", "latest", "curl", "8.17.0-r1")

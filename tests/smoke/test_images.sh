@@ -259,6 +259,23 @@ print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || 
       [ "$(sqlite3 :memory: "select 1")" = 1 ]
     ' || fail "debug tools"
     ;;
+  ci-tools)
+    # hey-furby's smoke test: curl as the entrypoint (as curlimages/curl), and busybox's chown
+    # as root on a volume (`--entrypoint chown -u 0`).
+    out=$(docker run --rm "$ref" --version) || fail "curl --version: $out"
+    grep -q '^curl 8' <<<"$out" || fail "curl --version printed: $out"
+    grep -q 'https' <<<"$out" || fail "curl has no https: $out"
+    vol=ci-tools-smoke-$$
+    docker volume create "$vol" >/dev/null
+    docker run --rm -u 0 -v "$vol":/data --entrypoint chown "$ref" 1000:1000 /data \
+      || { docker volume rm "$vol" >/dev/null; fail "chown"; }
+    owner=$(docker run --rm -v "$vol":/data --entrypoint stat "$ref" -c %u:%g /data)
+    docker volume rm "$vol" >/dev/null
+    [[ "$owner" == "1000:1000" ]] || fail "chown left /data as $owner"
+    for t in sh chown chmod stat; do
+      tool which "$t" >/dev/null || fail "missing $t"
+    done
+    ;;
   python-ssh)
     # The Job's path: `python3 main.py` runs ssh (OpenSSH prints its version on stderr).
     out=$(tool ssh -V 2>&1) || fail "ssh -V: $out"
