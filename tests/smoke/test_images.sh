@@ -5,7 +5,7 @@ ref=$1 image=$2 variant=$3
 fail() { echo "SMOKE FAIL ($image/$variant): $*" >&2; exit 1; }
 
 user=$(docker inspect --format '{{.Config.User}}' "$ref")
-if [[ "$image" == "photoprism-base" || "$image" == "debug" ]]; then  # root (photoprism-base: owner's decision; debug: reaches a target's files)
+if [[ "$image" == "photoprism-base" || "$image" == "debug" || "$image" == "rust" ]]; then  # root (photoprism-base: owner's decision; debug: reaches a target's files; rust: job containers write the workspace)
   [[ "$user" == "0" || "$user" == "root" || "$user" == "0:0" ]] || fail "user is '$user'"
 elif [[ "$image" == "stash-base" ]]; then  # Stash's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "stash" || "$user" == "1000:1000" ]] || fail "user is '$user'"
@@ -15,6 +15,8 @@ elif [[ "$image" == "servarr-base" ]]; then  # the Servarr pods run as 1000:1000
   [[ "$user" == "1000" || "$user" == "servarr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "python-ssh" ]]; then  # the feral-janitor Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "janitor" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "valkey" ]]; then  # photoprism-index-redis's pod runs as 999:999
+  [[ "$user" == "999" || "$user" == "valkey" || "$user" == "999:999" ]] || fail "user is '$user'"
 elif [[ "$image" == "beets-base" ]]; then  # beets' pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "beets" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
@@ -275,6 +277,42 @@ print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || 
     for t in sh chown chmod stat; do
       tool which "$t" >/dev/null || fail "missing $t"
     done
+    ;;
+  valkey)
+    # photoprism-k8s's CI service: started with no arguments, it answers on a published port.
+    cid=$(docker run -d -p 16379:6379 "$ref")
+    trap 'docker rm -f "$cid" >/dev/null' EXIT
+    for _ in $(seq 1 20); do
+      out=$(docker run --rm --network container:"$cid" --entrypoint valkey-cli "$ref" ping 2>&1 || true)
+      [[ "$out" == "PONG" ]] && break
+      sleep 0.5
+    done
+    [[ "$out" == "PONG" ]] || { docker logs "$cid" >&2; fail "valkey-cli ping: $out"; }
+    # From outside the container (protected mode is off), and writes persist to /data.
+    exec 3<>/dev/tcp/127.0.0.1/16379 || fail "no connection on the published port"
+    printf 'SET k v\r\nSAVE\r\n' >&3
+    read -r -t 5 r1 <&3; read -r -t 5 r2 <&3; exec 3<&-
+    [[ "$r1" == +OK* && "$r2" == +OK* ]] || fail "SET/SAVE over the published port: $r1 $r2"
+    ;;
+  rust)
+    # ollama-orchestrator's CI job and build stage: cargo fmt/clippy/test and a crate with C (cc).
+    docker run --rm "$ref" -c '
+      set -e
+      cargo --version; rustc --version; cargo clippy --version; cargo fmt --version; git --version
+      cd /tmp && cargo new -q hello && cd hello
+      printf "fn main() {\n    println!(\"hello\");\n}\n" > src/main.rs
+      cargo fmt --check
+      cargo clippy -q -- -D warnings
+      cargo build -q --release
+      [ "$(./target/release/hello)" = hello ]
+      printf "int seven(void) { return 7; }\n" > /tmp/seven.c && cc -c /tmp/seven.c -o /tmp/seven.o
+    ' || fail "rust toolchain"
+    ;;
+  cc)
+    # The C runtime a glibc Rust binary loads (no shell: ask ldconfig, which glibc ships).
+    out=$(tool ldconfig -p) || fail "ldconfig -p"
+    grep -q 'libc.so.6' <<<"$out" || fail "no libc.so.6"
+    grep -q 'libgcc_s.so.1' <<<"$out" || fail "no libgcc_s.so.1"
     ;;
   python-ssh)
     # The Job's path: `python3 main.py` runs ssh (OpenSSH prints its version on stderr).

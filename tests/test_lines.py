@@ -9,6 +9,7 @@ from dltools.lines import (
     LIBVIPS_MELANGE,
     Line,
     beets_base_lines,
+    cc_lines,
     ci_tools_lines,
     debug_lines,
     discover,
@@ -18,11 +19,13 @@ from dltools.lines import (
     photoprism_base_lines,
     python_lines,
     python_ssh_lines,
+    rust_lines,
     sabnzbd_base_lines,
     servarr_base_lines,
     stash_base_lines,
     static_lines,
     tesseract_lines,
+    valkey_lines,
 )
 from dltools.wolfi import parse_apkindex
 
@@ -223,7 +226,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-7] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-10] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -234,7 +237,7 @@ def test_sabnzbd_base_line(indexes):
 
 def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-6] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-9] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
 
 
 def test_servarr_base_line(indexes):
@@ -245,7 +248,7 @@ def test_servarr_base_line(indexes):
 
 def test_discover_includes_servarr_base_before_beets_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-5] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+    assert lines[-8] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
 
 
 def test_beets_base_line(indexes):
@@ -256,7 +259,7 @@ def test_beets_base_line(indexes):
 
 def test_discover_includes_beets_base_before_debug(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-4] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-7] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_debug_line(indexes):
@@ -267,7 +270,7 @@ def test_debug_line(indexes):
 
 def test_discover_includes_debug_before_python_ssh(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-3] == Line("debug", "latest", "bash", "5.3-r14")
+    assert lines[-6] == Line("debug", "latest", "bash", "5.3-r14")
 
 
 def test_python_ssh_line(indexes):
@@ -278,7 +281,7 @@ def test_python_ssh_line(indexes):
 
 def test_discover_includes_python_ssh_before_ci_tools(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-2] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-5] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_ci_tools_line(indexes):
@@ -287,6 +290,32 @@ def test_ci_tools_line(indexes):
     assert ci_tools_lines({"x86_64": {}, "aarch64": {}}) == []
 
 
-def test_discover_includes_ci_tools_last(indexes, eol):
+def test_discover_includes_ci_tools_before_valkey(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("ci-tools", "latest", "curl", "8.17.0-r1")
+    assert lines[-4] == Line("ci-tools", "latest", "curl", "8.17.0-r1")
+
+
+def test_valkey_line(indexes):
+    # One `latest` line headed by Valkey 9.0's newest released version on both arches.
+    assert valkey_lines(indexes) == [Line("valkey", "latest", "valkey-9.0", "9.0.4-r0")]
+    assert valkey_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_rust_line_is_the_newest_minor_on_every_arch(indexes):
+    # rust-1.100 is only on x86_64 and rust-1.101 is a pre-release, so 1.99 heads the line.
+    assert rust_lines(indexes) == [Line("rust", "latest", "rust-1.99", "1.99.1-r2")]
+    assert rust_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_cc_line(indexes):
+    # One `latest` line headed by libgcc's newest released version on both arches.
+    assert cc_lines(indexes) == [Line("cc", "latest", "libgcc", "16.2.0-r2")]
+
+
+def test_discover_includes_valkey_rust_cc_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-3:] == [
+        Line("valkey", "latest", "valkey-9.0", "9.0.4-r0"),
+        Line("rust", "latest", "rust-1.99", "1.99.1-r2"),
+        Line("cc", "latest", "libgcc", "16.2.0-r2"),
+    ]

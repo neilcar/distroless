@@ -1,0 +1,28 @@
+# Empty package that provides the virtual `posix-libc-utils`. Wolfi's valkey depends on
+# posix-libc-utils, whose `ldd` is a bash script, and every posix-libc-utils depends on
+# `bash` by name, which distroless-no-shell's cmd:bash cannot stand in for. Valkey never
+# runs ldd. This lets the runtime image satisfy that dependency without a shell. It
+# installs nothing.
+package:
+  name: distroless-no-libc-utils
+  version: 1.0.0
+  epoch: 0
+  description: Satisfies posix-libc-utils for packages that never run ldd; the image has no shell
+  copyright:
+    - license: Apache-2.0
+  dependencies:
+    provides:
+      - posix-libc-utils=1.0.0-r0
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+
+pipeline:
+  - runs: |
+      mkdir -p "${{targets.destdir}}"

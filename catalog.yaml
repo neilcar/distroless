@@ -382,3 +382,56 @@ images:
         entrypoint: "/usr/bin/curl"
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+
+  valkey:
+    # Valkey, the Redis-compatible server (Wolfi has no Redis since its license change), for
+    # photoprism-k8s's CI Redis service in place of Docker Hub's redis. Versioned by valkey-9.0.
+    # Runs as uid/gid 999 (`valkey`, home /data), like lxdk8s photoprism-index-redis's pod.
+    # The default arguments match the official redis image with no config: protected mode off
+    # (CI connects through a published port, and GitHub service containers take no command) and
+    # data in /data. Pass your own arguments (a config file, a password) to replace them.
+    run_as: "999"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: valkey, gid: 999}]
+      users: [{username: valkey, uid: 999, gid: 999, homedir: /data}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      runtime:
+        # distroless-no-libc-utils stands in for posix-libc-utils (valkey depends on it; its
+        # ldd is a bash script valkey never runs, and it needs bash by name).
+        packages: ["{package}", "{package}-cli", "distroless-no-libc-utils"]
+        entrypoint: "/usr/bin/valkey-server"
+        cmd: "--protected-mode no --dir /data"
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /data, type: directory, permissions: 0755, uid: 999, gid: 999}
+
+  rust:
+    # The Rust toolchain (cargo, rustc, clippy, rustfmt) with gcc for crates that build C
+    # (ring), for ollama-orchestrator's CI job container and Dockerfile build stage in place of
+    # Docker Hub's rust:alpine. Wolfi's Rust targets glibc, so binaries built here run on `cc`.
+    # Versioned by the newest rust-1.NN. Build-only: its only variant is `dev` (busybox shell,
+    # the entrypoint). Runs as root, since GitHub job containers write the runner's workspace.
+    run_as: "0"
+    lines: [latest]
+    variants:
+      dev:
+        packages: ["{package}", "busybox", "gcc", "glibc-dev", "git"]
+        entrypoint: "/bin/sh"
+    environment:
+      CARGO_HOME: /usr/local/cargo
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /usr/local/cargo, type: directory, permissions: 0755, uid: 0, gid: 0}
+
+  cc:
+    # glibc and libgcc, for dynamically linked Rust and C binaries (ollama-orchestrator, built
+    # on `rust`). `static` plus the C runtime, as Google's distroless/cc. Versioned by libgcc,
+    # whose libc.so.6 dependency brings in Wolfi's current glibc (glibc-2.44; the unversioned
+    # `glibc` package stopped at 2.43).
+    lines: [latest]
+    variants:
+      runtime:
+        packages: ["{package}"]
