@@ -290,3 +290,11 @@ def test_tar_binary_missing_member_fails(tmp_path, launcher, launch_dir):
                           "files": {"x86_64": {"url": tgz.as_uri(), "sha256": sha(tgz), "member": "x/fpcalc"}}}]}
     with pytest.raises(KeyError):
         build_layer(vendor, "x86_64", tmp_path / "cache", tmp_path / "l.tar.gz", launcher, launch_dir)
+
+
+def test_build_layer_with_nothing_vendored_still_installs_env(tmp_path, launcher, launch_dir):
+    # env_launcher images (flaresolverr-base): an empty vendor list gives a layer with just /usr/bin/env.
+    out = tmp_path / "out.tar.gz"
+    manifest = build_layer({"vendor": []}, "x86_64", tmp_path / "cache", out, launcher, launch_dir)
+    _, files = members(out)
+    assert files["usr/bin/env"] == launcher.read_bytes() and manifest["vendor"] == []

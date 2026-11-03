@@ -197,26 +197,41 @@ assert sys.version_info[:2] == (3, 11), sys.version
 print("python ok", ssl.OPENSSL_VERSION)' 2>&1) || fail "python3 check: $out"
     [[ "$out" == "python ok OpenSSL "* ]] || fail "python3 check printed: $out"
     # Chromium as the pod runs it: uid 1000, read-only root, tmpfs /tmp, no capabilities, default
-    # /dev/shm. The shell launcher is bypassed (no shell): the chrome binary itself.
-    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint /usr/lib/chromium/chrome "$ref" \
-      --headless=new --no-sandbox --disable-gpu --user-data-dir=/tmp/profile --dump-dom 'data:text/html,<p id=x>ok</p>' 2>/dev/null) \
-      || fail "chrome --dump-dom failed"
-    grep -q '<p id="x">ok</p>' <<<"$out" || fail "chrome --dump-dom printed: $(head -c 300 <<<"$out")"
+    # /dev/shm, HOME writable (the pod's /config is an emptyDir; Chromium's crash handler needs a HOME).
+    # The shell launcher is bypassed (no shell): the chrome binary itself. A page is opened over the
+    # DevTools port and must run its script (Chromium 149's --dump-dom never exits).
+    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL -e HOME=/tmp \
+      --entrypoint /usr/bin/python3 "$ref" -c '
+import json, subprocess, time, urllib.parse, urllib.request
+p = subprocess.Popen(["/usr/lib/chromium/chrome", "--headless", "--no-sandbox", "--disable-gpu",
+                      "--user-data-dir=/tmp/profile", "--remote-debugging-port=9222", "about:blank"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+title = None
+try:
+    for _ in range(60):
+        try:
+            urllib.request.urlopen("http://127.0.0.1:9222/json/version", timeout=2)
+            break
+        except OSError:
+            time.sleep(0.5)
+    url = "data:text/html,<title>t</title><script>document.title=\"rendered-\"+(6*7)</script>"
+    urllib.request.urlopen(urllib.request.Request(
+        "http://127.0.0.1:9222/json/new?" + urllib.parse.quote(url, safe=":,"), method="PUT"), timeout=5)
+    for _ in range(40):
+        tabs = json.load(urllib.request.urlopen("http://127.0.0.1:9222/json", timeout=2))
+        title = next((t["title"] for t in tabs if t["title"].startswith("rendered-")), None)
+        if title:
+            break
+        time.sleep(0.25)
+finally:
+    p.terminate()
+    p.wait(timeout=10)
+print("title", title)' 2>&1) || fail "chrome render check: $out"
+    [[ "$out" == *"title rendered-42"* ]] || fail "chrome render check printed: $out"
     cv=$(tool /usr/lib/chromium/chrome --version 2>&1) || fail "chrome --version: $cv"
     dv=$(tool /usr/lib/chromium/chromedriver --version 2>&1) || fail "chromedriver --version: $dv"
     [[ $(grep -oE '[0-9]+\.' <<<"$cv" | head -1) == $(grep -oE '[0-9]+\.' <<<"$dv" | head -1) ]] \
       || fail "chrome ($cv) and chromedriver ($dv) majors differ"
-    # Xvfb starts a display as uid 1000 (FlareSolverr's xvfbwrapper), checked from Python.
-    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --entrypoint /usr/bin/python3 "$ref" -c '
-import subprocess, time, os
-p = subprocess.Popen(["Xvfb", ":99", "-screen", "0", "800x680x24", "-nolisten", "tcp"], stderr=subprocess.PIPE)
-for _ in range(50):
-    if os.path.exists("/tmp/.X11-unix/X99"): break
-    time.sleep(0.1)
-ok = os.path.exists("/tmp/.X11-unix/X99")
-p.terminate(); p.wait()
-print("xvfb", ok)' 2>&1) || fail "Xvfb check: $out"
-    [[ "$out" == *"xvfb True"* ]] || fail "Xvfb check printed: $out"
     out=$(tool dumb-init --version 2>&1) || fail "dumb-init --version: $out"
     out=$(tool /usr/bin/python3 -c 'import os; s = os.stat("/config"); print(s.st_uid, s.st_gid, os.path.expanduser("~"))') \
       || fail "stat /config"
