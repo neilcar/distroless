@@ -3369,22 +3369,22 @@
       },
       {
         "name": "py3.12-six",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3.12-six-1.17.0-r8.apk",
-        "version": "1.17.0-r8",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3.12-six-1.17.0-r9.apk",
+        "version": "1.17.0-r9",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-97621",
-          "checksum": "sha1-I46atwHsNMLD7cxRCbQSQIm3DU4="
+          "range": "bytes=0-16321",
+          "checksum": "sha1-6uCdRSUtgWuPlfOQPXLjJLeKuBQ="
         },
         "data": {
-          "range": "bytes=97622-129618",
-          "checksum": "sha256-aGmko/PS8WPlM/LcLn6rrlnDoVDSgIpCGz8fQx4zAmE="
+          "range": "bytes=16322-48325",
+          "checksum": "sha256-diWo6tjVDN1uOqRck3hSVRa0uE+ILX6HdG1bkVFQykE="
         },
-        "checksum": "Q1I46atwHsNMLD7cxRCbQSQIm3DU4="
+        "checksum": "Q16uCdRSUtgWuPlfOQPXLjJLeKuBQ="
       },
       {
         "name": "py3.12-tzdata",
@@ -6960,22 +6960,22 @@
       },
       {
         "name": "py3.12-six",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3.12-six-1.17.0-r8.apk",
-        "version": "1.17.0-r8",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3.12-six-1.17.0-r9.apk",
+        "version": "1.17.0-r9",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-97675",
-          "checksum": "sha1-jvZ4JUX9fbrzGrLDj0hnflturzo="
+          "range": "bytes=0-16344",
+          "checksum": "sha1-aAR6IFtuEZoxVsIxm8lhQOCB2ZY="
         },
         "data": {
-          "range": "bytes=97676-129672",
-          "checksum": "sha256-oiApEL3dta8I28X9tlcQhu23I01Nm4I5O+AEpmff0eE="
+          "range": "bytes=16345-48346",
+          "checksum": "sha256-9/GsgQLkscb2et7wAxfo3g6QEEZD3kZd8+yu0+QSqPY="
         },
-        "checksum": "Q1jvZ4JUX9fbrzGrLDj0hnflturzo="
+        "checksum": "Q1aAR6IFtuEZoxVsIxm8lhQOCB2ZY="
       },
       {
         "name": "py3.12-tzdata",
