@@ -42,6 +42,10 @@ RUST_PACKAGE = re.compile(r"rust-1\.(\d+)")
 # cc (glibc and libgcc, for dynamically linked Rust/C binaries) is versioned by libgcc: Wolfi's
 # current glibc is a versioned package (glibc-2.44) that libgcc's libc.so.6 dependency resolves.
 CC_PACKAGE = "libgcc"
+# flaresolverr-base is versioned by its Chromium (what Cloudflare's checks see).
+FLARESOLVERR_BASE_PACKAGE = "chromium"
+# jdownloader-base is versioned by its Java runtime (JDownloader is a Java program).
+JDOWNLOADER_BASE_PACKAGE = "openjdk-21-jre"
 
 
 @dataclass(frozen=True)
@@ -177,6 +181,18 @@ def cc_lines(indexes) -> list[Line]:
     return [Line("cc", "latest", CC_PACKAGE, v)] if v else []
 
 
+def flaresolverr_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Chromium's newest released version."""
+    v = newest_released_all_arches(indexes, FLARESOLVERR_BASE_PACKAGE)
+    return [Line("flaresolverr-base", "latest", FLARESOLVERR_BASE_PACKAGE, v)] if v else []
+
+
+def jdownloader_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by OpenJDK 21's JRE at its newest released version."""
+    v = newest_released_all_arches(indexes, JDOWNLOADER_BASE_PACKAGE)
+    return [Line("jdownloader-base", "latest", JDOWNLOADER_BASE_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -229,7 +245,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
-            "rust": 13, "cc": 14}.get(line.image, 15)
+            "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16}.get(line.image, 17)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -260,6 +276,7 @@ def discover(
         + tesseract_lines(indexes) + sabnzbd_base_lines(indexes) + servarr_base_lines(indexes)
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
+        + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

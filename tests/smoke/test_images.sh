@@ -19,6 +19,10 @@ elif [[ "$image" == "valkey" ]]; then  # photoprism-index-redis's pod runs as 99
   [[ "$user" == "999" || "$user" == "valkey" || "$user" == "999:999" ]] || fail "user is '$user'"
 elif [[ "$image" == "beets-base" ]]; then  # beets' pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "beets" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "flaresolverr-base" ]]; then  # FlareSolverr's pod runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "flaresolverr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "jdownloader-base" ]]; then  # JDownloader's pod runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "jdownloader" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -183,6 +187,65 @@ with exiftool.ExifToolHelper() as et:
         # shellcheck disable=SC2086
         tool $cmd >/dev/null || fail "$cmd"
       done
+    fi
+    ;;
+  flaresolverr-base)
+    # FlareSolverr's Python (3.11, as the stock image) with the stdlib modules it and selenium use.
+    out=$(tool /usr/bin/python3 -c '
+import sys, ssl, json, subprocess, zoneinfo
+assert sys.version_info[:2] == (3, 11), sys.version
+print("python ok", ssl.OPENSSL_VERSION)' 2>&1) || fail "python3 check: $out"
+    [[ "$out" == "python ok OpenSSL "* ]] || fail "python3 check printed: $out"
+    # Chromium as the pod runs it: uid 1000, read-only root, tmpfs /tmp, no capabilities, default
+    # /dev/shm. The shell launcher is bypassed (no shell): the chrome binary itself.
+    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint /usr/lib/chromium/chrome "$ref" \
+      --headless=new --no-sandbox --disable-gpu --user-data-dir=/tmp/profile --dump-dom 'data:text/html,<p id=x>ok</p>' 2>/dev/null) \
+      || fail "chrome --dump-dom failed"
+    grep -q '<p id="x">ok</p>' <<<"$out" || fail "chrome --dump-dom printed: $(head -c 300 <<<"$out")"
+    cv=$(tool /usr/lib/chromium/chrome --version 2>&1) || fail "chrome --version: $cv"
+    dv=$(tool /usr/lib/chromium/chromedriver --version 2>&1) || fail "chromedriver --version: $dv"
+    [[ $(grep -oE '[0-9]+\.' <<<"$cv" | head -1) == $(grep -oE '[0-9]+\.' <<<"$dv" | head -1) ]] \
+      || fail "chrome ($cv) and chromedriver ($dv) majors differ"
+    # Xvfb starts a display as uid 1000 (FlareSolverr's xvfbwrapper), checked from Python.
+    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --entrypoint /usr/bin/python3 "$ref" -c '
+import subprocess, time, os
+p = subprocess.Popen(["Xvfb", ":99", "-screen", "0", "800x680x24", "-nolisten", "tcp"], stderr=subprocess.PIPE)
+for _ in range(50):
+    if os.path.exists("/tmp/.X11-unix/X99"): break
+    time.sleep(0.1)
+ok = os.path.exists("/tmp/.X11-unix/X99")
+p.terminate(); p.wait()
+print("xvfb", ok)' 2>&1) || fail "Xvfb check: $out"
+    [[ "$out" == *"xvfb True"* ]] || fail "Xvfb check printed: $out"
+    out=$(tool dumb-init --version 2>&1) || fail "dumb-init --version: $out"
+    out=$(tool /usr/bin/python3 -c 'import os; s = os.stat("/config"); print(s.st_uid, s.st_gid, os.path.expanduser("~"))') \
+      || fail "stat /config"
+    [[ "$out" == "1000 1000 /config" ]] || fail "/config: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    else
+      out=$(tool python3 -m pip --version 2>&1) || fail "pip: $out"
+      out=$(tool uv --version 2>&1) || fail "uv: $out"
+    fi
+    ;;
+  jdownloader-base)
+    # OpenJDK 21 on PATH, headless, as uid 1000 with a read-only root.
+    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint java "$ref" \
+      -Djava.awt.headless=true -XshowSettings:properties -version 2>&1) || fail "java -version: $out"
+    grep -q 'openjdk version "21\.' <<<"$out" || fail "java printed: $(grep -m1 version <<<"$out")"
+    grep -q 'java.awt.headless = true' <<<"$out" || fail "java is not headless"
+    out=$(tool tini --version 2>&1) || fail "tini --version: $out"
+    grep -q '^tini version' <<<"$out" || fail "tini printed: $out"
+    for t in ffmpeg ffprobe; do
+      out=$(tool $t -version 2>&1) || fail "$t -version: $out"
+      grep -q "^$t version" <<<"$out" || fail "$t printed: $(head -1 <<<"$out")"
+    done
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    else
+      out=$(tool curl --version 2>&1) || fail "curl: $out"
     fi
     ;;
   beets-base)

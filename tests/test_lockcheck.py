@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from dltools.lockcheck import check_lock
+from dltools.lockcheck import check_lock, image_allowed_unreleased
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -70,3 +70,21 @@ def test_image_forbidden_photoprism_base():
 def test_image_forbidden_stash_base():
     from dltools.lockcheck import image_forbidden
     assert image_forbidden("locks/stash-base/latest/runtime.lock.json") == {"libvips", "libvips-dev"}
+
+
+def test_lockcheck_allows_named_unreleased_packages_only():
+    lock = {"contents": {"packages": [
+        {"name": n, "version": v, "architecture": a}
+        for a in ("x86_64", "aarch64")
+        for n, v in (("avahi-libs", "0.9_rc5-r3"), ("zlib", "1.3.2.1_rc20260921-r1"))
+    ]}}
+    violations = check_lock(lock, allowed_unreleased=frozenset({"avahi-libs"}))
+    assert len(violations) == 2 and all("zlib" in v for v in violations)
+
+
+def test_image_allowed_unreleased_flaresolverr_base():
+    # Chromium's dependencies with no released version in Wolfi at all, and only for this image.
+    assert image_allowed_unreleased("locks/flaresolverr-base/latest/runtime.lock.json") == frozenset(
+        {"avahi-libs", "font-opensans"}
+    )
+    assert image_allowed_unreleased("locks/beets-base/latest/runtime.lock.json") == frozenset()

@@ -298,6 +298,64 @@ images:
             sha256: 3aa1498126ed272d805bc9d081c77965c9e1e1a0891bb112c13b56ef2ad47bad
             member: chromaprint-fpcalc-1.6.2-linux-arm64/fpcalc
 
+  flaresolverr-base:
+    # Base for the shell-free FlareSolverr build (neilcar/pyapps-image): Python 3.11 (what the stock
+    # image runs FlareSolverr v3.5.2 on), Wolfi Chromium with its chromedriver, Xvfb (FlareSolverr runs
+    # Chromium non-headless on a virtual display, as the stock image does), dumb-init as PID 1 (reaps
+    # Chromium's children, as the stock image does) and DejaVu fonts (the stock image's only fonts).
+    # Wolfi's /usr/bin/chromium is a shell launcher: callers start /usr/lib/chromium/chrome directly.
+    # Versioned by chromium. Runs as uid/gid 1000 (`flaresolverr`, home /config), like the chart's pod.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: flaresolverr, gid: 1000}]
+      users: [{username: flaresolverr, uid: 1000, gid: 1000, homedir: /config}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      runtime:
+        packages: ["{package}", "distroless-no-shell", "python-3.11", "Xvfb", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata"]
+      # dev: pip and uv for pyapps-image's hash-locked requirements.
+      dev:
+        packages: ["{package}", "python-3.11", "Xvfb", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata", "busybox", "bash", "py3.11-pip", "uv"]
+    environment:
+      HOME: /config
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      # CPython's stdlib cgi.py has `#! /usr/local/bin/python` (only ever imported): give the shebang a
+      # target so the shebang audit holds, as beets-base does.
+      - {path: /usr/local/bin, type: directory, permissions: 0755, uid: 0, gid: 0}
+      - {path: /usr/local/bin/python, type: symlink, source: /usr/bin/python3.11, permissions: 0755}
+
+  jdownloader-base:
+    # Base for the shell-free headless JDownloader build (neilcar/jdownloader-image): OpenJDK 21's JRE
+    # (java on PATH as /usr/bin/java), tini as PID 1 (reaps the ffmpeg children JDownloader starts),
+    # Wolfi ffmpeg/ffprobe (stream merging) and libstdc++/libgcc (the 7-Zip-JBinding native library
+    # JDownloader ships in its libs/). Versioned by openjdk-21-jre. Runs as uid/gid 1000 (`jdownloader`,
+    # home /config), like the pod (the volume is 1000:1000).
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: jdownloader, gid: 1000}]
+      users: [{username: jdownloader, uid: 1000, gid: 1000, homedir: /config}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      runtime:
+        # distroless-no-shell: ffmpeg's libsrt needs cmd:bash only for unused scripts (as stash-base).
+        packages: ["{package}", "distroless-no-shell", "tini", "ffmpeg", "libstdc++", "libgcc", "ca-certificates-bundle", "tzdata"]
+      # dev: busybox, bash and curl for jdownloader-image's snapshot stage (runs JDownloader's updater).
+      dev:
+        packages: ["{package}", "tini", "ffmpeg", "libstdc++", "libgcc", "ca-certificates-bundle", "tzdata", "busybox", "bash", "curl"]
+    environment:
+      HOME: /config
+      JAVA_HOME: /usr/lib/jvm/java-21-openjdk
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      - {path: /usr/bin/java, type: symlink, source: /usr/lib/jvm/java-21-openjdk/bin/java, permissions: 0755}
+
   debug:
     # Break-glass toolbox for troubleshooting shell-free containers: attached to a pod with
     # `kubectl debug --target=<container>` (or as a temporary sidecar), only with the owner's OK

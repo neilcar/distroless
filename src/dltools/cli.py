@@ -22,7 +22,12 @@ from dltools.lines import (
     libvips_behind,
     melange_version,
 )
-from dltools.lockcheck import RUNTIME_FORBIDDEN, check_lock, image_forbidden
+from dltools.lockcheck import (
+    RUNTIME_FORBIDDEN,
+    check_lock,
+    image_allowed_unreleased,
+    image_forbidden,
+)
 from dltools.notify import upsert_issue
 from dltools.ocilayout import append_layer
 from dltools.pinning import apply_pins, released_overrides
@@ -230,7 +235,8 @@ def cmd_lock_check(args) -> int:
     forbidden = RUNTIME_FORBIDDEN if args.runtime else frozenset()
     for path in args.locks:
         lock = json.loads(Path(path).read_text())
-        for violation in check_lock(lock, forbidden=forbidden | image_forbidden(path)):
+        for violation in check_lock(lock, forbidden=forbidden | image_forbidden(path),
+                                    allowed_unreleased=image_allowed_unreleased(path)):
             print(f"{path}: {violation}")
             failed = True
     return 1 if failed else 0
@@ -258,7 +264,7 @@ def cmd_pin_released(args) -> int:
     """0: lock is released-only; 3: config re-pinned, re-lock needed; 2: unresolvable."""
     lock = json.loads(Path(args.lock).read_text())
     indexes = load_indexes(args.index_dir)
-    pins, missing = released_overrides(lock, indexes)
+    pins, missing = released_overrides(lock, indexes, image_allowed_unreleased(args.lock))
     if missing:
         print(f"no released version on every arch for: {', '.join(missing)}")
         return 2

@@ -38,3 +38,18 @@ def test_apply_pins_adds_and_replaces():
         "wolfi-baselayout", "python-3.12=3.12.15-r6", "zlib=1.3.1-r9", "libffi=3.5-r0",
     ]
     assert cfg["contents"]["packages"][2] == "zlib=1.0-r0"  # input not mutated
+
+
+def test_released_overrides_skips_allowed_package_without_any_release():
+    pins, missing = released_overrides(
+        lock(("libexpat1", "2.7.4_git20261001-r0"), ("zlib", "1.3.2.1_rc20260921-r0")), INDEXES,
+        allowed_unreleased=frozenset({"libexpat1"}),
+    )
+    assert pins == {"zlib": "1.3.1-r9"} and missing == []
+
+
+def test_released_overrides_still_pins_allowed_package_once_released():
+    pins, _ = released_overrides(
+        lock(("zlib", "1.3.2.1_rc20260921-r0"),), INDEXES, allowed_unreleased=frozenset({"zlib"}),
+    )
+    assert pins == {"zlib": "1.3.1-r9"}
