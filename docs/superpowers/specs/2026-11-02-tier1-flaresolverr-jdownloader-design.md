@@ -102,6 +102,13 @@ General:
   image's version, and copies the result into the image. The image is the
   version; the watcher opens a PR when the update servers have a newer
   revision.
+- **JDownloader stays a Helm deploy** (owner's decision, 2026-11-02): our own
+  chart, `oci://ghcr.io/neilcar/charts/jdownloader`, kept in
+  `neilcar/jdownloader-image`, since the pmoscode chart probes the desktop's
+  web port. Same release name and object names.
+- **Both images build for amd64 and arm64**, and JDownloader loses its amd64
+  `nodeSelector` (owner's decision): every worker mounts `/mnt/downloads`, and
+  the Longhorn volume follows the pod.
 - Trivy gate as before: nothing Critical/High in what we add; app images no
   worse than the vendor image they replace.
 

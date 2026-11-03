@@ -4,7 +4,7 @@
 
 **Goal:** FlareSolverr and JDownloader run on shell-free, signed, private neilcar images, with FlareSolverr proven as reliable as today before it switches, and JDownloader headless (MyJDownloader only) with its code fixed in the image and updated weekly by itself.
 
-**Architecture:** Two new bases in `neilcar/distroless` (`flaresolverr-base`: Python + Wolfi Chromium; `jdownloader-base`: Wolfi JRE + what JDownloader loads). FlareSolverr builds in `neilcar/pyapps-image` next to Tautulli/SearXNG/beets. JDownloader gets `neilcar/jdownloader-image`, whose JDownloader code is a snapshot tarball (fetched with JDownloader's own updater, published as a release asset, pinned by SHA-256). Deploys go through lxdk8s Fleet GitOps; FlareSolverr's image comes from the arr chart (`arr-helm/images.yaml`), JDownloader moves from the pmoscode chart to plain manifests.
+**Architecture:** Two new bases in `neilcar/distroless` (`flaresolverr-base`: Python + Wolfi Chromium; `jdownloader-base`: Wolfi JRE + what JDownloader loads). FlareSolverr builds in `neilcar/pyapps-image` next to Tautulli/SearXNG/beets. JDownloader gets `neilcar/jdownloader-image`, whose JDownloader code is a snapshot tarball (fetched with JDownloader's own updater, published as a release asset, pinned by SHA-256). Deploys go through lxdk8s Fleet GitOps; FlareSolverr's image comes from the arr chart (`arr-helm/images.yaml`). JDownloader stays a Helm deploy (owner's decision) but on our own chart, `oci://ghcr.io/neilcar/charts/jdownloader`, kept in `neilcar/jdownloader-image` under `chart/` (the pmoscode chart's probes need the desktop's web port). Both images build for amd64 and arm64 (owner's decision), and JDownloader loses its amd64 pin.
 
 **Tech Stack:** apko/Wolfi (distroless `dl` tooling), Docker Buildx on ARC runners, cosign 2.4.3, Trivy 0.76.1, Kyverno CLI, Fleet, Python 3 (scripts + pytest), bash smoke tests.
 
@@ -16,6 +16,7 @@
 - No shell, read-only root, restricted pod-security set; FlareSolverr uid 1000; JDownloader non-root uid 1000 (volume is 1000:1000; `/complete` is 0777 911:1001).
 - FlareSolverr stays at v3.5.2 (no upgrade in the switch); same URL, port 8191, Prowlarr unchanged.
 - JDownloader: no change to settings, download list, accounts, Event Scripter scripts, download folders (`/output`, `/complete`) or MyJDownloader device name. Self-update off from the image side only; never edit `UpdateSettings` in the live `/config/cfg` (fallback only if impossible, then the revert runbook re-enables updates). Old code copies on the volume stay in place.
+- JDownloader: Helm deploy on our chart; images for amd64 and arm64; no nodeSelector (every worker mounts `/mnt/downloads`, `infra/fstab-downloads.md`; the PVC is Longhorn RWO, so it follows the pod).
 - JDownloader updates: weekly batched PR, merges itself after the image's smoke tests pass, rolls out through Fleet with no owner OK; manual "rebuild now" dispatch takes the same path.
 - FlareSolverr gate: the new image solves every challenge the old one solves (≥20 ExtraTorrent + ≥20 PornRips requests over a few hours, side by side on mona), in comparable time. If not: stop FlareSolverr, report to the owner with results and options; JDownloader carries on.
 - Trivy: nothing Critical/High in what we add; app images no worse than the vendor image they replace (`flaresolverr/flaresolverr:v3.5.2@sha256:c80ae007ce2ccdcd217a12426e4f039ef763ff90738c808d38810c3e59323767`, `jlesage/jdownloader-2:v26.09.1`).
@@ -100,7 +101,7 @@
 - Modify: `distroless/catalog.yaml` (`jdownloader-base`), locks, smoke test, README table
 
 **Interfaces:**
-- Produces: `ghcr.io/neilcar/distroless/jdownloader-base:latest@sha256:…` + `-dev`; uid/gid 1000 `jdownloader`, home `/config`; a Wolfi OpenJDK JRE (newest LTS that runs JDownloader revision 50639 headless — check with the dev variant before locking), `ffmpeg`, `ffprobe`, `libstdc++`/`libgcc` (the 7-Zip-JBinding native lib JDownloader ships). amd64 only (pod is pinned to amd64; my call — no arm64 build).
+- Produces: `ghcr.io/neilcar/distroless/jdownloader-base:latest@sha256:…` + `-dev`; uid/gid 1000 `jdownloader`, home `/config`; a Wolfi OpenJDK JRE (newest LTS that runs JDownloader revision 50639 headless — check with the dev variant before locking), `ffmpeg`, `ffprobe`, `libstdc++`/`libgcc` (the 7-Zip-JBinding native lib JDownloader ships; it has aarch64 builds — check JD loads it on arm64). amd64 and arm64.
 
 - [ ] **Step 1:** Smoke assertions first: no `/bin/sh`; `java -version` runs as 1000 with read-only root; `java -Djava.awt.headless=true -XshowSettings:properties -version` shows headless; `ffmpeg -version` runs. Run. Expected: FAIL (not defined).
 - [ ] **Step 2:** Add the catalog entry; `dl` lock steps as Task 1.
@@ -111,15 +112,15 @@
 
 **Files:**
 - Create repo `neilcar/jdownloader-image` (private), with `README.md`, `versions.env` (`JD_REVISION`, `JD_BUILD_DATE`, `JD_URL`, `JD_SHA256`), `scripts/snapshot.py`, `scripts/assert-private.sh` + `scripts/trivy-compare.py` (copied from pyapps-image), `tests/test_snapshot.py`
-- Create: `lxdk8s/fleet/arc-runner-jdownloader-image-amd64/{fleet.yaml,values.yaml}` (copy of pyapps-image-amd64, scale set `jdownloader-amd64`, idle 0, max 2), README row, GitRepo path; GitHub App installation covers the repo
+- Create: `lxdk8s/fleet/arc-runner-jdownloader-image-{amd64,arm64}/{fleet.yaml,values.yaml}` (copies of pyapps-image's, scale sets `jdownloader-amd64` on amd1 and `jdownloader-arm64` on mona, idle 0, max 2), README row, GitRepo paths; GitHub App installation covers the repo
 
 **Interfaces:**
 - Produces: `snapshot.py fetch OUT_DIR` (runs JDownloader's updater headless inside `jdownloader-base:-dev` until `build.json` exists and the updater reports no pending update; exits non-zero after 15 min), `snapshot.py pack OUT_DIR TARBALL` (deterministic tar: sorted, mtime 0, uid/gid 0, only `JDownloader.jar Core.jar jd/ libs/ extensions/ themes/ translations/ licenses/ build.json`; never `cfg/`, `logs/`, `tmp/`), `snapshot.py revision DIR` → `JDownloaderRevision` from `build.json`; `snapshot.py set-version VERSIONS TARBALL URL` rewrites the four lines. Release asset name `jd-r<revision>.tar.gz` on release `snapshot-r<revision>`.
 
 - [ ] **Step 1:** `test_snapshot.py`: `pack` of a fixture dir excludes `cfg/`, `logs/`, `tmp/` and is byte-identical across two runs; `revision` reads `50639` from a fixture `build.json`; `set-version` rewrites exactly the four lines. Run. Expected: FAIL.
 - [ ] **Step 2:** Implement; tests PASS.
-- [ ] **Step 3:** Runner bundle in lxdk8s (Kyverno CLI, PR, merge, GitRepo path); confirm the scale set registers.
-- [ ] **Step 4:** First snapshot by hand through a `snapshot.yml` workflow (dispatch-only for now): fetch, pack, upload to release `snapshot-r<rev>`, print SHA-256. Commit `versions.env` with it.
+- [ ] **Step 3:** Runner bundles in lxdk8s (Kyverno CLI, PR, merge, GitRepo paths); confirm both scale sets register.
+- [ ] **Step 4:** The snapshot is architecture-independent except `libs/` natives (JD ships both); fetch it once on amd64. First snapshot by hand through a `snapshot.yml` workflow (dispatch-only for now): fetch, pack, upload to release `snapshot-r<rev>`, print SHA-256. Commit `versions.env` with it.
 
 ### Task 7: jdownloader image build, smoke tests, publish
 
@@ -129,7 +130,7 @@
 
 **Interfaces:**
 - Consumes: Task 5 digests, Task 6 `versions.env` + snapshot asset.
-- Produces: `ghcr.io/neilcar/jdownloader:r<revision>@sha256:…` (amd64), code under `/opt/jdownloader` (read-only), entrypoint `java` with headless + update-disabling options and JD home pointing state (`cfg`, `logs`, `tmp`) at `/config`; GitHub release `jdownloader-r<revision>`.
+- Produces: `ghcr.io/neilcar/jdownloader:r<revision>@sha256:…` (multi-arch index, amd64 + arm64), code under `/opt/jdownloader` (read-only), entrypoint `java` with headless + update-disabling options and JD home pointing state (`cfg`, `logs`, `tmp`) at `/config`; GitHub release `jdownloader-r<revision>`.
 
 - [ ] **Step 1:** Smoke cases (bash, each run `--read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL -v fixture:/config`):
   - `no-shell`: `/bin/sh`, busybox absent.
@@ -141,16 +142,16 @@
   - `revert-readback`: then start `jlesage/jdownloader-2:v26.09.1` (pinned digest) on the same fixture copy with its self-update blocked by network `none`; its JD log shows the same download list size and the MyJD device name `fixture-id`.
   Run against nothing built. Expected: FAIL.
 - [ ] **Step 2:** Dockerfile: build stage fetches the snapshot by `JD_URL` and checks `JD_SHA256`, unpacks into `/opt/jdownloader`; runtime on `jdownloader-base`, `USER 1000:1000`. Find the update-disabling mechanism (system properties / start flags / read-only overlay of the update config resolved from the image) that passes `no-update` and `no-cfg-writeback`; if no image-side mechanism passes, ledger a ruling and fall back per the spec (cfg edit + revert-runbook step).
-- [ ] **Step 3:** `build.yml` (pyapps-image's shape, amd64 only, vendor = jlesage digest, sign with cosign 2.4.3 legacy, verify, SBOM, release notes). Push; CI green on the branch.
+- [ ] **Step 3:** `build.yml` (pyapps-image's shape, native matrix amd64 + arm64 on the two scale sets, smoke tests on both, vendor = jlesage digest per arch, sign with cosign 2.4.3 legacy, verify, SBOM, release notes). Push; CI green on the branch.
 - [ ] **Step 4:** Kyverno verify-images entry (own lxdk8s PR, Kyverno CLI). Merge both; record the published digest.
 
 ### Task 8: Weekly automated updates
 
 **Files:**
-- Create: `jdownloader-image/.github/workflows/watch.yml` (weekly cron, CRON in UTC, + `workflow_dispatch` "rebuild now"), `scripts/auto-merge.py`, `scripts/open-fleet-pr.py` (from pyapps-image, rewriting `fleet/jdownloader/jdownloader.yaml`'s image line), `tests/test_auto_merge.py`, `tests/test_open_fleet_pr.py`
+- Create: `jdownloader-image/.github/workflows/watch.yml` (weekly cron, CRON in UTC, + `workflow_dispatch` "rebuild now"), `scripts/auto-merge.py`, `scripts/open-fleet-pr.py` (from pyapps-image, rewriting the image tag/digest lines in `fleet/jdownloader/jdownloader-values.yaml`), `tests/test_auto_merge.py`, `tests/test_open_fleet_pr.py`
 
 **Interfaces:**
-- Produces: `auto-merge.py --repo OWNER/REPO --pr N --allow GLOB...` waits for all PR checks (`gh pr checks --watch`), refuses (exit 2) if any changed file is outside the allowlist or any check failed, else squash-merges. Allowlists: jdownloader-image PRs `versions.env`, `Dockerfile` (base digest lines only); lxdk8s PRs `fleet/jdownloader/jdownloader.yaml` only.
+- Produces: `auto-merge.py --repo OWNER/REPO --pr N --allow GLOB...` waits for all PR checks (`gh pr checks --watch`), refuses (exit 2) if any changed file is outside the allowlist or any check failed, else squash-merges. Allowlists: jdownloader-image PRs `versions.env`, `Dockerfile` (base digest lines only); lxdk8s PRs `fleet/jdownloader/jdownloader-values.yaml` only (image lines; a chart version bump in `fleet/jdownloader/fleet.yaml` too when the chart changed).
 - Flow: watch.yml runs `snapshot.py fetch/pack`; if revision > `JD_REVISION` or a base digest changed → upload asset, PR, `auto-merge.py`. On main, build.yml publishes, then opens the lxdk8s PR with the neilcar-homelab App and runs `auto-merge.py` on it (fleet-render must pass).
 
 - [ ] **Step 1:** `test_auto_merge.py::test_refuses_foreign_files`, `::test_refuses_failed_check`, `::test_merges_when_green` (fake `gh`), `test_open_fleet_pr.py::test_rewrites_only_image_line`. Run. Expected: FAIL.
@@ -158,14 +159,17 @@
 - [ ] **Step 3:** Workflows; dry-run dispatch (`dry_run: true` input → stops before PRs) shows "no newer revision" or the would-be PR.
 - [ ] **Step 4:** Merge; first scheduled run date in the ledger.
 
-### Task 9: JDownloader switch (owner trial)
+### Task 9: JDownloader chart and switch (owner trial)
 
 **Files:**
-- Modify: `lxdk8s/fleet/jdownloader/` — replace the chart with plain manifests `jdownloader.yaml` (Deployment `jdownloader-jdownloader2`, same labels, `Recreate`, nodeSelector amd64, PVC subPaths `config`→`/config`, `downloads`→`/output`, hostPath `/mnt/downloads`→`/complete`, `/tmp` emptyDir, restricted securityContext uid/gid 1000 + fsGroup 1000, 768Mi request, tcpSocket probes on the MyJD direct-connect port 3129 if it listens, else none; Service `jdownloader-jdownloader2-myjd:3129`), `fleet.yaml` without `helm.chart`, keep the release name; `fleet/kyverno-policies/image-sources.yaml` (`jdownloader2`'s name label into `neilcar-workloads-use-neilcar-images`); `fleet/jdownloader-oauth2-proxy` untouched (stays, shows nothing).
+- Create: `jdownloader-image/chart/` (Chart.yaml `name: jdownloader`, version 0.1.0, appVersion `r<revision>`; templates: Deployment, Service, ServiceAccount off), its `helm lint` + `helm template` tests in CI, and a publish job pushing `oci://ghcr.io/neilcar/charts/jdownloader` on main when `chart/` changes (package private; give `neilcar/lxdk8s`'s fleet-render token Read).
+- Chart behaviour: values `image.{repository,tag,digest}` (deploys `repository:tag@digest`), `persistence.existingClaim`, `additionalVolumes`/`additionalVolumeMounts`, `resources`, `nodeSelector`/`tolerations`/`affinity` (empty by default), `fullnameOverride`; fixed: `Recreate`, restricted securityContext uid/gid 1000 + fsGroup 1000 + RuntimeDefault seccomp + drop ALL + readOnlyRootFilesystem, `automountServiceAccountToken: false`, `/tmp` emptyDir, PVC subPaths `config`→`/config` and `downloads`→`/output`, tcpSocket probes on the MyJD direct-connect port 3129 if it listens (else none), Service port 3129 (`myjd`); no web port, no MyJD env (credentials and device name are already in `cfg`).
+- Modify: `lxdk8s/fleet/jdownloader/fleet.yaml` (chart `oci://ghcr.io/neilcar/charts/jdownloader`, same `releaseName: jdownloader`, `takeOwnership: true`), `jdownloader-values.yaml` (`fullnameOverride: jdownloader-jdownloader2` to keep object names, image pins, existing claim, `/complete` hostPath, 768Mi; **no nodeSelector**); `fleet/kyverno-policies/image-sources.yaml` (the pod's name label into `neilcar-workloads-use-neilcar-images`); `fleet/jdownloader-oauth2-proxy` untouched (stays, shows nothing).
 
+- [ ] **Step 0:** Chart tests first: `helm template` with the lxdk8s values renders exactly one Deployment named `jdownloader-jdownloader2` with no `nodeSelector`, `readOnlyRootFilesystem: true`, `runAsUser: 1000`, image `ghcr.io/neilcar/jdownloader:<tag>@<digest>`, mounts `/config`, `/output`, `/complete`, `/tmp`, and no port 5800. Expected: FAIL (no chart), then PASS after writing it. Publish the chart.
 - [ ] **Step 1:** Render the bundle and run the Kyverno CLI against every policy and PolicyException (the existing hostPath exception must still match the new pod's labels). Expected: pass.
 - [ ] **Step 2:** Backup: `cfg` → `/config/cfg.bak-20261102` (or the switch date) via a non-root busybox `kubectl debug --profile=baseline` container (not the toolbox image).
-- [ ] **Step 3:** PR, merge after fleet-render; pod Ready on amd2; JD log shows MyJD connected, no update check.
+- [ ] **Step 3:** PR, merge after fleet-render; pod Ready (on whichever node, amd64 or arm64 — note which); JD log shows MyJD connected, no update check.
 - [ ] **Step 4:** Owner checks (ask them): device online in MyJDownloader with the existing list; a new link downloads to the usual place; n8n receives the "download finished" webhook (n8n execution list, no `includeData`); an archive extracts.
 - [ ] **Step 5:** Ledger the result. Revert runbook in the PR body: revert the commit (jlesage returns, self-updates itself, desktop back behind the GitHub login).
 
