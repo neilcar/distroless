@@ -113,6 +113,18 @@
       "name": "latest",
       "package": "libgcc",
       "version": "16.2.0-r2"
+    },
+    {
+      "image": "flaresolverr-base",
+      "name": "latest",
+      "package": "chromium",
+      "version": "149.0.7827.53-r0"
+    },
+    {
+      "image": "jdownloader-base",
+      "name": "latest",
+      "package": "openjdk-21-jre",
+      "version": "21.0.13.0.3-r0"
     }
   ]
 }

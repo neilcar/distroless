@@ -2932,3 +2932,24 @@ S:1
 I:1
 T:
 
+P:chromium
+V:149.0.7827.53-r0
+A:aarch64
+S:1
+I:1
+T:
+
+P:openjdk-21-jre
+V:21.0.13.0.3-r0
+A:aarch64
+S:1
+I:1
+T:
+
+P:openjdk-21-jre
+V:21.0.9-r2
+A:aarch64
+S:1
+I:1
+T:
+

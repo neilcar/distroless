@@ -7,9 +7,12 @@ import copy
 from dltools.wolfi import is_released, newest_released_all_arches
 
 
-def released_overrides(lock: dict, indexes) -> tuple[dict[str, str], list[str]]:
+def released_overrides(
+    lock: dict, indexes, allowed_unreleased: frozenset[str] = frozenset()
+) -> tuple[dict[str, str], list[str]]:
     """Return (pins, missing): a released pin for every unreleased package in the lock,
-    and the names that have no released version on every arch."""
+    and the names that have no released version on every arch (an `allowed_unreleased` name
+    without one is left as it is)."""
     unreleased = sorted({
         p["name"] for p in lock.get("contents", {}).get("packages", [])
         if not is_released(p["version"])
@@ -19,7 +22,7 @@ def released_overrides(lock: dict, indexes) -> tuple[dict[str, str], list[str]]:
         version = newest_released_all_arches(indexes, name)
         if version:
             pins[name] = version
-        else:
+        elif name not in allowed_unreleased:
             missing.append(name)
     return pins, missing
 

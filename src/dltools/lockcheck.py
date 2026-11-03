@@ -20,6 +20,25 @@ IMAGE_FORBIDDEN = {
 }
 
 
+# Unreleased packages one image may contain because Wolfi has never had a released version of them.
+# pin-released still pins them the moment a release appears. flaresolverr-base: Wolfi Chromium's
+# dependencies (owner's decision, 2026-11-02).
+IMAGE_UNRELEASED_ALLOWED = {
+    "flaresolverr-base": {
+        # libcups (which Chromium links) needs libavahi-client; avahi's last release is 0.8 (2020) and
+        # Wolfi only ships 0.9 release candidates.
+        "avahi-libs": "Wolfi ships only avahi 0.9 release candidates",
+        # A direct Chromium dependency; Open Sans exists in Wolfi only as a git snapshot.
+        "font-opensans": "Wolfi ships Open Sans only as a git snapshot",
+    },
+}
+
+
+def image_allowed_unreleased(lock_path) -> frozenset[str]:
+    """Unreleased packages allowed in the image of a `locks/<image>/<line>/<variant>.lock.json`."""
+    return frozenset(IMAGE_UNRELEASED_ALLOWED.get(Path(lock_path).parent.parent.name, {}))
+
+
 def image_forbidden(lock_path) -> frozenset[str]:
     """Forbidden packages for the image of a `locks/<image>/<line>/<variant>.lock.json`."""
     return IMAGE_FORBIDDEN.get(Path(lock_path).parent.parent.name, frozenset())
@@ -29,13 +48,14 @@ def check_lock(
     lock: dict,
     required_arches: set[str] = frozenset(ARCHES),
     forbidden: frozenset[str] = frozenset(),
+    allowed_unreleased: frozenset[str] = frozenset(),
 ) -> list[str]:
     """Return human-readable violations; an empty list means the lock is acceptable."""
     packages = lock.get("contents", {}).get("packages", [])
     violations = [
         f"{p['architecture']}: {p['name']} {p['version']} is not a released version"
         for p in packages
-        if not is_released(p["version"])
+        if not is_released(p["version"]) and p["name"] not in allowed_unreleased
     ]
     violations += [
         f"{p['architecture']}: {p['name']} is not allowed in this image"
