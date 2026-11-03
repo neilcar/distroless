@@ -64,6 +64,11 @@ def render(catalog: dict, line: Line, variant: str) -> dict:
 
 
 def render_vendor(catalog: dict, line: Line) -> dict | None:
-    """The image's vendored upstream files (pinned by sha256), or None if it has none."""
-    vendor = catalog["images"][line.image].get("vendor")
-    return {"vendor": vendor} if vendor else None
+    """The image's vendored upstream files (pinned by sha256), or None if it has none. An image
+    with `env_launcher: true` and nothing to vendor gets an empty list: its build still adds the
+    launcher as the runtime's /usr/bin/env."""
+    image = catalog["images"][line.image]
+    vendor = image.get("vendor")
+    if vendor:
+        return {"vendor": vendor}
+    return {"vendor": []} if image.get("env_launcher") else None

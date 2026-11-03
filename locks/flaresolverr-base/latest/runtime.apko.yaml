@@ -12,7 +12,6 @@ contents:
   - chromium=149.0.7827.53-r0
   - distroless-no-shell
   - python-3.11
-  - Xvfb
   - dumb-init
   - ttf-dejavu
   - ca-certificates-bundle

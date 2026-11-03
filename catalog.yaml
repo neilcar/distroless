@@ -300,24 +300,28 @@ images:
 
   flaresolverr-base:
     # Base for the shell-free FlareSolverr build (neilcar/pyapps-image): Python 3.11 (what the stock
-    # image runs FlareSolverr v3.5.2 on), Wolfi Chromium with its chromedriver, Xvfb (FlareSolverr runs
-    # Chromium non-headless on a virtual display, as the stock image does), dumb-init as PID 1 (reaps
-    # Chromium's children, as the stock image does) and DejaVu fonts (the stock image's only fonts).
-    # Wolfi's /usr/bin/chromium is a shell launcher: callers start /usr/lib/chromium/chrome directly.
-    # Versioned by chromium. Runs as uid/gid 1000 (`flaresolverr`, home /config), like the chart's pod.
+    # image runs FlareSolverr v3.5.2 on), Wolfi Chromium with its chromedriver, dumb-init as PID 1 (reaps
+    # Chromium's children, as the stock image does) and DejaVu fonts (the stock image's only fonts). No
+    # Xvfb: FlareSolverr runs Chromium with --headless=new (the stock image's Xvfb display goes unused),
+    # and Xvfb compiles its keymap through /bin/sh. Wolfi's /usr/bin/chromium is a shell launcher:
+    # callers start /usr/lib/chromium/chrome directly. Versioned by chromium. Runs as uid/gid 1000
+    # (`flaresolverr`, home /config), like the chart's pod.
     run_as: "1000"
     lines: [latest]
     accounts:
       groups: [{groupname: flaresolverr, gid: 1000}]
       users: [{username: flaresolverr, uid: 1000, gid: 1000, homedir: /config}]
+    # The launcher as /usr/bin/env in the runtime (CPython's, mesa's and systemd's `#!/usr/bin/env python3`
+    # scripts; nothing to vendor).
+    env_launcher: true
     extra_repositories: ["./packages"]
     extra_keyring: ["./melange.rsa.pub"]
     variants:
       runtime:
-        packages: ["{package}", "distroless-no-shell", "python-3.11", "Xvfb", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata"]
+        packages: ["{package}", "distroless-no-shell", "python-3.11", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata"]
       # dev: pip and uv for pyapps-image's hash-locked requirements.
       dev:
-        packages: ["{package}", "python-3.11", "Xvfb", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata", "busybox", "bash", "py3.11-pip", "uv"]
+        packages: ["{package}", "python-3.11", "dumb-init", "ttf-dejavu", "ca-certificates-bundle", "tzdata", "busybox", "bash", "py3.11-pip", "uv"]
     environment:
       HOME: /config
     paths:

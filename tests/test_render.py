@@ -163,3 +163,16 @@ def test_render_stash_base_accounts_do_not_leak():
     assert render(CATALOG, PY, "runtime")["accounts"]["users"] == [
         {"username": "nonroot", "uid": 65532, "gid": 65532}]
     assert len(CATALOG["accounts"]["users"]) == 1  # the shared default is not mutated
+
+
+def test_render_vendor_env_launcher_without_vendored_files():
+    # An image with nothing to vendor can still ask for the launcher as /usr/bin/env (its runtime
+    # has `#!/usr/bin/env python3` scripts and no coreutils): an empty vendor list.
+    catalog = {**CATALOG, "images": {**CATALOG["images"], "e-img": {
+        "env_launcher": True, "variants": {"runtime": {"packages": []}}}}}
+    assert render_vendor(catalog, Line("e-img", "latest", "ca-certificates-bundle", "1-r0")) == {"vendor": []}
+
+
+def test_flaresolverr_base_gets_the_env_launcher():
+    line = Line("flaresolverr-base", "latest", "chromium", "149.0.7827.53-r0")
+    assert render_vendor(CATALOG, line) == {"vendor": []}
