@@ -329,22 +329,22 @@
       },
       {
         "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r29.apk",
-        "version": "1.0.8-r29",
+        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r30.apk",
+        "version": "1.0.8-r30",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18881",
-          "checksum": "sha1-nWh1ix5qr9A1LfiOtlP2wtUBfpw="
+          "range": "bytes=0-18974",
+          "checksum": "sha1-uJUw7U9e/1Jwt+vRSM5r8xKMJBE="
         },
         "data": {
-          "range": "bytes=18882-59496",
-          "checksum": "sha256-Bq2CuhUDwPg26F9V5HhQEQ1dzDXkybxww9EK+pF/I5o="
+          "range": "bytes=18975-59581",
+          "checksum": "sha256-vzFDAyYqjHW1evlLWEr8ptdtcSStJaORM644XTj2Mzc="
         },
-        "checksum": "Q1nWh1ix5qr9A1LfiOtlP2wtUBfpw="
+        "checksum": "Q1uJUw7U9e/1Jwt+vRSM5r8xKMJBE="
       },
       {
         "name": "libbrotlicommon1",
@@ -4224,22 +4224,22 @@
       },
       {
         "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r29.apk",
-        "version": "1.0.8-r29",
+        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r30.apk",
+        "version": "1.0.8-r30",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18923",
-          "checksum": "sha1-6qdi2IkIEk2el29wRLzgVDA9p6k="
+          "range": "bytes=0-19012",
+          "checksum": "sha1-3jJJ00qSLxqkcLJmJY9DOezS000="
         },
         "data": {
-          "range": "bytes=18924-60898",
-          "checksum": "sha256-CPYtlDbcGx4nKv9DNp6GhpuQeZnFf3SDTb/kOmldex8="
+          "range": "bytes=19013-60986",
+          "checksum": "sha256-ejVLtriILKOM6/P/n0kBs4TlqfxJhi9olrevAaqg/Vw="
         },
-        "checksum": "Q16qdi2IkIEk2el29wRLzgVDA9p6k="
+        "checksum": "Q13jJJ00qSLxqkcLJmJY9DOezS000="
       },
       {
         "name": "libbrotlicommon1",
