@@ -732,22 +732,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.6-r1.apk",
-        "version": "0.13.6-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.7-r0.apk",
+        "version": "0.13.7-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17675",
-          "checksum": "sha1-GMGAJrvXgbeWHj7VdPWbuJVVUPw="
+          "range": "bytes=0-18260",
+          "checksum": "sha1-LHPWrVYvGss1PnX+/ymFcvWCp6s="
         },
         "data": {
-          "range": "bytes=17676-19595712",
-          "checksum": "sha256-OcTpoaD2YRp1toMo3xh7TMfNca3GxtFusOMNU4MzhsI="
+          "range": "bytes=18261-19596619",
+          "checksum": "sha256-yONo76KVc91oU/ogpsy6FQXlPnKfkQNUNdf7Unzq2ew="
         },
-        "checksum": "Q1GMGAJrvXgbeWHj7VdPWbuJVVUPw="
+        "checksum": "Q1LHPWrVYvGss1PnX+/ymFcvWCp6s="
       },
       {
         "name": "wolfi-baselayout",
@@ -1454,22 +1454,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.6-r1.apk",
-        "version": "0.13.6-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.7-r0.apk",
+        "version": "0.13.7-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17701",
-          "checksum": "sha1-rXwOKar3k3zCrCEVcAsA1T1r43E="
+          "range": "bytes=0-18282",
+          "checksum": "sha1-UYuNX6uWAm5MQGJCX1tMW+AGZDY="
         },
         "data": {
-          "range": "bytes=17702-18512240",
-          "checksum": "sha256-novK8rEbhWA/yrVlDevFw/eOzD3e/4SKU7E1vE1HgHo="
+          "range": "bytes=18283-18375296",
+          "checksum": "sha256-9seRa9WWb8pWQBzBvvEeQVwlYbKaaG1QXLH8JplaMYs="
         },
-        "checksum": "Q1rXwOKar3k3zCrCEVcAsA1T1r43E="
+        "checksum": "Q1UYuNX6uWAm5MQGJCX1tMW+AGZDY="
       }
     ]
   }

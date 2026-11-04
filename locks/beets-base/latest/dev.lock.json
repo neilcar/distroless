@@ -1849,22 +1849,22 @@
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16092",
-          "checksum": "sha1-COjFciDudzRbDkwEL6UWAeSkpFg="
+          "range": "bytes=0-16134",
+          "checksum": "sha1-+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
         },
         "data": {
-          "range": "bytes=16093-2457447",
-          "checksum": "sha256-TCoFBngOUqrPL2hjoW/q7hW29rMy/KKOCm1FtJf2SzI="
+          "range": "bytes=16135-2461771",
+          "checksum": "sha256-JD1d6dYgL2Xh5Zn+CImvi1EHDUjmAFTCZAHmn0vbeEE="
         },
-        "checksum": "Q1COjFciDudzRbDkwEL6UWAeSkpFg="
+        "checksum": "Q1+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
       },
       {
         "name": "linux-pam",
@@ -2001,22 +2001,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16108",
-          "checksum": "sha1-4lb1nLI+frGzcwFnFspd8ivglz0="
+          "range": "bytes=0-16143",
+          "checksum": "sha1-nlitpjV/w78nnuGXLr903iwVcNI="
         },
         "data": {
-          "range": "bytes=16109-7587410",
-          "checksum": "sha256-6P+VFoGJwWgdtFH8PvGA/GN/3OyglQdwRoDppNWYDzA="
+          "range": "bytes=16144-7587463",
+          "checksum": "sha256-3uQIRmYo75n4wQCGD3IJWg3TMMAMsuV58fPGKadDYmQ="
         },
-        "checksum": "Q14lb1nLI+frGzcwFnFspd8ivglz0="
+        "checksum": "Q1nlitpjV/w78nnuGXLr903iwVcNI="
       },
       {
         "name": "gdk-pixbuf",
@@ -2324,22 +2324,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.6-r1.apk",
-        "version": "0.13.6-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.7-r0.apk",
+        "version": "0.13.7-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17675",
-          "checksum": "sha1-GMGAJrvXgbeWHj7VdPWbuJVVUPw="
+          "range": "bytes=0-18260",
+          "checksum": "sha1-LHPWrVYvGss1PnX+/ymFcvWCp6s="
         },
         "data": {
-          "range": "bytes=17676-19595712",
-          "checksum": "sha256-OcTpoaD2YRp1toMo3xh7TMfNca3GxtFusOMNU4MzhsI="
+          "range": "bytes=18261-19596619",
+          "checksum": "sha256-yONo76KVc91oU/ogpsy6FQXlPnKfkQNUNdf7Unzq2ew="
         },
-        "checksum": "Q1GMGAJrvXgbeWHj7VdPWbuJVVUPw="
+        "checksum": "Q1LHPWrVYvGss1PnX+/ymFcvWCp6s="
       },
       {
         "name": "wolfi-baselayout",
@@ -4148,22 +4148,22 @@
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16112",
-          "checksum": "sha1-F7vQ3N/DrrNWVfFHAzI8jXn+c5Y="
+          "range": "bytes=0-16151",
+          "checksum": "sha1-sUU13W8GOT14sKKfMhPG1SamZPw="
         },
         "data": {
-          "range": "bytes=16113-2416344",
-          "checksum": "sha256-rVnZbxzOvGe7MflbG9L8+ia3T2f1+5sZdiPbmYY6uCM="
+          "range": "bytes=16152-2409989",
+          "checksum": "sha256-KaasP2rOAvDVmOw4Bb2cLO8IuAfXKoAyzEAjDno5IGQ="
         },
-        "checksum": "Q1F7vQ3N/DrrNWVfFHAzI8jXn+c5Y="
+        "checksum": "Q1sUU13W8GOT14sKKfMhPG1SamZPw="
       },
       {
         "name": "linux-pam",
@@ -4300,22 +4300,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16128",
-          "checksum": "sha1-206mZya2YfAh3+qvybLO4VNCCQk="
+          "range": "bytes=0-16163",
+          "checksum": "sha1-foiTn5WrZHelfMOFlMupBHAoTaM="
         },
         "data": {
-          "range": "bytes=16129-7415855",
-          "checksum": "sha256-Ey+V749TinshOHuS9/IzJvJt9G6fZMiURd73XkvPPHw="
+          "range": "bytes=16164-7415905",
+          "checksum": "sha256-5AFgt78xEe+T6AwG7xDqtZ8HVIwl+NcZsePXz1loCs4="
         },
-        "checksum": "Q1206mZya2YfAh3+qvybLO4VNCCQk="
+        "checksum": "Q1foiTn5WrZHelfMOFlMupBHAoTaM="
       },
       {
         "name": "gdk-pixbuf",
@@ -4623,22 +4623,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.6-r1.apk",
-        "version": "0.13.6-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.7-r0.apk",
+        "version": "0.13.7-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17701",
-          "checksum": "sha1-rXwOKar3k3zCrCEVcAsA1T1r43E="
+          "range": "bytes=0-18282",
+          "checksum": "sha1-UYuNX6uWAm5MQGJCX1tMW+AGZDY="
         },
         "data": {
-          "range": "bytes=17702-18512240",
-          "checksum": "sha256-novK8rEbhWA/yrVlDevFw/eOzD3e/4SKU7E1vE1HgHo="
+          "range": "bytes=18283-18375296",
+          "checksum": "sha256-9seRa9WWb8pWQBzBvvEeQVwlYbKaaG1QXLH8JplaMYs="
         },
-        "checksum": "Q1rXwOKar3k3zCrCEVcAsA1T1r43E="
+        "checksum": "Q1UYuNX6uWAm5MQGJCX1tMW+AGZDY="
       }
     ]
   }

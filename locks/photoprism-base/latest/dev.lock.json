@@ -1450,22 +1450,22 @@
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16092",
-          "checksum": "sha1-COjFciDudzRbDkwEL6UWAeSkpFg="
+          "range": "bytes=0-16134",
+          "checksum": "sha1-+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
         },
         "data": {
-          "range": "bytes=16093-2457447",
-          "checksum": "sha256-TCoFBngOUqrPL2hjoW/q7hW29rMy/KKOCm1FtJf2SzI="
+          "range": "bytes=16135-2461771",
+          "checksum": "sha256-JD1d6dYgL2Xh5Zn+CImvi1EHDUjmAFTCZAHmn0vbeEE="
         },
-        "checksum": "Q1COjFciDudzRbDkwEL6UWAeSkpFg="
+        "checksum": "Q1+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
       },
       {
         "name": "libxdmcp",
@@ -1868,22 +1868,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16108",
-          "checksum": "sha1-4lb1nLI+frGzcwFnFspd8ivglz0="
+          "range": "bytes=0-16143",
+          "checksum": "sha1-nlitpjV/w78nnuGXLr903iwVcNI="
         },
         "data": {
-          "range": "bytes=16109-7587410",
-          "checksum": "sha256-6P+VFoGJwWgdtFH8PvGA/GN/3OyglQdwRoDppNWYDzA="
+          "range": "bytes=16144-7587463",
+          "checksum": "sha256-3uQIRmYo75n4wQCGD3IJWg3TMMAMsuV58fPGKadDYmQ="
         },
-        "checksum": "Q14lb1nLI+frGzcwFnFspd8ivglz0="
+        "checksum": "Q1nlitpjV/w78nnuGXLr903iwVcNI="
       },
       {
         "name": "gdk-pixbuf",
@@ -3920,22 +3920,22 @@
       },
       {
         "name": "glycin-2-dev",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-dev-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-dev-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16039",
-          "checksum": "sha1-kZvAMXhk86b1/kc5U0l3aPQMZWU="
+          "range": "bytes=0-16070",
+          "checksum": "sha1-zPrWdyK2VzSeBl9r5a5cYMTlBR4="
         },
         "data": {
-          "range": "bytes=16040-39766",
-          "checksum": "sha256-SMBLMjriWnTAcQqvFLqUryOqP7icSPJ1tNIiccgvPac="
+          "range": "bytes=16071-39804",
+          "checksum": "sha256-x4NefDA0mQoIQu4EnH21k5eMGNq7CS9Lbz1YFi/JWGc="
         },
-        "checksum": "Q1kZvAMXhk86b1/kc5U0l3aPQMZWU="
+        "checksum": "Q1zPrWdyK2VzSeBl9r5a5cYMTlBR4="
       },
       {
         "name": "gdk-pixbuf-dev",
@@ -5326,22 +5326,22 @@
       },
       {
         "name": "libLLVM-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/libLLVM-23-23.1.4-r1.apk",
-        "version": "23.1.4-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/libLLVM-23-23.1.5-r0.apk",
+        "version": "23.1.5-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-19438",
-          "checksum": "sha1-vMbz1Zttw6P+9xktz1Pced6XT9k="
+          "range": "bytes=0-25756",
+          "checksum": "sha1-d3GvGzA6Hkg3wN7F8NX2dUebgdU="
         },
         "data": {
-          "range": "bytes=19439-65426156",
-          "checksum": "sha256-4ZQj6v5VnXam7J9+mVCLwSm9hCZO9UOi3iTZxKS3nF4="
+          "range": "bytes=25757-65501662",
+          "checksum": "sha256-z0Lxde6SjZCERBVehZ5+iaB2CaPpUk/TYrhKKrrJZTo="
         },
-        "checksum": "Q1vMbz1Zttw6P+9xktz1Pced6XT9k="
+        "checksum": "Q1d3GvGzA6Hkg3wN7F8NX2dUebgdU="
       },
       {
         "name": "libxshmfence",
@@ -5592,22 +5592,22 @@
       },
       {
         "name": "rsync",
-        "url": "https://packages.wolfi.dev/os/x86_64/rsync-3.5.1-r0.apk",
-        "version": "3.5.1-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/rsync-3.5.2-r0.apk",
+        "version": "3.5.2-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-6270",
-          "checksum": "sha1-BHcD9KszdUMuVXK4n1+/j1d1BFg="
+          "range": "bytes=0-11944",
+          "checksum": "sha1-0Mzy9Mt/E8tH2yMjn5pcoEnXGZE="
         },
         "data": {
-          "range": "bytes=6271-376808",
-          "checksum": "sha256-kqnPDtcCFClzhgmUbHDM3WMVHhe52Jdp4tC6PR4m4DI="
+          "range": "bytes=11945-390478",
+          "checksum": "sha256-RZwZrIEMSHy80JVaHbfFWTrKg3QQooN/dfqn4jnTUaA="
         },
-        "checksum": "Q1BHcD9KszdUMuVXK4n1+/j1d1BFg="
+        "checksum": "Q10Mzy9Mt/E8tH2yMjn5pcoEnXGZE="
       },
       {
         "name": "ttf-dejavu",
@@ -7093,22 +7093,22 @@
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16112",
-          "checksum": "sha1-F7vQ3N/DrrNWVfFHAzI8jXn+c5Y="
+          "range": "bytes=0-16151",
+          "checksum": "sha1-sUU13W8GOT14sKKfMhPG1SamZPw="
         },
         "data": {
-          "range": "bytes=16113-2416344",
-          "checksum": "sha256-rVnZbxzOvGe7MflbG9L8+ia3T2f1+5sZdiPbmYY6uCM="
+          "range": "bytes=16152-2409989",
+          "checksum": "sha256-KaasP2rOAvDVmOw4Bb2cLO8IuAfXKoAyzEAjDno5IGQ="
         },
-        "checksum": "Q1F7vQ3N/DrrNWVfFHAzI8jXn+c5Y="
+        "checksum": "Q1sUU13W8GOT14sKKfMhPG1SamZPw="
       },
       {
         "name": "libxdmcp",
@@ -7511,22 +7511,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16128",
-          "checksum": "sha1-206mZya2YfAh3+qvybLO4VNCCQk="
+          "range": "bytes=0-16163",
+          "checksum": "sha1-foiTn5WrZHelfMOFlMupBHAoTaM="
         },
         "data": {
-          "range": "bytes=16129-7415855",
-          "checksum": "sha256-Ey+V749TinshOHuS9/IzJvJt9G6fZMiURd73XkvPPHw="
+          "range": "bytes=16164-7415905",
+          "checksum": "sha256-5AFgt78xEe+T6AwG7xDqtZ8HVIwl+NcZsePXz1loCs4="
         },
-        "checksum": "Q1206mZya2YfAh3+qvybLO4VNCCQk="
+        "checksum": "Q1foiTn5WrZHelfMOFlMupBHAoTaM="
       },
       {
         "name": "gdk-pixbuf",
@@ -9563,22 +9563,22 @@
       },
       {
         "name": "glycin-2-dev",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-dev-2.2.5-r2.apk",
-        "version": "2.2.5-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-dev-2.2.6-r0.apk",
+        "version": "2.2.6-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16058",
-          "checksum": "sha1-e+2E1sGH5K+AWGZZZXa/VBBRbDg="
+          "range": "bytes=0-16096",
+          "checksum": "sha1-D+gzQFHOHK4MguXi4O9rfYG5hWg="
         },
         "data": {
-          "range": "bytes=16059-39787",
-          "checksum": "sha256-ENZ03a1qLxKvbrF+bp08JgrtGzzg7+KVZrUHWnm5kI0="
+          "range": "bytes=16097-39829",
+          "checksum": "sha256-uLXznKS8jXZ1mbfgrjnGBKKoRf9FzmTZjk3Gi6rQ/1Q="
         },
-        "checksum": "Q1e+2E1sGH5K+AWGZZZXa/VBBRbDg="
+        "checksum": "Q1D+gzQFHOHK4MguXi4O9rfYG5hWg="
       },
       {
         "name": "gdk-pixbuf-dev",
@@ -10950,22 +10950,22 @@
       },
       {
         "name": "libLLVM-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/libLLVM-23-23.1.4-r1.apk",
-        "version": "23.1.4-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/libLLVM-23-23.1.5-r0.apk",
+        "version": "23.1.5-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-19498",
-          "checksum": "sha1-xdhf+ULq0hVMpcRukYXsWYLroQA="
+          "range": "bytes=0-25794",
+          "checksum": "sha1-VKS2AzEgQdS1tNrKOhUjaJXfNls="
         },
         "data": {
-          "range": "bytes=19499-62472606",
-          "checksum": "sha256-Lg3TlIbrdB/JOglTb7R0PW2yiY8sc0Q2bgxQvmIGvQY="
+          "range": "bytes=25795-62465148",
+          "checksum": "sha256-AHdEOX8TgYVa/8UvHz/HMAvtjcqrGSSTwaI/c67KYTA="
         },
-        "checksum": "Q1xdhf+ULq0hVMpcRukYXsWYLroQA="
+        "checksum": "Q1VKS2AzEgQdS1tNrKOhUjaJXfNls="
       },
       {
         "name": "libxshmfence",
@@ -11216,22 +11216,22 @@
       },
       {
         "name": "rsync",
-        "url": "https://packages.wolfi.dev/os/aarch64/rsync-3.5.1-r0.apk",
-        "version": "3.5.1-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/rsync-3.5.2-r0.apk",
+        "version": "3.5.2-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-6302",
-          "checksum": "sha1-3es0ejshwL8y8hJoxKkd5Jzwe9o="
+          "range": "bytes=0-11973",
+          "checksum": "sha1-VabTqHoM67WyIxq1qvFjyqp/xu0="
         },
         "data": {
-          "range": "bytes=6303-360243",
-          "checksum": "sha256-+aWlm4G4eNoD54exnrXN0MBxmBwodjlzsvbD4smKiqQ="
+          "range": "bytes=11974-374574",
+          "checksum": "sha256-XQ4+NQx97zhZUO1GrLp4ipeBVLSReZ/siKGCLvU4sKk="
         },
-        "checksum": "Q13es0ejshwL8y8hJoxKkd5Jzwe9o="
+        "checksum": "Q1VabTqHoM67WyIxq1qvFjyqp/xu0="
       },
       {
         "name": "ttf-dejavu",

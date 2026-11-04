@@ -2,7 +2,7 @@
   "version": "v1",
   "config": {
     "name": "locks/tesseract/latest/runtime.apko.yaml",
-    "checksum": "sha256-VtIpmWQ/EksD2ZsHkJ3yNXWPcFfmmRNQiINRXK7pQL8="
+    "checksum": "sha256-oBbx6huZ2G9fqdUU5ULmy5rS4rFY33dQahxv8Y6NVuU="
   },
   "contents": {
     "keyring": [
