@@ -497,3 +497,19 @@ images:
     variants:
       runtime:
         packages: ["{package}"]
+
+  nodejs:
+    # Node.js runtime for homelab-mcp's `discogs` image (the npm discogs-mcp-server behind its
+    # bearer gate), in place of Docker Hub's node:alpine. One line per Node LTS major Wolfi ships,
+    # today 26 (`nodejs-26`); the pin follows that package. Runtime only (no npm, no shell): the
+    # Dockerfile installs node_modules in a build stage and copies them in. Runs as 65532 unless
+    # the Dockerfile says otherwise.
+    lines: ["26"]
+    variants:
+      runtime:
+        packages: ["{package}"]
+        entrypoint: "/usr/bin/node"
+    environment:
+      NODE_ENV: production
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}

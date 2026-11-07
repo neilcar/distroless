@@ -392,6 +392,15 @@ print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || 
     grep -q 'libc.so.6' <<<"$out" || fail "no libc.so.6"
     grep -q 'libgcc_s.so.1' <<<"$out" || fail "no libgcc_s.so.1"
     ;;
+  nodejs)
+    # homelab-mcp's discogs image: an ES module runs, with TLS, tzdata and the version the line promises.
+    out=$(docker run --rm "$ref" --input-type=module -e '
+import tls from "node:tls";
+const tz = new Intl.DateTimeFormat("en", {timeZone: "Europe/London"}).resolvedOptions().timeZone;
+console.log(process.version.split(".")[0], tz, tls.rootCertificates.length > 0, typeof fetch);') \
+      || fail "node check"
+    [[ "$out" == "v26 Europe/London true function" ]] || fail "node printed: $out"
+    ;;
   python-ssh)
     # The Job's path: `python3 main.py` runs ssh (OpenSSH prints its version on stderr).
     out=$(tool ssh -V 2>&1) || fail "ssh -V: $out"

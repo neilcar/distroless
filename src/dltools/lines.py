@@ -46,6 +46,10 @@ CC_PACKAGE = "libgcc"
 FLARESOLVERR_BASE_PACKAGE = "chromium"
 # jdownloader-base is versioned by its Java runtime (JDownloader is a Java program).
 JDOWNLOADER_BASE_PACKAGE = "openjdk-21-jre"
+# nodejs (homelab-mcp's discogs image) follows Wolfi's current Node LTS line: one line named after
+# the major, headed by that package. Move both when the next even major becomes LTS.
+NODEJS_LINE = "26"
+NODEJS_PACKAGE = f"nodejs-{NODEJS_LINE}"
 
 
 @dataclass(frozen=True)
@@ -193,6 +197,12 @@ def jdownloader_base_lines(indexes) -> list[Line]:
     return [Line("jdownloader-base", "latest", JDOWNLOADER_BASE_PACKAGE, v)] if v else []
 
 
+def nodejs_lines(indexes) -> list[Line]:
+    """The single `26` line (the current Node LTS), headed by nodejs-26's newest released version."""
+    v = newest_released_all_arches(indexes, NODEJS_PACKAGE)
+    return [Line("nodejs", NODEJS_LINE, NODEJS_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -245,7 +255,7 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
-            "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16}.get(line.image, 17)
+            "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17}.get(line.image, 18)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -276,7 +286,7 @@ def discover(
         + tesseract_lines(indexes) + sabnzbd_base_lines(indexes) + servarr_base_lines(indexes)
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
-        + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes)
+        + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
