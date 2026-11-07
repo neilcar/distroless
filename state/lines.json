@@ -125,6 +125,12 @@
       "name": "latest",
       "package": "openjdk-21-jre",
       "version": "21.0.13.0.3-r0"
+    },
+    {
+      "image": "nodejs",
+      "name": "26",
+      "package": "nodejs-26",
+      "version": "26.13.0-r1"
     }
   ]
 }

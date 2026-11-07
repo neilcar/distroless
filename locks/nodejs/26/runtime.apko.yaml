@@ -1,0 +1,36 @@
+contents:
+  repositories:
+  - https://packages.wolfi.dev/os
+  keyring:
+  - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  packages:
+  - wolfi-baselayout
+  - ca-certificates-bundle
+  - tzdata
+  - nodejs-26=26.13.0-r1
+  - zlib=1.3.2-r7
+accounts:
+  groups:
+  - groupname: nonroot
+    gid: 65532
+  users:
+  - username: nonroot
+    uid: 65532
+    gid: 65532
+  run-as: '65532'
+archs:
+- x86_64
+- aarch64
+annotations:
+  org.opencontainers.image.source: https://github.com/neilcar/distroless
+  org.opencontainers.image.title: nodejs:26
+entrypoint:
+  command: /usr/bin/node
+environment:
+  NODE_ENV: production
+paths:
+- path: /tmp
+  type: directory
+  permissions: 1023
+  uid: 0
+  gid: 0
