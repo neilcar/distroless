@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same PR cancels the older run; runs on main always finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
