@@ -478,11 +478,13 @@ images:
     # Docker Hub's rust:alpine. Wolfi's Rust targets glibc, so binaries built here run on `cc`.
     # Versioned by the newest rust-1.NN. Build-only: its only variant is `dev` (busybox shell,
     # the entrypoint). Runs as root, since GitHub job containers write the runner's workspace.
+    # clang-23 + lld-23 (with llvm-ar) cross-compile arm64 on amd64 runners: Wolfi gcc only
+    # targets its own arch; the target glibc and Rust std come from the arm64 image as a sysroot.
     run_as: "0"
     lines: [latest]
     variants:
       dev:
-        packages: ["{package}", "busybox", "gcc", "glibc-dev", "git"]
+        packages: ["{package}", "busybox", "gcc", "glibc-dev", "clang-23", "lld-23", "git"]
         entrypoint: "/bin/sh"
     environment:
       CARGO_HOME: /usr/local/cargo
