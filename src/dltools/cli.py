@@ -204,29 +204,64 @@ RESYNC_INPUTS = ("catalog.yaml", "melange/", "packages/", "melange.rsa.pub")
 REBUILD_INPUTS = (".trivyignore",)
 
 
-def cmd_matrix(args) -> int:
-    locks = Path(args.locks)
-    entries = sorted(
+def _lock_entries(locks: Path) -> list[tuple[str, str, str]]:
+    """(image, line, variant) for every rendered config under `locks`."""
+    return sorted(
         (p.parts[-3], p.parts[-2], p.name.removesuffix(".apko.yaml"))
         for p in locks.glob("*/*/*.apko.yaml")
     )
-    changed = [c.strip() for c in Path(args.changed).read_text().splitlines()]
-    changed = [c for c in changed if c]
+
+
+def _read_changed(path: str) -> list[str]:
+    changed = [c.strip() for c in Path(path).read_text().splitlines()]
+    return [c for c in changed if c]
+
+
+def _changed_locks(changed: list[str]) -> set[tuple[str, str, str]]:
+    """(image, line, file stem) for each changed file directly in a line's lock dir."""
+    wanted = set()
+    for c in changed:
+        parts = Path(c).parts
+        if len(parts) == 4 and parts[0] == "locks":
+            wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
+    return wanted
+
+
+def _filter_matches(entry: tuple[str, str, str], flt: str) -> bool:
+    """`flt` is a space- or comma-separated list of images and image:line names."""
+    tokens = flt.replace(",", " ").split()
+    return not tokens or entry[0] in tokens or f"{entry[0]}:{entry[1]}" in tokens
+
+
+def cmd_matrix(args) -> int:
+    entries = _lock_entries(Path(args.locks))
+    changed = _read_changed(args.changed)
     if any(c.startswith(RESYNC_INPUTS) for c in changed):
         print(json.dumps({"include": [], "resync": True}))
         return 0
     if not changed or any(c.startswith(REBUILD_INPUTS) for c in changed):
         selected = entries
     else:
-        wanted = set()
-        for c in changed:
-            parts = Path(c).parts
-            if len(parts) == 4 and parts[0] == "locks":
-                wanted.add((parts[1], parts[2], parts[3].split(".")[0]))
+        wanted = _changed_locks(changed)
         # vendor.json is shared by every variant of its line.
         selected = [e for e in entries if e in wanted or (e[0], e[1], "vendor") in wanted]
+    selected = [e for e in selected if _filter_matches(e, args.filter)]
     include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
     print(json.dumps({"include": include, "resync": False}))
+    return 0
+
+
+def cmd_changed_lines(args) -> int:
+    """image:line for each existing line whose lock dir is in `--changed`, one per row.
+
+    Unlike `dl matrix`, an empty or lock-free list selects nothing. Sync uses it to build
+    the lines a catalog change touched when the pushed locks were already right, so its
+    own commit (and the build that follows one) never happens.
+    """
+    live = {(i, ln) for i, ln, _ in _lock_entries(Path(args.locks))}
+    touched = {(i, ln) for i, ln, _ in _changed_locks(_read_changed(args.changed))}
+    for image, line in sorted(touched & live):
+        print(f"{image}:{line}")
     return 0
 
 
@@ -360,7 +395,15 @@ def build_parser() -> argparse.ArgumentParser:
     matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
     matrix.add_argument("--locks", default="locks")
     matrix.add_argument("--changed", required=True, help="file listing changed paths")
+    matrix.add_argument("--filter", default="",
+                        help="only these images or image:line names (space/comma separated)")
     matrix.set_defaults(func=cmd_matrix)
+
+    clines = sub.add_parser("changed-lines",
+                            help="image:line of each live line with changed lock files")
+    clines.add_argument("--locks", default="locks")
+    clines.add_argument("--changed", required=True, help="file listing changed paths")
+    clines.set_defaults(func=cmd_changed_lines)
 
     lockcheck = sub.add_parser("lock-check", help="fail on unreleased or single-arch locks")
     lockcheck.add_argument("--runtime", action="store_true",
