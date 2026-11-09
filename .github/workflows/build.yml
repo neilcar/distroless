@@ -123,9 +123,10 @@ jobs:
           key: vendor-${{ hashFiles(env.VENDOR_JSON) }}
 
       # photoprism-base (dev above all, with the MariaDB 13.1 client) outgrew the hosted
-      # runner's free root disk while apko wrote both arches' layers to /tmp.
+      # runner's free root disk while apko wrote both arches' layers to /tmp; so did
+      # stash-base dev once it gained clang + lld (LLVM).
       - name: Free disk
-        if: matrix.image == 'photoprism-base'
+        if: matrix.image == 'photoprism-base' || matrix.image == 'stash-base'
         run: |
           df -h / | tail -1
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
