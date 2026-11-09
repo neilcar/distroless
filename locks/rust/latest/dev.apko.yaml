@@ -11,6 +11,8 @@ contents:
   - busybox
   - gcc
   - glibc-dev
+  - clang-23
+  - lld-23
   - git
   - zlib=1.3.2-r7
 accounts:
