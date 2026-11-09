@@ -3141,22 +3141,22 @@
       },
       {
         "name": "cryptsetup",
-        "url": "https://packages.wolfi.dev/os/x86_64/cryptsetup-2.8.8-r3.apk",
-        "version": "2.8.8-r3",
+        "url": "https://packages.wolfi.dev/os/x86_64/cryptsetup-2.8.8-r4.apk",
+        "version": "2.8.8-r4",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10259",
-          "checksum": "sha1-RXztuw+YxPY2Lp+ML4xNVrE2a6Q="
+          "range": "bytes=0-17025",
+          "checksum": "sha1-2jkxmixysf7WPPG6A8qVFdmtmD0="
         },
         "data": {
-          "range": "bytes=10260-1314862",
-          "checksum": "sha256-X2B1skbJ691c+r+6YGAgLbiKSGxziUievNVB+GLSz2Q="
+          "range": "bytes=17026-1321635",
+          "checksum": "sha256-ng15ww0Oy0pgsJegBYwkZyIsTalyqy9qtSPkC+qr3o8="
         },
-        "checksum": "Q1RXztuw+YxPY2Lp+ML4xNVrE2a6Q="
+        "checksum": "Q12jkxmixysf7WPPG6A8qVFdmtmD0="
       },
       {
         "name": "liblz4-1",
@@ -6865,22 +6865,22 @@
       },
       {
         "name": "cryptsetup",
-        "url": "https://packages.wolfi.dev/os/aarch64/cryptsetup-2.8.8-r3.apk",
-        "version": "2.8.8-r3",
+        "url": "https://packages.wolfi.dev/os/aarch64/cryptsetup-2.8.8-r4.apk",
+        "version": "2.8.8-r4",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10289",
-          "checksum": "sha1-oN0tdii+gCPWlE3SprX3o0Fdd8Y="
+          "range": "bytes=0-17055",
+          "checksum": "sha1-/PpcRSPaKknNvVfU5ieKIUbHiHE="
         },
         "data": {
-          "range": "bytes=10290-1277773",
-          "checksum": "sha256-UZU3TZd03pTEmRM8zU9Xnztw6eTkaHsmyGx1RFpeOe8="
+          "range": "bytes=17056-1284546",
+          "checksum": "sha256-vsjK5A8snMGmwEahZ7V1zUDP+HXm1DBhwc6IMqQdEDI="
         },
-        "checksum": "Q1oN0tdii+gCPWlE3SprX3o0Fdd8Y="
+        "checksum": "Q1/PpcRSPaKknNvVfU5ieKIUbHiHE="
       },
       {
         "name": "liblz4-1",

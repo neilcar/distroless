@@ -1697,22 +1697,22 @@
       },
       {
         "name": "exiftool",
-        "url": "https://packages.wolfi.dev/os/x86_64/exiftool-13.60-r0.apk",
-        "version": "13.60-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/exiftool-13.61-r0.apk",
+        "version": "13.61-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-13315",
-          "checksum": "sha1-O0ibQzcFmjN/SsL8N6rQABqtWiA="
+          "range": "bytes=0-13854",
+          "checksum": "sha1-O/BFHvyWSCsRh+BCKwnCHos+bfo="
         },
         "data": {
-          "range": "bytes=13316-5967571",
-          "checksum": "sha256-Va22IrC/pyql36odN99ejfPtZUeM+vU0s6S7T+c1Lrg="
+          "range": "bytes=13855-5976213",
+          "checksum": "sha256-V+NVe0m9TpyN9Fn2ZU++R7kBdtSQVItuuThzj7MmKng="
         },
-        "checksum": "Q1O0ibQzcFmjN/SsL8N6rQABqtWiA="
+        "checksum": "Q1O/BFHvyWSCsRh+BCKwnCHos+bfo="
       },
       {
         "name": "ffmpeg-9.0-libavutil61",
@@ -4509,22 +4509,22 @@
       },
       {
         "name": "exiftool",
-        "url": "https://packages.wolfi.dev/os/aarch64/exiftool-13.60-r0.apk",
-        "version": "13.60-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/exiftool-13.61-r0.apk",
+        "version": "13.61-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-13348",
-          "checksum": "sha1-b2koHY9eug9La/xfKZVtNjLEMXA="
+          "range": "bytes=0-13888",
+          "checksum": "sha1-GQVXT7g9FUPwxU2V6wh4esud8cI="
         },
         "data": {
-          "range": "bytes=13349-5967598",
-          "checksum": "sha256-6jUAtTPOyDooUXeRb+GAAoVIEhpahpCY9hf9Idb+lcQ="
+          "range": "bytes=13889-5976248",
+          "checksum": "sha256-0AtNl6/54mzYWlGCXBBPT05f1Tx7kwzt6AgX1Mj61ZE="
         },
-        "checksum": "Q1b2koHY9eug9La/xfKZVtNjLEMXA="
+        "checksum": "Q1GQVXT7g9FUPwxU2V6wh4esud8cI="
       },
       {
         "name": "ffmpeg-9.0-libavutil61",

@@ -2100,22 +2100,22 @@
       },
       {
         "name": "yq",
-        "url": "https://packages.wolfi.dev/os/x86_64/yq-4.54.1-r5.apk",
-        "version": "4.54.1-r5",
+        "url": "https://packages.wolfi.dev/os/x86_64/yq-4.54.3-r0.apk",
+        "version": "4.54.3-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-9217",
-          "checksum": "sha1-53ZQLVnlwbjekQtLrOkAtkVMCTM="
+          "range": "bytes=0-17535",
+          "checksum": "sha1-LoQz5O0oJuyN5/Q1auY18DcmwFo="
         },
         "data": {
-          "range": "bytes=9218-6198086",
-          "checksum": "sha256-NcvB3n/INAamQ3X35IhcwdJJy3S7b3rh+ORu7+5s/eA="
+          "range": "bytes=17536-6845342",
+          "checksum": "sha256-Z1zMX0lclu0FyFfGDZz1XnYwNB79LFrboeOKOkPxHWA="
         },
-        "checksum": "Q153ZQLVnlwbjekQtLrOkAtkVMCTM="
+        "checksum": "Q1LoQz5O0oJuyN5/Q1auY18DcmwFo="
       },
       {
         "name": "wolfi-baselayout",
@@ -4190,22 +4190,22 @@
       },
       {
         "name": "yq",
-        "url": "https://packages.wolfi.dev/os/aarch64/yq-4.54.1-r5.apk",
-        "version": "4.54.1-r5",
+        "url": "https://packages.wolfi.dev/os/aarch64/yq-4.54.3-r0.apk",
+        "version": "4.54.3-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-9249",
-          "checksum": "sha1-QyleIacYckBwkJA676oAJ3eRL8w="
+          "range": "bytes=0-17505",
+          "checksum": "sha1-GmTAmQ+EBF1HuhoyCh4A9SEO4HA="
         },
         "data": {
-          "range": "bytes=9250-5588699",
-          "checksum": "sha256-hQP0NePDPsssKgwDOAonjqVn3Sp56/Pg70DQZGaVsU0="
+          "range": "bytes=17506-6140379",
+          "checksum": "sha256-n4Ys74GIF9ypbW0PdgBxc8jbwtReXKZ0K36axeprzzU="
         },
-        "checksum": "Q1QyleIacYckBwkJA676oAJ3eRL8w="
+        "checksum": "Q1GmTAmQ+EBF1HuhoyCh4A9SEO4HA="
       }
     ]
   }
