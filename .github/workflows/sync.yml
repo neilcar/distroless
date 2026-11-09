@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "17 6 * * *"
   workflow_dispatch:
+    inputs:
+      since:
+        description: "Commit before the push that asked for this sync (build.yml sets it): if sync commits nothing, build the lines whose locks changed since"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -54,6 +59,24 @@ jobs:
       - name: Trigger build
         if: steps.commit.outputs.changed == 'true'
         run: gh workflow run build.yml --ref "$GITHUB_REF_NAME"
+      # A catalog/package push that already carried the re-rendered locks leaves sync
+      # nothing to commit, so the build above never runs. Build the lines the push changed
+      # (and only those), in one dispatch: a second pending build run would replace the first.
+      - name: Build pushed locks
+        if: steps.commit.outputs.changed == 'false' && inputs.since != ''
+        env:
+          SINCE: ${{ inputs.since }}
+        run: |
+          set -euo pipefail
+          git fetch -q --no-tags --depth=1 origin "$SINCE"
+          git diff --name-only "$SINCE" HEAD > "$RUNNER_TEMP/pushed.txt"
+          lines=$(uv run dl changed-lines --changed "$RUNNER_TEMP/pushed.txt" | paste -sd' ' -)
+          if [[ -z "$lines" ]]; then
+            echo "No lock changed since $SINCE; nothing to build."
+            exit 0
+          fi
+          echo "Locks already current; building what the push changed: $lines"
+          gh workflow run build.yml --ref "$GITHUB_REF_NAME" -f filter="$lines"
       - name: Report events, warnings and blocked lines
         run: |
           set -euo pipefail

@@ -140,3 +140,54 @@ def test_lock_check_rejects_wolfi_libvips_in_photoprism_base(tmp_path, capsys, v
     assert f"{wolfi_pkg} is not allowed in this image" in capsys.readouterr().out
     # Other images may use Wolfi's libvips.
     assert cli.main(["lock-check", write("other", [wolfi_pkg])]) == 0
+
+
+def run_matrix(locks, changed, capsys, tmp_path, *extra):
+    f = tmp_path / "changed.txt"
+    f.write_text("\n".join(changed))
+    assert cli.main(["matrix", "--locks", str(locks), "--changed", str(f), *extra]) == 0
+    return json.loads(capsys.readouterr().out)
+
+
+@pytest.mark.parametrize("flt, want", [
+    ("python", {("python", "3.12", "dev"), ("python", "3.12", "runtime")}),
+    ("python:3.12", {("python", "3.12", "dev"), ("python", "3.12", "runtime")}),
+    ("static:latest nginx:stable", {("static", "latest", "runtime"),
+                                    ("nginx", "stable", "runtime")}),
+    ("static:latest,nginx", {("static", "latest", "runtime"), ("nginx", "stable", "runtime")}),
+    ("python:3.10", set()),
+])
+def test_matrix_filter_takes_a_list_of_images_and_lines(locks, capsys, tmp_path, flt, want):
+    out = run_matrix(locks, [], capsys, tmp_path, "--filter", flt)
+    assert {(e["image"], e["line"], e["variant"]) for e in out["include"]} == want
+
+
+def test_matrix_empty_filter_keeps_everything(locks, capsys, tmp_path):
+    assert len(run_matrix(locks, [], capsys, tmp_path, "--filter", "")["include"]) == 4
+
+
+def changed_lines(locks, changed, capsys, tmp_path):
+    f = tmp_path / "changed.txt"
+    f.write_text("\n".join(changed))
+    assert cli.main(["changed-lines", "--locks", str(locks), "--changed", str(f)]) == 0
+    return capsys.readouterr().out.split()
+
+
+def test_changed_lines_lists_each_line_once(locks, capsys, tmp_path):
+    out = changed_lines(locks, ["catalog.yaml", "locks/python/3.12/dev.apko.yaml",
+                                "locks/python/3.12/dev.lock.json",
+                                "locks/static/latest/runtime.lock.json"], capsys, tmp_path)
+    assert out == ["python:3.12", "static:latest"]
+
+
+def test_changed_lines_vendor_json_counts(locks, capsys, tmp_path):
+    assert changed_lines(locks, ["locks/python/3.12/vendor.json"], capsys,
+                         tmp_path) == ["python:3.12"]
+
+
+@pytest.mark.parametrize("changed", [[], ["catalog.yaml", "state/lines.json"],
+                                     ["locks/python/3.10/runtime.lock.json"]])
+def test_changed_lines_empty_without_live_lock_changes(locks, capsys, tmp_path, changed):
+    # Unlike `dl matrix`, no lock change means nothing to build, never "build everything";
+    # a removed line has nothing left to build.
+    assert changed_lines(locks, changed, capsys, tmp_path) == []

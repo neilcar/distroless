@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       filter:
-        description: "Only build this image or image:line (empty = everything)"
+        description: "Only build these images or image:line names, space-separated (empty = everything)"
         required: false
         default: ""
 
@@ -49,14 +49,13 @@ jobs:
           else
             : > changed.txt   # dispatch, new branch or unknown base: build everything
           fi
-          uv run dl matrix --changed changed.txt > m.json
-          if [[ -n "${FILTER:-}" ]]; then
-            jq --arg f "$FILTER" '{include: [.include[] | select(.image == $f or (.image + ":" + .line) == $f)]}' m.json > f.json && mv f.json m.json
-          fi
+          uv run dl matrix --changed changed.txt --filter "${FILTER:-}" > m.json
           if [[ $(jq -r .resync m.json) == true ]]; then
-            # Configs/packages changed: sync re-renders and re-locks, then builds.
+            # Configs/packages changed: sync re-renders and re-locks, then builds. If the
+            # push already carried the right locks, sync commits nothing and instead builds
+            # the lines whose locks changed since `before` (sync.yml, "Build pushed locks").
             echo "Config inputs changed; dispatching sync instead of building stale configs."
-            gh workflow run sync.yml --ref "$GITHUB_REF_NAME"
+            gh workflow run sync.yml --ref "$GITHUB_REF_NAME" -f since="$before"
           fi
           echo "matrix=$(jq -c '{include}' m.json)" >> "$GITHUB_OUTPUT"
           echo "any=$(jq '.include | length > 0' m.json)" >> "$GITHUB_OUTPUT"
