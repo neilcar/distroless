@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "config": {
-    "name": "dev.apko.yaml",
+    "name": "locks/rust/latest/dev.apko.yaml",
     "checksum": "sha256-rTp9IyYK4Do9b5BAOU2nuYFZlBmNpgnAelXzY3lQeMY="
   },
   "contents": {
