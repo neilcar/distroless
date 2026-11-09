@@ -130,9 +130,11 @@ images:
       runtime:
         # distroless-no-shell: ffmpeg's libsrt needs cmd:bash only for unused scripts.
         packages: ["{package}", "distroless-no-shell", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl"]
-      # dev: Go (Stash's go.mod wants >= 1.24.3), Node.js 24 and npm for the UI build.
+      # dev: Go (Stash's go.mod wants >= 1.24.3), Node.js 24 and npm for the UI build;
+      # clang-23 + lld-23 cross-compile the cgo backend for arm64 on amd64 runners (Wolfi gcc
+      # only targets its own arch; the target glibc comes from the arm64 dev image as a sysroot).
       dev:
-        packages: ["{package}", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl", "busybox", "bash", "coreutils", "git", "make", "gcc", "glibc-dev", "go-1.27", "nodejs-24", "npm"]
+        packages: ["{package}", "ffmpeg", "distroless-libvips", "py3.12-pip", "py3.12-requests", "py3.12-requests-toolbelt", "py3.12-lxml", "py3.12-beautifulsoup4", "py3.12-pyparsing", "py3.12-tzlocal", "py3.12-regex", "py3.12-python-dateutil", "py3.12-pytz", "exiftool", "perl", "busybox", "bash", "coreutils", "git", "make", "gcc", "glibc-dev", "clang-23", "lld-23", "go-1.27", "nodejs-24", "npm"]
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
       - {path: /config, type: directory, permissions: 0755, uid: 1000, gid: 1000}

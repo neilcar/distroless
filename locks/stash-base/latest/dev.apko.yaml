@@ -31,6 +31,8 @@ contents:
   - make
   - gcc
   - glibc-dev
+  - clang-23
+  - lld-23
   - go-1.27
   - nodejs-24
   - npm
