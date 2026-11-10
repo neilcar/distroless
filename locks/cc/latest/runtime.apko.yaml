@@ -7,7 +7,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - libgcc=16.2.0-r2
+  - libgcc=16.2.0-r3
 accounts:
   groups:
   - groupname: nonroot
