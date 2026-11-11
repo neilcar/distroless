@@ -519,3 +519,42 @@ images:
       NODE_ENV: production
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+
+  music-videos-base:
+    # Base for the nightly music-video fetcher Job (neilcar/music-videos): Python 3.12 for its stdlib-only
+    # code, yt-dlp (vendored as photoprism-base does; run with `--js-runtimes node`, so Node.js 26 is
+    # installed), and Wolfi ffmpeg/ffprobe (libx264 + AAC encoding). Versioned by python-3.12.
+    # Runs as uid/gid 1000 (`mv`, home /tmp) with a read-only root; /tmp is the only writable path.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: mv, gid: 1000}]
+      users: [{username: mv, uid: 1000, gid: 1000, homedir: /tmp}]
+    variants:
+      runtime:
+        # distroless-no-shell: ffmpeg's libsrt needs cmd:bash only for unused scripts (as stash-base).
+        packages: ["{package}", "distroless-no-shell", "ffmpeg", "nodejs-26", "ca-certificates-bundle", "tzdata"]
+        entrypoint: "/usr/bin/python3.12"
+      dev:
+        packages: ["{package}", "ffmpeg", "nodejs-26", "ca-certificates-bundle", "tzdata", "busybox"]
+        entrypoint: "/usr/bin/python3.12"
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    environment:
+      PYTHONUNBUFFERED: "1"
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+    # Not a Wolfi package: the yt-dlp release binary, the same version and sha256 as photoprism-base.
+    vendor:
+      - name: yt-dlp
+        version: 2026.10.21
+        kind: binary
+        prefix: /opt/yt-dlp
+        files:
+          x86_64:
+            url: https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux
+            sha256: d8bd33fca9d5b23bd5b9952b3fca36db5c46331933fda9f598a3da14ce2c243f
+          aarch64:
+            url: https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux_aarch64
+            sha256: e137c2171b0b8ef648e6136e86aa70c65923e93e434f01c93901d64744b190aa
+        launchers: [yt-dlp]

@@ -28,9 +28,10 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/rust` | `latest` (versioned by the newest Rust), variant `dev` only (tags end in `-dev`) | Build image: Rust (cargo, rustc, clippy, rustfmt), gcc and glibc headers for crates that build C, git and busybox (`/bin/sh`, the entrypoint). `CARGO_HOME=/usr/local/cargo`. Binaries link glibc, so run them on `cc`. Runs as **0**, since GitHub job containers write the runner's workspace. |
 | `ghcr.io/neilcar/distroless/cc` | `latest` (versioned by libgcc) | `static` plus glibc and libgcc, for dynamically linked Rust and C binaries (ollama-orchestrator). |
 | `ghcr.io/neilcar/distroless/nodejs` | `26` (the current Node LTS; versioned by nodejs-26) | Node.js runtime only (`/usr/bin/node` is the entrypoint; no npm, no shell), for homelab-mcp's `discogs` image (the npm discogs-mcp-server behind its bearer gate) in place of Docker Hub's `node:alpine`. Install node_modules in a build stage and copy them in. `NODE_ENV=production`. Runs as **65532**. |
+| `ghcr.io/neilcar/distroless/music-videos-base` | `latest` (versioned by Python 3.12) | Base for the nightly music-video fetcher Job ([neilcar/music-videos](https://github.com/neilcar/music-videos)): Python 3.12 (the entrypoint) for its stdlib-only code, yt-dlp (vendored as in `photoprism-base`, run through `/usr/bin/yt-dlp`), Node.js 26 (yt-dlp's JS runtime, `--js-runtimes node`), Wolfi ffmpeg/ffprobe, the CA bundle and tzdata. Runs as **1000** (`mv`, home `/tmp`). `-dev` adds busybox. |
 
 Runtime images have no shell and no package manager and run as uid **65532**
-(`photoprism-base`: uid **0**, the owner's decision; `debug`: uid **0**, to reach a debug target's files; `stash-base`, `sabnzbd-base`, `servarr-base`, `beets-base`, `flaresolverr-base`, `jdownloader-base` and `python-ssh`: uid **1000**, as their apps' pods; `valkey`: uid **999**, as photoprism-index-redis's pod).
+(`photoprism-base`: uid **0**, the owner's decision; `debug`: uid **0**, to reach a debug target's files; `stash-base`, `sabnzbd-base`, `servarr-base`, `beets-base`, `flaresolverr-base`, `jdownloader-base`, `python-ssh` and `music-videos-base`: uid **1000**, as their apps' pods; `valkey`: uid **999**, as photoprism-index-redis's pod).
 
 `stash-base` also has a vendor layer: five pure-Python wheels from PyPI (pinned by
 version and sha256 in `catalog.yaml`) unpacked into `/usr/lib/python3.12/site-packages`,
@@ -39,7 +40,7 @@ plugins run). Unlike the AppImages, Trivy reads those wheels' metadata, so their
 are gated like any package's; `dl vendor-check` (in the daily rescan) opens the same
 *Vendored tool updates available* issue when PyPI has a newer final release.
 
-`photoprism-base` has one layer that is not a Wolfi package: darktable, RawTherapee
+`photoprism-base` (and, for yt-dlp alone, `music-videos-base`) has one layer that is not a Wolfi package: darktable, RawTherapee
 and yt-dlp from their upstream release files (pinned by sha256 in `catalog.yaml`,
 written to `locks/photoprism-base/latest/vendor.json`), unpacked without their
 AppRun shell scripts and started by a small Go launcher (`launcher/`). The launcher

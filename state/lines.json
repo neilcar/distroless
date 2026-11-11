@@ -131,6 +131,12 @@
       "name": "26",
       "package": "nodejs-26",
       "version": "26.13.0-r1"
+    },
+    {
+      "image": "music-videos-base",
+      "name": "latest",
+      "package": "python-3.12",
+      "version": "3.12.16-r3"
     }
   ]
 }
