@@ -33,6 +33,8 @@ BEETS_BASE_PACKAGE = "python-3.12"
 DEBUG_PACKAGE = "bash"
 # python-ssh (stdlib scripts that shell out to ssh) is versioned by its Python.
 PYTHON_SSH_PACKAGE = "python-3.12"
+# music-videos-base (the nightly music-video fetcher Job) is versioned by its Python, like python-ssh.
+MUSIC_VIDEOS_BASE_PACKAGE = "python-3.12"
 # ci-tools (busybox and curl for CI smoke tests) is versioned by curl.
 CI_TOOLS_PACKAGE = "curl"
 # valkey (Redis-compatible; Wolfi has no Redis) is versioned by its server.
@@ -203,6 +205,12 @@ def nodejs_lines(indexes) -> list[Line]:
     return [Line("nodejs", NODEJS_LINE, NODEJS_PACKAGE, v)] if v else []
 
 
+def music_videos_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by Python 3.12's newest released version."""
+    v = newest_released_all_arches(indexes, MUSIC_VIDEOS_BASE_PACKAGE)
+    return [Line("music-videos-base", "latest", MUSIC_VIDEOS_BASE_PACKAGE, v)] if v else []
+
+
 def melange_version(path) -> str | None:
     """`<version>-r<epoch>` of a melange config, or None if the file is missing."""
     p = Path(path)
@@ -255,7 +263,8 @@ def _eol_passed(cycle: dict | None, today: date) -> bool:
 def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
-            "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17}.get(line.image, 18)
+            "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17,
+            "music-videos-base": 18}.get(line.image, 19)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -287,6 +296,7 @@ def discover(
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
         + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
+        + music_videos_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

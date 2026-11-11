@@ -1,0 +1,23 @@
+{
+  "vendor": [
+    {
+      "files": {
+        "aarch64": {
+          "sha256": "e137c2171b0b8ef648e6136e86aa70c65923e93e434f01c93901d64744b190aa",
+          "url": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux_aarch64"
+        },
+        "x86_64": {
+          "sha256": "d8bd33fca9d5b23bd5b9952b3fca36db5c46331933fda9f598a3da14ce2c243f",
+          "url": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.21/yt-dlp_linux"
+        }
+      },
+      "kind": "binary",
+      "launchers": [
+        "yt-dlp"
+      ],
+      "name": "yt-dlp",
+      "prefix": "/opt/yt-dlp",
+      "version": "2026.10.21"
+    }
+  ]
+}

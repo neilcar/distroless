@@ -23,6 +23,8 @@ elif [[ "$image" == "flaresolverr-base" ]]; then  # FlareSolverr's pod runs as 1
   [[ "$user" == "1000" || "$user" == "flaresolverr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "jdownloader-base" ]]; then  # JDownloader's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "jdownloader" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "music-videos-base" ]]; then  # the music-video fetcher Job runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "mv" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
   [[ "$user" == "65532" || "$user" == "nonroot" || "$user" == "65532:65532" ]] || fail "user is '$user'"
 fi
@@ -400,6 +402,39 @@ const tz = new Intl.DateTimeFormat("en", {timeZone: "Europe/London"}).resolvedOp
 console.log(process.version.split(".")[0], tz, tls.rootCertificates.length > 0, typeof fetch);') \
       || fail "node check"
     [[ "$out" == "v26 Europe/London true function" ]] || fail "node printed: $out"
+    ;;
+  music-videos-base)
+    # The Job's path: stdlib Python as uid 1000 with a read-only root runs yt-dlp (which needs Node
+    # for its JS runtime) and ffmpeg/ffprobe, which must encode H.264 and AAC.
+    out=$(tool yt-dlp --version 2>&1) || fail "yt-dlp --version: $out"
+    grep -qE '^[0-9]{4}\.[0-9]{2}\.[0-9]{2}' <<<"$out" || fail "yt-dlp printed: $out"
+    out=$(tool node --version 2>&1) || fail "node --version: $out"
+    grep -q '^v26\.' <<<"$out" || fail "node printed: $out"
+    for t in ffmpeg ffprobe; do
+      out=$(tool $t -version 2>&1) || fail "$t -version: $out"
+      grep -q "^$t version" <<<"$out" || fail "$t printed: $(head -1 <<<"$out")"
+    done
+    out=$(tool ffmpeg -hide_banner -encoders 2>&1) || fail "ffmpeg -encoders"
+    for enc in libx264 aac; do
+      grep -qE "^ [A-Z.]{6} $enc " <<<"$out" || fail "ffmpeg has no $enc encoder"
+    done
+    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint python3 "$ref" -c '
+import pwd, os, subprocess
+assert pwd.getpwuid(os.getuid()).pw_name == "mv"
+r = subprocess.run(["yt-dlp", "--version"], capture_output=True, text=True, check=True)
+assert r.stdout.strip()[:2] == "20", r.stdout
+r = subprocess.run(["node", "--version"], capture_output=True, text=True, check=True)
+assert r.stdout.startswith("v26."), r.stdout
+subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=black:s=64x64:d=1", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+                "-t", "1", "-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart", "/tmp/t.mp4"], check=True)
+r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_name", "-of", "csv=p=0", "/tmp/t.mp4"], capture_output=True, text=True, check=True)
+assert set(r.stdout.split()) == {"h264", "aac"}, r.stdout
+print("mv ok")') || fail "python3 -> yt-dlp/node/ffmpeg: $out"
+    [[ "$out" == "mv ok" ]] || fail "music-videos check printed: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    fi
+    # No shebang audit, as for python-ssh (CPython stdlib's `#!/usr/bin/env python3` modules).
     ;;
   python-ssh)
     # The Job's path: `python3 main.py` runs ssh (OpenSSH prints its version on stderr).
