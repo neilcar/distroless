@@ -418,7 +418,10 @@ console.log(process.version.split(".")[0], tz, tls.rootCertificates.length > 0, 
     for enc in libx264 aac; do
       grep -qE "^ [A-Z.]{6} $enc " <<<"$out" || fail "ffmpeg has no $enc encoder"
     done
-    out=$(docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint python3 "$ref" -c '
+    # /tmp must allow exec: the vendored yt-dlp is a PyInstaller one-file binary that unpacks
+    # itself into /tmp and runs from there. Docker's --tmpfs defaults to noexec; the Job's
+    # emptyDir /tmp does not.
+    out=$(docker run --rm --read-only --tmpfs /tmp:exec --user 1000:1000 --cap-drop ALL --entrypoint python3 "$ref" -c '
 import pwd, os, subprocess
 assert pwd.getpwuid(os.getuid()).pw_name == "mv"
 r = subprocess.run(["yt-dlp", "--version"], capture_output=True, text=True, check=True)
