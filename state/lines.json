@@ -130,7 +130,7 @@
       "image": "nodejs",
       "name": "26",
       "package": "nodejs-26",
-      "version": "26.13.0-r1"
+      "version": "26.13.1-r0"
     },
     {
       "image": "music-videos-base",

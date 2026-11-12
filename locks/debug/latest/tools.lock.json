@@ -1282,25 +1282,6 @@
         "checksum": "Q1rRWpWGSi5Ce5BQWM2Ok9CCDU2lE="
       },
       {
-        "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r30.apk",
-        "version": "1.0.8-r30",
-        "architecture": "x86_64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-18974",
-          "checksum": "sha1-uJUw7U9e/1Jwt+vRSM5r8xKMJBE="
-        },
-        "data": {
-          "range": "bytes=18975-59581",
-          "checksum": "sha256-vzFDAyYqjHW1evlLWEr8ptdtcSStJaORM644XTj2Mzc="
-        },
-        "checksum": "Q1uJUw7U9e/1Jwt+vRSM5r8xKMJBE="
-      },
-      {
         "name": "libzstd1",
         "url": "https://packages.wolfi.dev/os/x86_64/libzstd1-1.5.7-r13.apk",
         "version": "1.5.7-r13",
@@ -1318,6 +1299,25 @@
           "checksum": "sha256-6C/BZDA4QVnHT3g8yl46qKvdBCKwII+pUAH56t1pvME="
         },
         "checksum": "Q18qf/hL60HO4kVy/KSZk3mfs/EJA="
+      },
+      {
+        "name": "libbz2-1",
+        "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r31.apk",
+        "version": "1.0.8-r31",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-19913",
+          "checksum": "sha1-w3lPNIRO2HgicFqZrR2d/a20ShU="
+        },
+        "data": {
+          "range": "bytes=19914-60515",
+          "checksum": "sha256-BK+HU83HabOzyeo1eJQwVBdBgfJJIuel7HIZj3F/Z6Q="
+        },
+        "checksum": "Q1w3lPNIRO2HgicFqZrR2d/a20ShU="
       },
       {
         "name": "xz",
@@ -1605,23 +1605,42 @@
         "checksum": "Q1d4CNYyY9kcnu1R88SoRBXixWMBg="
       },
       {
-        "name": "lsof",
-        "url": "https://packages.wolfi.dev/os/x86_64/lsof-4.99.7-r3.apk",
-        "version": "4.99.7-r3",
+        "name": "liblsof0",
+        "url": "https://packages.wolfi.dev/os/x86_64/liblsof0-4.99.7-r4.apk",
+        "version": "4.99.7-r4",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8247",
-          "checksum": "sha1-va8XgI2JB0c63j5tpilhtN0UncY="
+          "range": "bytes=0-14904",
+          "checksum": "sha1-+X7rl63xUTShsj/0sw0xqEELjEc="
         },
         "data": {
-          "range": "bytes=8248-189452",
-          "checksum": "sha256-HQhfXMZyDrLEpBRgX90x4pCXEvm7HYL4RbGlGwOMP+A="
+          "range": "bytes=14905-91086",
+          "checksum": "sha256-0krGRLCiSulfRRq/RbILqnCT4CILJ9NS4NkLCWyTDlk="
         },
-        "checksum": "Q1va8XgI2JB0c63j5tpilhtN0UncY="
+        "checksum": "Q1+X7rl63xUTShsj/0sw0xqEELjEc="
+      },
+      {
+        "name": "lsof",
+        "url": "https://packages.wolfi.dev/os/x86_64/lsof-4.99.7-r4.apk",
+        "version": "4.99.7-r4",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-14896",
+          "checksum": "sha1-D/efXqCmwve4PuN2ZkOvlkKQr00="
+        },
+        "data": {
+          "range": "bytes=14897-125492",
+          "checksum": "sha256-mlVnSuc27qDxITHvla/Jd3LbH9FWxIG9UTxmaO8tUGw="
+        },
+        "checksum": "Q1D/efXqCmwve4PuN2ZkOvlkKQr00="
       },
       {
         "name": "libmd",
@@ -3391,25 +3410,6 @@
         "checksum": "Q1wseLa5QJw5A/1TOpn5khXdSx/m0="
       },
       {
-        "name": "libbz2-1",
-        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r30.apk",
-        "version": "1.0.8-r30",
-        "architecture": "aarch64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-19012",
-          "checksum": "sha1-3jJJ00qSLxqkcLJmJY9DOezS000="
-        },
-        "data": {
-          "range": "bytes=19013-60986",
-          "checksum": "sha256-ejVLtriILKOM6/P/n0kBs4TlqfxJhi9olrevAaqg/Vw="
-        },
-        "checksum": "Q13jJJ00qSLxqkcLJmJY9DOezS000="
-      },
-      {
         "name": "libzstd1",
         "url": "https://packages.wolfi.dev/os/aarch64/libzstd1-1.5.7-r13.apk",
         "version": "1.5.7-r13",
@@ -3427,6 +3427,25 @@
           "checksum": "sha256-zULV0jkwam1NnLLhBpb0mhqZYYWy/a+karnYia95pxA="
         },
         "checksum": "Q1r3RMUMVqvabfRkRPNpiy87ENIXQ="
+      },
+      {
+        "name": "libbz2-1",
+        "url": "https://packages.wolfi.dev/os/aarch64/libbz2-1-1.0.8-r31.apk",
+        "version": "1.0.8-r31",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-19950",
+          "checksum": "sha1-BwblpbELTvGclK98dCqdLQrDhLM="
+        },
+        "data": {
+          "range": "bytes=19951-61908",
+          "checksum": "sha256-ZR4ZN6Wd3FN7RWGrWxZYExt+JsOQpT3iaA9zLSbeXmE="
+        },
+        "checksum": "Q1BwblpbELTvGclK98dCqdLQrDhLM="
       },
       {
         "name": "xz",
@@ -3714,23 +3733,42 @@
         "checksum": "Q1we8xAjtD87c/5zgMyBN1Lijp4+o="
       },
       {
-        "name": "lsof",
-        "url": "https://packages.wolfi.dev/os/aarch64/lsof-4.99.7-r3.apk",
-        "version": "4.99.7-r3",
+        "name": "liblsof0",
+        "url": "https://packages.wolfi.dev/os/aarch64/liblsof0-4.99.7-r4.apk",
+        "version": "4.99.7-r4",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8278",
-          "checksum": "sha1-LtsnkOP1kaj2j4NP7jOuyGpNG9g="
+          "range": "bytes=0-14951",
+          "checksum": "sha1-9SNazhOW1jskXE552QGnuj8H2y8="
         },
         "data": {
-          "range": "bytes=8279-179311",
-          "checksum": "sha256-Y26OEG06YGLEgVDgDk+/DNJ4nWvulG/MUBXUMNOO1zw="
+          "range": "bytes=14952-88119",
+          "checksum": "sha256-16BRT/tgyAetVU9+4KD3WPxa399rRuFGgKN3FnlKWVM="
         },
-        "checksum": "Q1LtsnkOP1kaj2j4NP7jOuyGpNG9g="
+        "checksum": "Q19SNazhOW1jskXE552QGnuj8H2y8="
+      },
+      {
+        "name": "lsof",
+        "url": "https://packages.wolfi.dev/os/aarch64/lsof-4.99.7-r4.apk",
+        "version": "4.99.7-r4",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-14929",
+          "checksum": "sha1-2CzQUgjNdkYaJV20MzDGBkLdHsI="
+        },
+        "data": {
+          "range": "bytes=14930-118979",
+          "checksum": "sha256-DTeXawrKuYYsScKRFCJNv9DnDy44osfkUIwh0TNf9ok="
+        },
+        "checksum": "Q12CzQUgjNdkYaJV20MzDGBkLdHsI="
       },
       {
         "name": "libmd",
