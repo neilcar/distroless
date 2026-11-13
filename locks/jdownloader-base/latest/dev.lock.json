@@ -1450,22 +1450,22 @@
       },
       {
         "name": "freetype",
-        "url": "https://packages.wolfi.dev/os/x86_64/freetype-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/x86_64/freetype-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8845",
-          "checksum": "sha1-kR6sRtDej7eha0d9wG+AHeP2twQ="
+          "range": "bytes=0-15208",
+          "checksum": "sha1-htFmCT+cuX9iJ1SWcVyqU4W/9Ms="
         },
         "data": {
-          "range": "bytes=8846-478403",
-          "checksum": "sha256-atHhchATNkQlU/TPc4laaYKrLMfMEEMcKCiKYBr867M="
+          "range": "bytes=15209-501707",
+          "checksum": "sha256-BefwCRzbpLYCUTG4joZoOvJCQUCWQo1aEV+YW1bY4pg="
         },
-        "checksum": "Q1kR6sRtDej7eha0d9wG+AHeP2twQ="
+        "checksum": "Q1htFmCT+cuX9iJ1SWcVyqU4W/9Ms="
       },
       {
         "name": "fontconfig-config",
@@ -3749,22 +3749,22 @@
       },
       {
         "name": "freetype",
-        "url": "https://packages.wolfi.dev/os/aarch64/freetype-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/aarch64/freetype-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8894",
-          "checksum": "sha1-8e0xyNOolgu1981Azhd+wbnZhUg="
+          "range": "bytes=0-15241",
+          "checksum": "sha1-pBoV4IDrLHiRbbzmxZiuSX2DEEk="
         },
         "data": {
-          "range": "bytes=8895-456273",
-          "checksum": "sha256-gU+ehiRYQZsslpyQs504wku4RRSC0V/D7oz/UPLEX08="
+          "range": "bytes=15242-478034",
+          "checksum": "sha256-d6ofuAEJDs8S0xfL5I+Eq6qkiWVp5/5aNyAv2rNak7g="
         },
-        "checksum": "Q18e0xyNOolgu1981Azhd+wbnZhUg="
+        "checksum": "Q1pBoV4IDrLHiRbbzmxZiuSX2DEEk="
       },
       {
         "name": "fontconfig-config",

@@ -1488,22 +1488,22 @@
       },
       {
         "name": "freetype",
-        "url": "https://packages.wolfi.dev/os/x86_64/freetype-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/x86_64/freetype-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8845",
-          "checksum": "sha1-kR6sRtDej7eha0d9wG+AHeP2twQ="
+          "range": "bytes=0-15208",
+          "checksum": "sha1-htFmCT+cuX9iJ1SWcVyqU4W/9Ms="
         },
         "data": {
-          "range": "bytes=8846-478403",
-          "checksum": "sha256-atHhchATNkQlU/TPc4laaYKrLMfMEEMcKCiKYBr867M="
+          "range": "bytes=15209-501707",
+          "checksum": "sha256-BefwCRzbpLYCUTG4joZoOvJCQUCWQo1aEV+YW1bY4pg="
         },
-        "checksum": "Q1kR6sRtDej7eha0d9wG+AHeP2twQ="
+        "checksum": "Q1htFmCT+cuX9iJ1SWcVyqU4W/9Ms="
       },
       {
         "name": "fontconfig-config",
@@ -3292,6 +3292,44 @@
         "checksum": "Q1R13LAc4Hc425YfgjhDUoI+8e7+0="
       },
       {
+        "name": "libxrender-dev",
+        "url": "https://packages.wolfi.dev/os/x86_64/libxrender-dev-0.9.13-r1.apk",
+        "version": "0.9.13-r1",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-14598",
+          "checksum": "sha1-YeyrMMDA/AOC1533RIz3MVmLpbw="
+        },
+        "data": {
+          "range": "bytes=14599-371837",
+          "checksum": "sha256-65o0OOns4NWUEJDPgieN2nklHpro7qW2rrfE+2IxEVE="
+        },
+        "checksum": "Q1YeyrMMDA/AOC1533RIz3MVmLpbw="
+      },
+      {
+        "name": "pixman-dev",
+        "url": "https://packages.wolfi.dev/os/x86_64/pixman-dev-0.46.4-r9.apk",
+        "version": "0.46.4-r9",
+        "architecture": "x86_64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-15922",
+          "checksum": "sha1-RVGaJ5k/z8VyCg9kjgRvXG3EEgs="
+        },
+        "data": {
+          "range": "bytes=15923-28816",
+          "checksum": "sha256-FdVay6NW41BFydfz5dE4gLbqNah57R24+Jup5/Ja388="
+        },
+        "checksum": "Q1RVGaJ5k/z8VyCg9kjgRvXG3EEgs="
+      },
+      {
         "name": "bzip2-dev",
         "url": "https://packages.wolfi.dev/os/x86_64/bzip2-dev-1.0.8-r31.apk",
         "version": "1.0.8-r31",
@@ -3331,60 +3369,22 @@
       },
       {
         "name": "freetype-dev",
-        "url": "https://packages.wolfi.dev/os/x86_64/freetype-dev-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/x86_64/freetype-dev-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8876",
-          "checksum": "sha1-+MOPRgkU2T1SROkUMVMrUgs1wb0="
+          "range": "bytes=0-15235",
+          "checksum": "sha1-LmENz4wtsDPVmZfxwiTlYqvHqE8="
         },
         "data": {
-          "range": "bytes=8877-217328",
-          "checksum": "sha256-kJUkOMQjrWHyy1gZEqc0Qe58YY1xYGO1XOsPos9STc4="
+          "range": "bytes=15236-224142",
+          "checksum": "sha256-raHGzgSLVHlw2n3ND/kJeSjQ1n8Dfh0DjbV55rkG7kM="
         },
-        "checksum": "Q1+MOPRgkU2T1SROkUMVMrUgs1wb0="
-      },
-      {
-        "name": "libxrender-dev",
-        "url": "https://packages.wolfi.dev/os/x86_64/libxrender-dev-0.9.13-r1.apk",
-        "version": "0.9.13-r1",
-        "architecture": "x86_64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-14598",
-          "checksum": "sha1-YeyrMMDA/AOC1533RIz3MVmLpbw="
-        },
-        "data": {
-          "range": "bytes=14599-371837",
-          "checksum": "sha256-65o0OOns4NWUEJDPgieN2nklHpro7qW2rrfE+2IxEVE="
-        },
-        "checksum": "Q1YeyrMMDA/AOC1533RIz3MVmLpbw="
-      },
-      {
-        "name": "pixman-dev",
-        "url": "https://packages.wolfi.dev/os/x86_64/pixman-dev-0.46.4-r9.apk",
-        "version": "0.46.4-r9",
-        "architecture": "x86_64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-15922",
-          "checksum": "sha1-RVGaJ5k/z8VyCg9kjgRvXG3EEgs="
-        },
-        "data": {
-          "range": "bytes=15923-28816",
-          "checksum": "sha256-FdVay6NW41BFydfz5dE4gLbqNah57R24+Jup5/Ja388="
-        },
-        "checksum": "Q1RVGaJ5k/z8VyCg9kjgRvXG3EEgs="
+        "checksum": "Q1LmENz4wtsDPVmZfxwiTlYqvHqE8="
       },
       {
         "name": "expat-dev",
@@ -7226,22 +7226,22 @@
       },
       {
         "name": "freetype",
-        "url": "https://packages.wolfi.dev/os/aarch64/freetype-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/aarch64/freetype-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8894",
-          "checksum": "sha1-8e0xyNOolgu1981Azhd+wbnZhUg="
+          "range": "bytes=0-15241",
+          "checksum": "sha1-pBoV4IDrLHiRbbzmxZiuSX2DEEk="
         },
         "data": {
-          "range": "bytes=8895-456273",
-          "checksum": "sha256-gU+ehiRYQZsslpyQs504wku4RRSC0V/D7oz/UPLEX08="
+          "range": "bytes=15242-478034",
+          "checksum": "sha256-d6ofuAEJDs8S0xfL5I+Eq6qkiWVp5/5aNyAv2rNak7g="
         },
-        "checksum": "Q18e0xyNOolgu1981Azhd+wbnZhUg="
+        "checksum": "Q1pBoV4IDrLHiRbbzmxZiuSX2DEEk="
       },
       {
         "name": "fontconfig-config",
@@ -9030,6 +9030,44 @@
         "checksum": "Q1HcZlobREoV4opiR7bcjy0dQynHw="
       },
       {
+        "name": "libxrender-dev",
+        "url": "https://packages.wolfi.dev/os/aarch64/libxrender-dev-0.9.13-r1.apk",
+        "version": "0.9.13-r1",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-14635",
+          "checksum": "sha1-YQsWWuXPmdy3y+lzPzm1b9VefPQ="
+        },
+        "data": {
+          "range": "bytes=14636-375517",
+          "checksum": "sha256-AFMnPCBOwq8JplcdQ9Hn0lNMxLSlnAEgi8B6lrSW1Cg="
+        },
+        "checksum": "Q1YQsWWuXPmdy3y+lzPzm1b9VefPQ="
+      },
+      {
+        "name": "pixman-dev",
+        "url": "https://packages.wolfi.dev/os/aarch64/pixman-dev-0.46.4-r9.apk",
+        "version": "0.46.4-r9",
+        "architecture": "aarch64",
+        "signature": {
+          "range": "",
+          "checksum": ""
+        },
+        "control": {
+          "range": "bytes=0-15957",
+          "checksum": "sha1-5g58Hl0bqivql+Tj1db9FvAmHSE="
+        },
+        "data": {
+          "range": "bytes=15958-28847",
+          "checksum": "sha256-X9f7s4zDBfj/Q0Jt7fTGZgnrB/hcOUEowpHBObCTlAw="
+        },
+        "checksum": "Q15g58Hl0bqivql+Tj1db9FvAmHSE="
+      },
+      {
         "name": "bzip2-dev",
         "url": "https://packages.wolfi.dev/os/aarch64/bzip2-dev-1.0.8-r31.apk",
         "version": "1.0.8-r31",
@@ -9069,60 +9107,22 @@
       },
       {
         "name": "freetype-dev",
-        "url": "https://packages.wolfi.dev/os/aarch64/freetype-dev-2.14.3-r7.apk",
-        "version": "2.14.3-r7",
+        "url": "https://packages.wolfi.dev/os/aarch64/freetype-dev-2.15.0-r0.apk",
+        "version": "2.15.0-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-8921",
-          "checksum": "sha1-4vZDpEWg3dExb46izZUGZ/PtU2w="
+          "range": "bytes=0-15264",
+          "checksum": "sha1-+YSevdiEZa/GK2BqHywqdWRqYJg="
         },
         "data": {
-          "range": "bytes=8922-217365",
-          "checksum": "sha256-+IKZ7GEXRjHKPIOfYFKjyN3xW4FGdnS6wGoGyzXIkHI="
+          "range": "bytes=15265-224168",
+          "checksum": "sha256-EGnnMTzKkfOwBMsMcB9I7oWCiFHJkmMxD4mYxeO7iEU="
         },
-        "checksum": "Q14vZDpEWg3dExb46izZUGZ/PtU2w="
-      },
-      {
-        "name": "libxrender-dev",
-        "url": "https://packages.wolfi.dev/os/aarch64/libxrender-dev-0.9.13-r1.apk",
-        "version": "0.9.13-r1",
-        "architecture": "aarch64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-14635",
-          "checksum": "sha1-YQsWWuXPmdy3y+lzPzm1b9VefPQ="
-        },
-        "data": {
-          "range": "bytes=14636-375517",
-          "checksum": "sha256-AFMnPCBOwq8JplcdQ9Hn0lNMxLSlnAEgi8B6lrSW1Cg="
-        },
-        "checksum": "Q1YQsWWuXPmdy3y+lzPzm1b9VefPQ="
-      },
-      {
-        "name": "pixman-dev",
-        "url": "https://packages.wolfi.dev/os/aarch64/pixman-dev-0.46.4-r9.apk",
-        "version": "0.46.4-r9",
-        "architecture": "aarch64",
-        "signature": {
-          "range": "",
-          "checksum": ""
-        },
-        "control": {
-          "range": "bytes=0-15957",
-          "checksum": "sha1-5g58Hl0bqivql+Tj1db9FvAmHSE="
-        },
-        "data": {
-          "range": "bytes=15958-28847",
-          "checksum": "sha256-X9f7s4zDBfj/Q0Jt7fTGZgnrB/hcOUEowpHBObCTlAw="
-        },
-        "checksum": "Q15g58Hl0bqivql+Tj1db9FvAmHSE="
+        "checksum": "Q1+YSevdiEZa/GK2BqHywqdWRqYJg="
       },
       {
         "name": "expat-dev",
