@@ -7,7 +7,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - rust-1.99=1.99.1-r2
+  - rust-1.100=1.100.0-r0
   - busybox
   - gcc
   - glibc-dev

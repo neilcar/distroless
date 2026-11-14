@@ -105,14 +105,14 @@
     {
       "image": "rust",
       "name": "latest",
-      "package": "rust-1.99",
-      "version": "1.99.1-r2"
+      "package": "rust-1.100",
+      "version": "1.100.0-r0"
     },
     {
       "image": "cc",
       "name": "latest",
       "package": "libgcc",
-      "version": "16.2.0-r3"
+      "version": "16.2.0-r4"
     },
     {
       "image": "flaresolverr-base",
@@ -137,6 +137,12 @@
       "name": "latest",
       "package": "python-3.12",
       "version": "3.12.16-r3"
+    },
+    {
+      "image": "postgres",
+      "name": "latest",
+      "package": "postgresql-17",
+      "version": "17.10-r1"
     }
   ]
 }
