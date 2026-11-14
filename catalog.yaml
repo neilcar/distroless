@@ -474,6 +474,37 @@ images:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
       - {path: /data, type: directory, permissions: 0755, uid: 999, gid: 999}
 
+  postgres:
+    # PostgreSQL 17 for lxdk8s's n8n, atuin and postiz databases in place of Docker Hub's
+    # postgres:17-alpine. Versioned by postgresql-17. No entrypoint script (the official image's
+    # docker-entrypoint.sh is shell): it runs `postgres` on an existing cluster in $PGDATA. initdb needs
+    # /bin/sh, so create a new cluster with the dev variant. postgresql-17-client brings psql, pg_isready
+    # and pg_dump. glibc-locale-en provides
+    # en_US.UTF-8, the locale the alpine image initialized the existing clusters with; glibc collates it
+    # differently from musl, so text indexes need a REINDEX after a cluster moves here. Runs as uid/gid 70
+    # (`postgres`, home /var/lib/postgresql), like the pods (the volumes are 70:70).
+    run_as: "70"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: postgres, gid: 70}]
+      users: [{username: postgres, uid: 70, gid: 70, homedir: /var/lib/postgresql}]
+    variants:
+      runtime:
+        packages: ["{package}", "{package}-client", "glibc-locale-en", "tzdata"]
+        entrypoint: "/usr/bin/postgres"
+      # dev: busybox for initdb and pg_ctl, which run their helpers through /bin/sh (popen).
+      dev:
+        packages: ["{package}", "{package}-client", "glibc-locale-en", "tzdata", "busybox"]
+        entrypoint: "/usr/bin/postgres"
+    environment:
+      LANG: en_US.UTF-8
+      PGDATA: /var/lib/postgresql/data/pgdata
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /var/lib/postgresql, type: directory, permissions: 0755, uid: 70, gid: 70}
+      - {path: /var/lib/postgresql/data, type: directory, permissions: 0700, uid: 70, gid: 70}
+      - {path: /var/run/postgresql, type: directory, permissions: 02775, uid: 70, gid: 70}
+
   rust:
     # The Rust toolchain (cargo, rustc, clippy, rustfmt) with gcc for crates that build C
     # (ring), for ollama-orchestrator's CI job container and Dockerfile build stage in place of

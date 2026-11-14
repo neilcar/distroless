@@ -2967,3 +2967,17 @@ S:1
 I:1
 T:
 
+P:postgresql-17
+V:17.11-r0
+A:aarch64
+S:1
+I:1
+T:
+
+P:postgresql-17
+V:17.10-r1
+A:aarch64
+S:1
+I:1
+T:
+

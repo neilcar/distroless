@@ -23,6 +23,8 @@ elif [[ "$image" == "flaresolverr-base" ]]; then  # FlareSolverr's pod runs as 1
   [[ "$user" == "1000" || "$user" == "flaresolverr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "jdownloader-base" ]]; then  # JDownloader's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "jdownloader" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "postgres" ]]; then  # the lxdk8s Postgres pods run as 70:70 (the alpine image's postgres)
+  [[ "$user" == "70" || "$user" == "postgres" || "$user" == "70:70" ]] || fail "user is '$user'"
 elif [[ "$image" == "music-videos-base" ]]; then  # the music-video fetcher Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "mv" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
@@ -523,6 +525,43 @@ int main() { std::printf("omp %d\n", omp_get_max_threads() > 0); }
 CPP
 ) || fail "g++ -fopenmp: $out"
       [[ "$out" == "omp 1" ]] || fail "g++ -fopenmp printed: $out"
+    fi
+    ;;
+  postgres)
+    # Like the lxdk8s pods: uid 70, read-only root, a data volume, emptyDirs for the socket dir and /tmp.
+    # The runtime starts on a cluster made by the alpine image those pods run today (the migration);
+    # the dev variant makes its own with initdb (which needs its /bin/sh).
+    alpine=postgres:17.11-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
+    vol=$(docker volume create)
+    run=(docker run --user 70:70 --read-only --cap-drop ALL --tmpfs /tmp --tmpfs /var/run/postgresql:uid=70,gid=70
+         -v "$vol":/var/lib/postgresql/data)
+    init_ref=$ref
+    [[ "$variant" == "runtime" ]] && init_ref=$alpine
+    out=$("${run[@]}" --rm --entrypoint initdb "$init_ref" -D /var/lib/postgresql/data/pgdata -U smoke \
+      --auth=trust --locale=en_US.UTF-8 2>&1) || { docker volume rm "$vol" >/dev/null; fail "initdb ($init_ref): $out"; }
+    cid=$("${run[@]}" -d "$ref" -c shared_buffers=32MB)
+    trap 'docker rm -f "$cid" >/dev/null; docker volume rm "$vol" >/dev/null' EXIT
+    # The probe as the pods run it: pg_isready exec'd directly (no shell).
+    for _ in $(seq 1 30); do
+      docker exec "$cid" pg_isready -U smoke -d postgres -h 127.0.0.1 >/dev/null 2>&1 && break
+      sleep 0.5
+    done
+    docker exec "$cid" pg_isready -U smoke -d postgres -h 127.0.0.1 >/dev/null || { docker logs "$cid" >&2; fail "pg_isready"; }
+    # The clusters this replaces were initialized en_US.UTF-8: glibc must load that locale, and collate it.
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc \
+      "SELECT datcollate || ' ' || (SELECT string_agg(x, '' ORDER BY x) FROM unnest(ARRAY['b','A','a','B']) x)
+       FROM pg_database WHERE datname = 'postgres'" 2>&1) || fail "psql: $out"
+    [[ "$out" == "en_US.UTF-8 aAbB" || "$out" == "en_US.utf8 aAbB" ]] || fail "locale/collation: $out"
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc 'SHOW server_version_num' 2>&1) || fail "psql: $out"
+    [[ "$out" == 17* ]] || fail "server_version_num: $out"
+    # What the switch runs after moving a cluster here: REINDEX, and a dump for the backup.
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc 'REINDEX DATABASE postgres' 2>&1) || fail "REINDEX: $out"
+    out=$(docker exec "$cid" pg_dump -U smoke -h 127.0.0.1 -d postgres --schema-only 2>&1) || fail "pg_dump: $out"
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    else
+      tool sh -c true || fail "no /bin/sh in the dev variant"
     fi
     ;;
 esac
