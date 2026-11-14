@@ -62,6 +62,7 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         "music-videos-base/latest/runtime.apko.yaml",
         "music-videos-base/latest/dev.apko.yaml",
         "postgres/latest/runtime.apko.yaml",
+        "postgres/latest/dev.apko.yaml",
     ]:
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
