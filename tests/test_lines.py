@@ -21,6 +21,7 @@ from dltools.lines import (
     nginx_lines,
     nodejs_lines,
     photoprism_base_lines,
+    postgres_lines,
     python_lines,
     python_ssh_lines,
     rust_lines,
@@ -230,7 +231,7 @@ def test_tesseract_line(indexes):
 
 def test_discover_includes_tesseract_before_sabnzbd_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-14] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
+    assert lines[-15] == Line("tesseract", "latest", "tesseract", "5.5.2-r8")
 
 
 def test_sabnzbd_base_line(indexes):
@@ -241,7 +242,7 @@ def test_sabnzbd_base_line(indexes):
 
 def test_discover_includes_sabnzbd_base_before_servarr_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-13] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
+    assert lines[-14] == Line("sabnzbd-base", "latest", "python-3.14", "3.14.7-r8")
 
 
 def test_servarr_base_line(indexes):
@@ -252,7 +253,7 @@ def test_servarr_base_line(indexes):
 
 def test_discover_includes_servarr_base_before_beets_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-12] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
+    assert lines[-13] == Line("servarr-base", "latest", "libicu79", "79.1-r1")
 
 
 def test_beets_base_line(indexes):
@@ -263,7 +264,7 @@ def test_beets_base_line(indexes):
 
 def test_discover_includes_beets_base_before_debug(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-11] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-12] == Line("beets-base", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_debug_line(indexes):
@@ -274,7 +275,7 @@ def test_debug_line(indexes):
 
 def test_discover_includes_debug_before_python_ssh(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-10] == Line("debug", "latest", "bash", "5.3-r14")
+    assert lines[-11] == Line("debug", "latest", "bash", "5.3-r14")
 
 
 def test_python_ssh_line(indexes):
@@ -285,7 +286,7 @@ def test_python_ssh_line(indexes):
 
 def test_discover_includes_python_ssh_before_ci_tools(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-9] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-10] == Line("python-ssh", "latest", "python-3.12", "3.12.15-r6")
 
 
 def test_ci_tools_line(indexes):
@@ -296,7 +297,7 @@ def test_ci_tools_line(indexes):
 
 def test_discover_includes_ci_tools_before_valkey(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-8] == Line("ci-tools", "latest", "curl", "8.17.0-r1")
+    assert lines[-9] == Line("ci-tools", "latest", "curl", "8.17.0-r1")
 
 
 def test_valkey_line(indexes):
@@ -318,7 +319,7 @@ def test_cc_line(indexes):
 
 def test_discover_includes_valkey_rust_cc_last(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-7:-4] == [
+    assert lines[-8:-5] == [
         Line("valkey", "latest", "valkey-9.0", "9.0.4-r0"),
         Line("rust", "latest", "rust-1.99", "1.99.1-r2"),
         Line("cc", "latest", "libgcc", "16.2.0-r2"),
@@ -339,7 +340,7 @@ def test_jdownloader_base_line(indexes):
 
 def test_discover_includes_flaresolverr_and_jdownloader_bases_before_nodejs(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-4:-2] == [
+    assert lines[-5:-3] == [
         Line("flaresolverr-base", "latest", "chromium", "149.0.7827.53-r0"),
         Line("jdownloader-base", "latest", "openjdk-21-jre", "21.0.13.0.3-r0"),
     ]
@@ -354,7 +355,7 @@ def test_nodejs_line(indexes):
 
 def test_discover_includes_nodejs_before_music_videos_base(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-2] == Line("nodejs", "26", "nodejs-26", "26.13.0-r0")
+    assert lines[-3] == Line("nodejs", "26", "nodejs-26", "26.13.0-r0")
 
 
 def test_music_videos_base_line(indexes):
@@ -365,4 +366,16 @@ def test_music_videos_base_line(indexes):
 
 def test_discover_includes_music_videos_base_last(indexes, eol):
     lines, _ = discover(indexes, eol, TODAY, current=[])
-    assert lines[-1] == Line("music-videos-base", "latest", "python-3.12", "3.12.15-r6")
+    assert lines[-2] == Line("music-videos-base", "latest", "python-3.12", "3.12.15-r6")
+
+
+def test_postgres_line(indexes):
+    # One `latest` line headed by postgresql-17's newest released version on both arches (17.12 is only on
+    # x86_64; postgresql-18 is another package).
+    assert postgres_lines(indexes) == [Line("postgres", "latest", "postgresql-17", "17.11-r0")]
+    assert postgres_lines({"x86_64": {}, "aarch64": {}}) == []
+
+
+def test_discover_includes_postgres_last(indexes, eol):
+    lines, _ = discover(indexes, eol, TODAY, current=[])
+    assert lines[-1] == Line("postgres", "latest", "postgresql-17", "17.11-r0")

@@ -61,11 +61,12 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         "nodejs/26/runtime.apko.yaml",
         "music-videos-base/latest/runtime.apko.yaml",
         "music-videos-base/latest/dev.apko.yaml",
+        "postgres/latest/runtime.apko.yaml",
     ]:
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
     assert not (locks / "nginx/stable").exists()  # not in the catalog's nginx lines
-    assert sum(e["kind"] == "line_added" for e in events) == 23  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base + beets-base + debug + python-ssh + ci-tools + valkey + rust + cc + flaresolverr-base + jdownloader-base + nodejs + music-videos-base
+    assert sum(e["kind"] == "line_added" for e in events) == 24  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base + beets-base + debug + python-ssh + ci-tools + valkey + rust + cc + flaresolverr-base + jdownloader-base + nodejs + music-videos-base + postgres
 
 
 def test_cli_sync_second_run_is_a_no_op(tmp_path, offline, capsys):

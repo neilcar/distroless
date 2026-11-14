@@ -23,6 +23,8 @@ elif [[ "$image" == "flaresolverr-base" ]]; then  # FlareSolverr's pod runs as 1
   [[ "$user" == "1000" || "$user" == "flaresolverr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "jdownloader-base" ]]; then  # JDownloader's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "jdownloader" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "postgres" ]]; then  # the lxdk8s Postgres pods run as 70:70 (the alpine image's postgres)
+  [[ "$user" == "70" || "$user" == "postgres" || "$user" == "70:70" ]] || fail "user is '$user'"
 elif [[ "$image" == "music-videos-base" ]]; then  # the music-video fetcher Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "mv" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
@@ -524,6 +526,32 @@ CPP
 ) || fail "g++ -fopenmp: $out"
       [[ "$out" == "omp 1" ]] || fail "g++ -fopenmp printed: $out"
     fi
+    ;;
+  postgres)
+    # Like the lxdk8s pods: uid 70, read-only root, a data volume, emptyDirs for the socket dir and /tmp.
+    vol=$(docker volume create)
+    run=(docker run --user 70:70 --read-only --cap-drop ALL --tmpfs /tmp --tmpfs /var/run/postgresql:uid=70,gid=70
+         -v "$vol":/var/lib/postgresql/data)
+    out=$("${run[@]}" --rm --entrypoint initdb "$ref" -U smoke --auth=trust --locale=en_US.UTF-8 2>&1) \
+      || { docker volume rm "$vol" >/dev/null; fail "initdb: $out"; }
+    cid=$("${run[@]}" -d "$ref" -c shared_buffers=32MB)
+    trap 'docker rm -f "$cid" >/dev/null; docker volume rm "$vol" >/dev/null' EXIT
+    # The probe as the pods run it: pg_isready exec'd directly (no shell).
+    for _ in $(seq 1 30); do
+      docker exec "$cid" pg_isready -U smoke -d postgres -h 127.0.0.1 >/dev/null 2>&1 && break
+      sleep 0.5
+    done
+    docker exec "$cid" pg_isready -U smoke -d postgres -h 127.0.0.1 >/dev/null || { docker logs "$cid" >&2; fail "pg_isready"; }
+    # The clusters this replaces were initialized en_US.UTF-8: glibc must load that locale, and collate it.
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc \
+      "SELECT datcollate || ' ' || (SELECT string_agg(x, '' ORDER BY x) FROM unnest(ARRAY['b','A','a','B']) x)
+       FROM pg_database WHERE datname = 'postgres'" 2>&1) || fail "psql: $out"
+    [[ "$out" == "en_US.UTF-8 aAbB" ]] || fail "locale/collation: $out"
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc 'SHOW server_version_num' 2>&1) || fail "psql: $out"
+    [[ "$out" == 17* ]] || fail "server_version_num: $out"
+    out=$(docker exec "$cid" pg_dump -U smoke -h 127.0.0.1 -d postgres --schema-only 2>&1) || fail "pg_dump: $out"
+    shebang_audit
+    has_file /bin/sh && fail "/bin/sh present in the runtime"
     ;;
 esac
 echo "smoke ok: $image/$variant"
