@@ -25,6 +25,8 @@ elif [[ "$image" == "jdownloader-base" ]]; then  # JDownloader's pod runs as 100
   [[ "$user" == "1000" || "$user" == "jdownloader" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "postgres" ]]; then  # the lxdk8s Postgres pods run as 70:70 (the alpine image's postgres)
   [[ "$user" == "70" || "$user" == "postgres" || "$user" == "70:70" ]] || fail "user is '$user'"
+elif [[ "$image" == "runner-base" ]]; then  # the ARC runner runs as 1001, as the official runner image
+  [[ "$user" == "1001" || "$user" == "runner" || "$user" == "1001:1001" ]] || fail "user is '$user'"
 elif [[ "$image" == "music-videos-base" ]]; then  # the music-video fetcher Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "mv" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
@@ -375,6 +377,32 @@ print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || 
     printf 'SET k v\r\nSAVE\r\n' >&3
     read -r -t 5 r1 <&3; read -r -t 5 r2 <&3; exec 3<&-
     [[ "$r1" == +OK* && "$r2" == +OK* ]] || fail "SET/SAVE over the published port: $r1 $r2"
+    ;;
+  runner-base)
+    # neilcar/actions-runner's Wolfi runner: the tools jobs expect, a C build, Python with pip and
+    # venv, sudo and apk, the libraries the .NET runner loads, as uid 1001 in group docker (123).
+    docker run --rm "$ref" -c '
+      set -e
+      for t in bash git curl jq yq gh gcc cc make pkg-config shellcheck envsubst zip unzip xz tar gzip \
+               bzip2 file which ps ssh python3 pip3 sudo apk awk diff find sed grep; do
+        command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }
+      done
+      [ "$(id -u):$(id -g)" = 1001:1001 ] || { echo "id $(id)"; exit 1; }
+      id -nG | grep -qw docker || { echo "not in docker: $(id)"; exit 1; }
+      grep -q "^docker:[^:]*:123:" /etc/group || { echo "docker gid: $(grep ^docker: /etc/group)"; exit 1; }
+      [ -w /home/runner ] || { echo "/home/runner not writable"; exit 1; }
+      printf "int main(void){return 0;}\n" > /tmp/t.c && cc -o /tmp/t /tmp/t.c && /tmp/t
+      python3 -c "import ssl, sqlite3, venv, zoneinfo"
+      python3 -m venv /tmp/venv && /tmp/venv/bin/pip --version >/dev/null
+      [ "$(X=ok envsubst <<<"\$X")" = ok ] || { echo "envsubst"; exit 1; }
+      git --version >/dev/null; gh --version >/dev/null; shellcheck --version >/dev/null
+      sudo --version >/dev/null; apk --version >/dev/null
+      [ -s /etc/apk/repositories ] || { echo "no /etc/apk/repositories"; exit 1; }
+      for f in /usr/lib/libicuuc.so.79 /usr/lib/libssl.so.3 /usr/lib/libgssapi_krb5.so.2 /usr/lib/libz.so.1 \
+               /usr/lib/libstdc++.so.6 /etc/ssl/certs/ca-certificates.crt; do
+        [ -e "$f" ] || { echo "missing $f"; exit 1; }
+      done
+    ' || fail "runner tools"
     ;;
   rust)
     # ollama-orchestrator's CI job and build stage: cargo fmt/clippy/test and a crate with C (cc).

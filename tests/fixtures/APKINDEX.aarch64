@@ -2981,3 +2981,17 @@ S:1
 I:1
 T:
 
+P:git
+V:2.53.0-r0
+A:aarch64
+S:1
+I:1
+T:
+
+P:git
+V:2.52.1-r1
+A:aarch64
+S:1
+I:1
+T:
+
