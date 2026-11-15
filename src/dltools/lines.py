@@ -41,6 +41,9 @@ CI_TOOLS_PACKAGE = "curl"
 VALKEY_PACKAGE = "valkey-9.0"
 # postgres follows the major the lxdk8s clusters were initialized with (a new major needs pg_upgrade).
 POSTGRES_PACKAGE = "postgresql-17"
+# runner-base (the Wolfi base of neilcar/actions-runner's CI runner) is versioned by git, the tool
+# every job starts with.
+RUNNER_BASE_PACKAGE = "git"
 # rust follows Wolfi's newest rust-1.NN with a released version on both arches.
 RUST_PACKAGE = re.compile(r"rust-1\.(\d+)")
 # cc (glibc and libgcc, for dynamically linked Rust/C binaries) is versioned by libgcc: Wolfi's
@@ -175,6 +178,12 @@ def postgres_lines(indexes) -> list[Line]:
     return [Line("postgres", "latest", POSTGRES_PACKAGE, v)] if v else []
 
 
+def runner_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by git's newest released version."""
+    v = newest_released_all_arches(indexes, RUNNER_BASE_PACKAGE)
+    return [Line("runner-base", "latest", RUNNER_BASE_PACKAGE, v)] if v else []
+
+
 def rust_lines(indexes) -> list[Line]:
     """The single `latest` line, headed by the newest rust-1.NN released on every arch."""
     minors = {
@@ -272,7 +281,7 @@ def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
             "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17,
-            "music-videos-base": 18, "postgres": 19}.get(line.image, 20)
+            "music-videos-base": 18, "postgres": 19, "runner-base": 20}.get(line.image, 21)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -304,7 +313,7 @@ def discover(
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
         + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
-        + music_videos_base_lines(indexes) + postgres_lines(indexes)
+        + music_videos_base_lines(indexes) + postgres_lines(indexes) + runner_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}
