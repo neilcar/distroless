@@ -123,6 +123,10 @@ def _note(f: Finding, status: str) -> str:
     return f"{f.severity} {f.id} in {f.package}: {reason}{advisory}"
 
 
+def _sev(f: Finding) -> str:
+    return f.severity if f.severity in SEVERITIES else "UNKNOWN"
+
+
 def counts(items: list[Finding]) -> dict[str, int]:
     c = dict.fromkeys(SEVERITIES, 0)
     for f in items:
@@ -177,12 +181,18 @@ def evaluate(
     cand_counts = counts(cand)
     pub_counts = None
     if published is not None:
-        pub_counts = counts(findings(published, ignore))
-        reasons += [
-            f"{sev}: {cand_counts[sev]} findings vs {pub_counts[sev]} in the published image"
-            for sev in SEVERITIES
-            if cand_counts[sev] > pub_counts[sev]
-        ]
+        pub = findings(published, ignore)
+        pub_counts = counts(pub)
+        # Not worse: no vulnerability ID the published image lacks, per severity. Compared by ID,
+        # not by count, so a package sharing a source with one already there (postgresql-17-contrib
+        # beside postgresql-17) adds no reason, and a new CVE can't hide behind a fixed one.
+        for sev in SEVERITIES:
+            known = {f.id for f in pub if _sev(f) == sev}
+            new = sorted({f.id for f in cand if _sev(f) == sev} - known)
+            if new:
+                shown = ", ".join(new[:10]) + (f" and {len(new) - 10} more" if len(new) > 10 else "")
+                reasons.append(f"{sev}: {len(new)} new vs the published image ({shown}); "
+                               f"{cand_counts[sev]} findings vs {pub_counts[sev]}")
     return GateResult(not reasons, reasons, cand_counts, pub_counts, notes,
                       counts(vendored) if vendor_prefixes else None, vendored,
                       list(vendor_components or vendor_prefixes))
