@@ -557,6 +557,10 @@ CPP
     # What the switch runs after moving a cluster here: REINDEX, and a dump for the backup.
     out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc 'REINDEX DATABASE postgres' 2>&1) || fail "REINDEX: $out"
     out=$(docker exec "$cid" pg_dump -U smoke -h 127.0.0.1 -d postgres --schema-only 2>&1) || fail "pg_dump: $out"
+    # Contrib extensions the clusters use: Temporal's visibility database indexes with btree_gin.
+    out=$(docker exec "$cid" psql -U smoke -d postgres -h 127.0.0.1 -Atc \
+      'CREATE EXTENSION btree_gin; CREATE EXTENSION pg_trgm; DROP EXTENSION btree_gin; DROP EXTENSION pg_trgm' 2>&1) \
+      || fail "contrib extensions: $out"
     if [[ "$variant" == "runtime" ]]; then
       shebang_audit
       has_file /bin/sh && fail "/bin/sh present in the runtime"
