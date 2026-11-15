@@ -310,22 +310,22 @@
       },
       {
         "name": "soxr",
-        "url": "https://packages.wolfi.dev/os/x86_64/soxr-0.1.3-r10.apk",
-        "version": "0.1.3-r10",
+        "url": "https://packages.wolfi.dev/os/x86_64/soxr-0.1.3-r11.apk",
+        "version": "0.1.3-r11",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-13980",
-          "checksum": "sha1-+Be2y9r2yveZmEjXmLMt2lsc46E="
+          "range": "bytes=0-14653",
+          "checksum": "sha1-nl74oEj5TzNuPFM04QEXQh18aUg="
         },
         "data": {
-          "range": "bytes=13981-143029",
-          "checksum": "sha256-PRNu4h9iJNcw0Cjuw//AL+daGLvAtNKG13EiSwkUj1U="
+          "range": "bytes=14654-143690",
+          "checksum": "sha256-lEd1LX45xcqvC+MXiZ49MpMqsHvxZLWIcf9ajYFeVTo="
         },
-        "checksum": "Q1+Be2y9r2yveZmEjXmLMt2lsc46E="
+        "checksum": "Q1nl74oEj5TzNuPFM04QEXQh18aUg="
       },
       {
         "name": "ffmpeg-9.0-libswresample7",
@@ -1203,41 +1203,41 @@
       },
       {
         "name": "cairo",
-        "url": "https://packages.wolfi.dev/os/x86_64/cairo-1.18.6-r1.apk",
-        "version": "1.18.6-r1",
+        "url": "https://packages.wolfi.dev/os/x86_64/cairo-1.18.6-r2.apk",
+        "version": "1.18.6-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15286",
-          "checksum": "sha1-7WqBEve0DwwlWJJkIOlvSsWaw8A="
+          "range": "bytes=0-15957",
+          "checksum": "sha1-mk0SHDFDch0Pkxby7goVfmvALWo="
         },
         "data": {
-          "range": "bytes=15287-863448",
-          "checksum": "sha256-6wxeoczBPh48JXabhQEQYYkRiFds0swhB0Aq9eqEiDk="
+          "range": "bytes=15958-864117",
+          "checksum": "sha256-abR0jRgSrrNRBXQ0wALoNBikciDyOilsg+3VshrXeD4="
         },
-        "checksum": "Q17WqBEve0DwwlWJJkIOlvSsWaw8A="
+        "checksum": "Q1mk0SHDFDch0Pkxby7goVfmvALWo="
       },
       {
         "name": "graphite2",
-        "url": "https://packages.wolfi.dev/os/x86_64/graphite2-1.3.15-r6.apk",
-        "version": "1.3.15-r6",
+        "url": "https://packages.wolfi.dev/os/x86_64/graphite2-1.3.15-r7.apk",
+        "version": "1.3.15-r7",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14948",
-          "checksum": "sha1-HM+3CFsTOXnFRQ4Yox/1r+ddXxo="
+          "range": "bytes=0-15656",
+          "checksum": "sha1-Djhha5tsgX0E2PN0oXo/Lni+QFw="
         },
         "data": {
-          "range": "bytes=14949-89457",
-          "checksum": "sha256-+2Xxu7mPN+sqacuNEbBMgWL+moM+9BcnFM0lAoAPNDk="
+          "range": "bytes=15657-90166",
+          "checksum": "sha256-EtjTRtGLyP5A9hSDHxNSCKQ/GJMP7Ew5oHwxQXUFEek="
         },
-        "checksum": "Q1HM+3CFsTOXnFRQ4Yox/1r+ddXxo="
+        "checksum": "Q1Djhha5tsgX0E2PN0oXo/Lni+QFw="
       },
       {
         "name": "libsepol",
@@ -2134,22 +2134,22 @@
       },
       {
         "name": "soxr",
-        "url": "https://packages.wolfi.dev/os/aarch64/soxr-0.1.3-r10.apk",
-        "version": "0.1.3-r10",
+        "url": "https://packages.wolfi.dev/os/aarch64/soxr-0.1.3-r11.apk",
+        "version": "0.1.3-r11",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14018",
-          "checksum": "sha1-RXzVY4MFPZSc7BebeJLVzhH9iPE="
+          "range": "bytes=0-14688",
+          "checksum": "sha1-psS/QBfVMafylCl9bKa+Q7ZBklk="
         },
         "data": {
-          "range": "bytes=14019-110156",
-          "checksum": "sha256-xwXk3qeKr6xfcw3veP+3issuMk8h6ucUGhZOQE2QTPw="
+          "range": "bytes=14689-110821",
+          "checksum": "sha256-o5y3IZqGGZYk+lbwZj+R4MjL0y6iXfI+x7WQTHlZUmQ="
         },
-        "checksum": "Q1RXzVY4MFPZSc7BebeJLVzhH9iPE="
+        "checksum": "Q1psS/QBfVMafylCl9bKa+Q7ZBklk="
       },
       {
         "name": "ffmpeg-9.0-libswresample7",
@@ -3027,41 +3027,41 @@
       },
       {
         "name": "cairo",
-        "url": "https://packages.wolfi.dev/os/aarch64/cairo-1.18.6-r1.apk",
-        "version": "1.18.6-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/cairo-1.18.6-r2.apk",
+        "version": "1.18.6-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15321",
-          "checksum": "sha1-QaZ1pp8dWVQlodWwVyK7tB/5X1c="
+          "range": "bytes=0-15990",
+          "checksum": "sha1-jE1NIlEyOf5FpD5my6rUf98XiLY="
         },
         "data": {
-          "range": "bytes=15322-826644",
-          "checksum": "sha256-jeHbPCLcFzU9Fq5cxsF1xiF6wFeo1nM0yi0Dx++c4rA="
+          "range": "bytes=15991-827314",
+          "checksum": "sha256-WJzqdmNCtxTCbiCYLrjIq5huNy61hbzF8F3SPQ/s4zA="
         },
-        "checksum": "Q1QaZ1pp8dWVQlodWwVyK7tB/5X1c="
+        "checksum": "Q1jE1NIlEyOf5FpD5my6rUf98XiLY="
       },
       {
         "name": "graphite2",
-        "url": "https://packages.wolfi.dev/os/aarch64/graphite2-1.3.15-r6.apk",
-        "version": "1.3.15-r6",
+        "url": "https://packages.wolfi.dev/os/aarch64/graphite2-1.3.15-r7.apk",
+        "version": "1.3.15-r7",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14990",
-          "checksum": "sha1-AWIGHo5jrgeE4Em00jOtNbllItc="
+          "range": "bytes=0-15702",
+          "checksum": "sha1-VO13g0oN7TypeWSZcHIQ41+qLKM="
         },
         "data": {
-          "range": "bytes=14991-91839",
-          "checksum": "sha256-F8QU6hNj3XmeyKqwcbZ2QZkLTSLwJJQG7jEfGg5T0Ck="
+          "range": "bytes=15703-92551",
+          "checksum": "sha256-gUp3ATtaJBrPOV/Y5THdqV4dkefxDCktCPAyvePTMuE="
         },
-        "checksum": "Q1AWIGHo5jrgeE4Em00jOtNbllItc="
+        "checksum": "Q1VO13g0oN7TypeWSZcHIQ41+qLKM="
       },
       {
         "name": "libsepol",

@@ -979,22 +979,22 @@
       },
       {
         "name": "gdbm",
-        "url": "https://packages.wolfi.dev/os/x86_64/gdbm-1.26-r9.apk",
-        "version": "1.26-r9",
+        "url": "https://packages.wolfi.dev/os/x86_64/gdbm-1.26-r10.apk",
+        "version": "1.26-r10",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18015",
-          "checksum": "sha1-+OpsdmzH2i87yrQzTUkS0smKEPg="
+          "range": "bytes=0-19126",
+          "checksum": "sha1-Hz3RQwsMF42oY6/XdR+cvuPvaaI="
         },
         "data": {
-          "range": "bytes=18016-289759",
-          "checksum": "sha256-7ug2qsCzcIUnq4n4NvAeFFjSzEOEUrVVvOOSGYl8hC4="
+          "range": "bytes=19127-296607",
+          "checksum": "sha256-jwsW4vwv+YRUlPrw4nssMbT8z6QdAXtzvxa4TnxNM+E="
         },
-        "checksum": "Q1+OpsdmzH2i87yrQzTUkS0smKEPg="
+        "checksum": "Q1Hz3RQwsMF42oY6/XdR+cvuPvaaI="
       },
       {
         "name": "lmdb",
@@ -2252,22 +2252,22 @@
       },
       {
         "name": "gdbm",
-        "url": "https://packages.wolfi.dev/os/aarch64/gdbm-1.26-r9.apk",
-        "version": "1.26-r9",
+        "url": "https://packages.wolfi.dev/os/aarch64/gdbm-1.26-r10.apk",
+        "version": "1.26-r10",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18054",
-          "checksum": "sha1-YbVQY0lrywqPTh3yp2HkWyfZk1g="
+          "range": "bytes=0-19158",
+          "checksum": "sha1-E/6LbAmug2jwNlEFLG9q5m69KvY="
         },
         "data": {
-          "range": "bytes=18055-290198",
-          "checksum": "sha256-qcPxbt9f2GOLE8muRA9Q63mODtc3URZWkHMDBvHpY+4="
+          "range": "bytes=19159-295559",
+          "checksum": "sha256-MWhmJ528N0n/PGqVFBMB1jfC0yDbO7Yq9dd38IwGywE="
         },
-        "checksum": "Q1YbVQY0lrywqPTh3yp2HkWyfZk1g="
+        "checksum": "Q1E/6LbAmug2jwNlEFLG9q5m69KvY="
       },
       {
         "name": "lmdb",
