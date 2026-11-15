@@ -137,8 +137,10 @@ A build is published only if, per arch:
 1. no Critical/High finding has an **available fix** — a released Wolfi version
    (on both arches) at or above the advisory's fixed version. Fixes that exist only
    as snapshots or unpublished versions are listed as notes, not blockers;
-2. it has no more findings at any severity than the image currently published
-   for that tag.
+2. it has no vulnerability ID, at any severity, that the image currently published
+   for that tag doesn't have. IDs are compared, not counts: an added package that
+   shares a source with one already there (postgresql-17-contrib) repeats known IDs and
+   passes, while a new CVE blocks even if another one was fixed.
 
 Findings in vendored files (`photoprism-base`'s `/opt/...`) count toward neither rule.
 In practice that section is empty: Trivy cannot see the libraries bundled inside the

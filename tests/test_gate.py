@@ -50,6 +50,29 @@ def test_gate_blocks_worse_than_published():
     assert any("MEDIUM" in reason and "3" in reason and "2" in reason for reason in r.reasons)
 
 
+def report_pkgs(*vulns):
+    """Like report(), with a package per finding: (id, severity, package)."""
+    return {"Results": [{"Target": "img", "Vulnerabilities": [
+        {"VulnerabilityID": vid, "Severity": sev, "PkgName": pkg, "InstalledVersion": "1"}
+        for vid, sev, pkg in vulns]}]}
+
+
+def test_gate_allows_known_id_in_another_package():
+    pub = report_pkgs(("CVE-5", "HIGH", "postgresql-17"))
+    cand = report_pkgs(("CVE-5", "HIGH", "postgresql-17"), ("CVE-5", "HIGH", "postgresql-17-contrib"))
+    r = evaluate(cand, pub, set())
+    assert r.passed, r.reasons
+    assert r.candidate_counts["HIGH"] == 2 and r.published_counts["HIGH"] == 1
+
+
+def test_gate_blocks_new_id_even_at_same_count():
+    pub = report_pkgs(("CVE-5", "LOW", "a"))
+    cand = report_pkgs(("CVE-6", "LOW", "a"))
+    r = evaluate(cand, pub, set())
+    assert not r.passed
+    assert any("CVE-6" in reason for reason in r.reasons)
+
+
 def test_gate_respects_ignore():
     cand = report(("CVE-1", "HIGH", "1.2.3"), ("CVE-3", "LOW", ""))
     r = evaluate(cand, CLEAN, {"CVE-1", "CVE-3"})
