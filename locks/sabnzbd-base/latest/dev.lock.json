@@ -504,22 +504,22 @@
       },
       {
         "name": "libzstd1",
-        "url": "https://packages.wolfi.dev/os/x86_64/libzstd1-1.5.7-r13.apk",
-        "version": "1.5.7-r13",
+        "url": "https://packages.wolfi.dev/os/x86_64/libzstd1-1.5.7-r14.apk",
+        "version": "1.5.7-r14",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15395",
-          "checksum": "sha1-8qf/hL60HO4kVy/KSZk3mfs/EJA="
+          "range": "bytes=0-16071",
+          "checksum": "sha1-hZoktIY8e/3/R1uDqL9L6ehM3Kk="
         },
         "data": {
-          "range": "bytes=15396-647312",
-          "checksum": "sha256-6C/BZDA4QVnHT3g8yl46qKvdBCKwII+pUAH56t1pvME="
+          "range": "bytes=16072-647984",
+          "checksum": "sha256-frTE5Qw/BTOpF/3+/fcVYG56H+yerTsvZTDHc3sxAy8="
         },
-        "checksum": "Q18qf/hL60HO4kVy/KSZk3mfs/EJA="
+        "checksum": "Q1hZoktIY8e/3/R1uDqL9L6ehM3Kk="
       },
       {
         "name": "libstdc++-dev",
@@ -789,22 +789,22 @@
       },
       {
         "name": "libuuid",
-        "url": "https://packages.wolfi.dev/os/x86_64/libuuid-2.42.4-r2.apk",
-        "version": "2.42.4-r2",
+        "url": "https://packages.wolfi.dev/os/x86_64/libuuid-2.42.4-r3.apk",
+        "version": "2.42.4-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18726",
-          "checksum": "sha1-RMgxwtEheWi8izRUHv/oGNNwqKA="
+          "range": "bytes=0-19534",
+          "checksum": "sha1-fVqkVtqAWCN1aDn+Av3O1SVcbi4="
         },
         "data": {
-          "range": "bytes=18727-39967",
-          "checksum": "sha256-uGJbNiTtZNSh+oG//yOA+GNGTpfRQkVR8RV2ptFYEds="
+          "range": "bytes=19535-40776",
+          "checksum": "sha256-fBwNUal0/xLNVsumoEFEcX2v859hLmcntHGxv9p9LqY="
         },
-        "checksum": "Q1RMgxwtEheWi8izRUHv/oGNNwqKA="
+        "checksum": "Q1fVqkVtqAWCN1aDn+Av3O1SVcbi4="
       },
       {
         "name": "py3-pip-wheel",
@@ -1587,22 +1587,22 @@
       },
       {
         "name": "libzstd1",
-        "url": "https://packages.wolfi.dev/os/aarch64/libzstd1-1.5.7-r13.apk",
-        "version": "1.5.7-r13",
+        "url": "https://packages.wolfi.dev/os/aarch64/libzstd1-1.5.7-r14.apk",
+        "version": "1.5.7-r14",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15435",
-          "checksum": "sha1-r3RMUMVqvabfRkRPNpiy87ENIXQ="
+          "range": "bytes=0-16108",
+          "checksum": "sha1-Q+8+Ir3+zI5KdJxB7tdhtgwCYWQ="
         },
         "data": {
-          "range": "bytes=15436-595557",
-          "checksum": "sha256-zULV0jkwam1NnLLhBpb0mhqZYYWy/a+karnYia95pxA="
+          "range": "bytes=16109-596232",
+          "checksum": "sha256-r95yrv9h8+Hx1VYrR7VekUo72MQCSlvlx/kDahDyyuU="
         },
-        "checksum": "Q1r3RMUMVqvabfRkRPNpiy87ENIXQ="
+        "checksum": "Q1Q+8+Ir3+zI5KdJxB7tdhtgwCYWQ="
       },
       {
         "name": "libstdc++-dev",
@@ -1872,22 +1872,22 @@
       },
       {
         "name": "libuuid",
-        "url": "https://packages.wolfi.dev/os/aarch64/libuuid-2.42.4-r2.apk",
-        "version": "2.42.4-r2",
+        "url": "https://packages.wolfi.dev/os/aarch64/libuuid-2.42.4-r3.apk",
+        "version": "2.42.4-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18765",
-          "checksum": "sha1-gRKPSbz5jnlOkE5J1kmDIF+6lxA="
+          "range": "bytes=0-19578",
+          "checksum": "sha1-kIt1tZpX3ljrKKXJqHTfp4Jboqk="
         },
         "data": {
-          "range": "bytes=18766-39770",
-          "checksum": "sha256-srd+as1DmbyBwBPD1qvW+CMuFoKGL9w9HOIxH6VFC3Q="
+          "range": "bytes=19579-40585",
+          "checksum": "sha256-RmtW+Dgpv1bktTJ78aQT79A9g2L3yR+MmRkAxRH6F8w="
         },
-        "checksum": "Q1gRKPSbz5jnlOkE5J1kmDIF+6lxA="
+        "checksum": "Q1kIt1tZpX3ljrKKXJqHTfp4Jboqk="
       },
       {
         "name": "py3-pip-wheel",
