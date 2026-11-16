@@ -9,7 +9,7 @@
       {
         "name": "./melange.rsa.pub",
         "url": "./melange.rsa.pub",
-        "content": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7KSxu+3ju3h1eCPiNWXd\nAurGOS3aTpLQwKhLn4zD/5xWCJWCKj9X31XrZhna87BxZGzDu4pdJe4MMXiPB815\n6TL5LY2ozhHCSOtYDmGLr/tzYzJp4dlOZUR39Loaj4nVedP8lb+XY+d/m0M4KXTq\nHMIa3wgPx8WMGmFcj28D9zBvwp5r95UFh7+z2FDaCYKghi9w0ffzCiRCW0iL4Vjw\nDawkkFF6xphwrN462/zzjjz0xCeQnljfecXsokTFC7ng2rRb+LcFJaYA03GbFKUx\nd9OrQFmxurIZBi7cii1tWsB53/qePIy89VjnzFGMCJRnTVu0YTmW2jSxKsogG+Bo\nIPeTwIDs0XhPn8qk11+fcap4yQf1HuGsLVgCdk0Ixv01hXFbX5/O/iANafG/wZzs\nYX2ACQyM3rVfCSjAfQPiWIkzDwcyEVi+zS7DS2vzP+2gK3Oi+Z37WZOhHHqClro1\nxkl+v8zJOI3wFtzNckjcV+7MXWknwwcgHXnaJc+jXnM4eX7LTmdd2g9jRXUDXdO5\nmyit23x6GnSYkJ3DV6cfO34sqq7WceBzAaXllb3wqiJAJD92UIwpy3g+0VtvOT/v\n2/JO3HvQwvVUF0KzKKA9n1UzoKeTjsP6D8td8nQErIpNQrnMfYD5gNtRbyS3vwOa\n96x9Oz4hrgkB0xeeLEN9t8ECAwEAAQ==\n-----END PUBLIC KEY-----\n"
+        "content": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvrt7MthwAy4f1onEiMCC\nh5Y+sdp9ikU6LYrA6d4dqlGzxC0O8lAx7ppceFS/8OJuHbvt50MVF30RqhLc+lFn\n8c5ZIH9Nvg9pnNUvSleo6uCtBxDydYGAizPgN1lkzBEtcgTs9qhHdlQROU/cxnec\nJk6TMpdOoTi/JQvtwilspFXsVf8SWXjBYa+3I3szHIo8MyXrlVWcnaAf7ZXZbYXB\nNcMN7sl9vcGcQOTDgd8W38Eez8EK85ALktU41nMabDnHhHoZh66OOIwXrMHPit5s\n9i2xjZdZC3Y9Divgwm37hfNdJneHAAKRK4piY2zZZK3+uu33Hj9wiFg1N//GYGGt\necFzY8Sc8ee5vycPhrLnc5lTX4TxXbZmMgPCEWNnEorsJJBvFa+27IkV4aFLax/w\nrl/AFYXc7n0BSRjdW5+CBZJvx+d4SY7xuHEJmNixY2peFEk4YINSyC2mUSNBe33k\nPgM51wvJnrY063PbDWvitbsAqZLXNkg9jdHxLkgOJvK9gX1j3SlNCFolSEVjCauH\n3FDgqpBsK9z9J+8P69rEZc7BQwrjbIu+LPIrHf4rZMnlEqYLainByWc3k6sLhCZ2\nkqWdTAuHVZlM3BFJgPYy+UKlCd/9eu2b6cOOn6gG5ryyY/L3dwq6bPvGKPQo+Twn\nnk+su1fGb8rsHrSezwk5ZYkCAwEAAQ==\n-----END PUBLIC KEY-----\n"
       },
       {
         "name": "packages.wolfi.dev/os/wolfi-signing.rsa.pub",
@@ -87,17 +87,17 @@
         "architecture": "x86_64",
         "signature": {
           "range": "bytes=0-685",
-          "checksum": "sha1-AQWR+xHwQnliKkGI/4d0115I/Yg="
+          "checksum": "sha1-XGAvuWXyaVudVcDyUmQ402b6ba0="
         },
         "control": {
-          "range": "bytes=686-1679",
-          "checksum": "sha1-1/RYNu1+SSeLqzZ3eh6AlrLBmg8="
+          "range": "bytes=686-1678",
+          "checksum": "sha1-7VxCo8blRYMvRKdcQyVQHTFjGJA="
         },
         "data": {
-          "range": "bytes=1680-3578",
-          "checksum": "sha256-4Nbp0HNCEhJrX9H3321Giv8cW4fcGPMNkunLXyuopkA="
+          "range": "bytes=1679-3576",
+          "checksum": "sha256-dsJVOHAYmkCubtF7QAuatdzQuBk6Wnoysps+Y06k/OA="
         },
-        "checksum": "Q11/RYNu1+SSeLqzZ3eh6AlrLBmg8="
+        "checksum": "Q17VxCo8blRYMvRKdcQyVQHTFjGJA="
       },
       {
         "name": "nginx-mainline-mime-types",
@@ -466,18 +466,18 @@
         "version": "1.0.0-r0",
         "architecture": "aarch64",
         "signature": {
-          "range": "bytes=0-688",
-          "checksum": "sha1-6aLaYeLXVZoYL/3S9TWGBOIab/E="
+          "range": "bytes=0-689",
+          "checksum": "sha1-j4p6NOGMnNOS2cJV0VP5cCHnDCw="
         },
         "control": {
-          "range": "bytes=689-1682",
-          "checksum": "sha1-AaYbWKNWgRJyDcmBkEEZb3FNL18="
+          "range": "bytes=690-1685",
+          "checksum": "sha1-OEATUTAfMqgG9GxhONZ6tstBZFw="
         },
         "data": {
-          "range": "bytes=1683-3577",
-          "checksum": "sha256-Ad+yRpNIdY3B2HcQ+QA9hx3R1/SA15gANgoBqSviOrg="
+          "range": "bytes=1686-3579",
+          "checksum": "sha256-KMCVLVtP9aX7ISKZaymQppOxGiQaHVB2Nz8DJ9clWVg="
         },
-        "checksum": "Q1AaYbWKNWgRJyDcmBkEEZb3FNL18="
+        "checksum": "Q1OEATUTAfMqgG9GxhONZ6tstBZFw="
       },
       {
         "name": "nginx-mainline-mime-types",
