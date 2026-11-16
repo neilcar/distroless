@@ -1,0 +1,102 @@
+# GraphicsMagick for n8n-base: n8n's Edit Image node runs the `gm` binary (the gm npm module),
+# and Wolfi has no GraphicsMagick package. Built with the coders upstream's n8n image has
+# (JPEG, PNG, WebP, TIFF, HEIF, FreeType, bzip2, xz, zlib, Little CMS), Q16, without loadable
+# modules (every coder is built in, so no libltdl at runtime) and without X11 or Perl. The
+# version and sha256 are GraphicsMagick's SourceForge release (sha256 matches Homebrew's formula).
+package:
+  name: graphicsmagick
+  version: "1.3.49"
+  epoch: 0
+  description: Image processing toolkit (the gm command)
+  copyright:
+    - license: MIT
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - build-base
+      - busybox
+      - bzip2-dev
+      - freetype-dev
+      - glibc-2.44-dev
+      - lcms2-dev
+      - libheif-dev
+      - libjpeg-turbo-dev
+      - libpng-dev
+      - libwebp-dev
+      - pkgconf
+      - tiff-dev
+      - xz-dev
+      - zlib-dev
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${{package.version}}/GraphicsMagick-${{package.version}}.tar.xz
+      expected-sha256: 7efa070dc31116b4315061b39f84bc7181e8b060bf61214ec9af851131af9c81
+
+  - uses: autoconf/configure
+    with:
+      opts: |
+        --enable-shared \
+        --disable-static \
+        --without-modules \
+        --with-quantum-depth=16 \
+        --without-perl \
+        --without-x \
+        --without-gslib \
+        --without-dps \
+        --without-fpx \
+        --without-jbig \
+        --without-jp2 \
+        --without-jxl \
+        --without-trio \
+        --without-wmf \
+        --with-lcms2 \
+        --with-heif \
+        --with-webp \
+        --with-tiff \
+        --with-jpeg \
+        --with-png \
+        --with-ttf \
+        --with-bzlib \
+        --with-lzma \
+        --with-zlib
+
+  - uses: autoconf/make
+
+  - uses: autoconf/make-install
+
+  - runs: find "${{targets.destdir}}" -name '*.la' -delete
+
+  - uses: strip
+
+  - name: Check the coders n8n uses are built in
+    runs: |
+      export LD_LIBRARY_PATH="${{targets.destdir}}/usr/lib"
+      gm="${{targets.destdir}}/usr/bin/gm"
+      "$gm" version | head -1
+      for f in JPEG PNG WebP TIFF FreeType; do
+        "$gm" version | grep -E "^ *$f +yes" || { echo "missing coder: $f"; exit 1; }
+      done
+      "$gm" convert -size 64x48 xc:red /tmp/in.png
+      "$gm" convert /tmp/in.png -resize 32x24 -quality 80 /tmp/out.jpg
+      "$gm" identify /tmp/out.jpg | grep -F "32x24"
+
+subpackages:
+  - name: graphicsmagick-dev
+    description: GraphicsMagick headers and pkg-config files
+    pipeline:
+      - uses: split/dev
+
+  - name: graphicsmagick-doc
+    description: GraphicsMagick documentation
+    pipeline:
+      - uses: split/manpages
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}/usr/share"
+          mv "${{targets.destdir}}/usr/share/doc" "${{targets.subpkgdir}}/usr/share/" || true

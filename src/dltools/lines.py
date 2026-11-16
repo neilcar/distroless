@@ -57,6 +57,8 @@ JDOWNLOADER_BASE_PACKAGE = "openjdk-21-jre"
 # the major, headed by that package. Move both when the next even major becomes LTS.
 NODEJS_LINE = "26"
 NODEJS_PACKAGE = f"nodejs-{NODEJS_LINE}"
+# n8n-base (neilcar/pyapps-image's n8n) is versioned by the same Node line: n8n is a Node program.
+N8N_BASE_PACKAGE = NODEJS_PACKAGE
 
 
 @dataclass(frozen=True)
@@ -222,6 +224,12 @@ def nodejs_lines(indexes) -> list[Line]:
     return [Line("nodejs", NODEJS_LINE, NODEJS_PACKAGE, v)] if v else []
 
 
+def n8n_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by nodejs-26's newest released version."""
+    v = newest_released_all_arches(indexes, N8N_BASE_PACKAGE)
+    return [Line("n8n-base", "latest", N8N_BASE_PACKAGE, v)] if v else []
+
+
 def music_videos_base_lines(indexes) -> list[Line]:
     """The single `latest` line, headed by Python 3.12's newest released version."""
     v = newest_released_all_arches(indexes, MUSIC_VIDEOS_BASE_PACKAGE)
@@ -281,7 +289,8 @@ def _order(line: Line) -> tuple:
     rank = {"static": 0, "python": 1, "nginx": 2, "photoprism-base": 3, "stash-base": 4, "tesseract": 5,
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
             "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17,
-            "music-videos-base": 18, "postgres": 19, "runner-base": 20}.get(line.image, 21)
+            "music-videos-base": 18, "postgres": 19, "runner-base": 20,
+            "n8n-base": 21}.get(line.image, 22)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -313,7 +322,7 @@ def discover(
         + beets_base_lines(indexes) + debug_lines(indexes) + python_ssh_lines(indexes)
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
         + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
-        + music_videos_base_lines(indexes) + postgres_lines(indexes) + runner_base_lines(indexes)
+        + music_videos_base_lines(indexes) + postgres_lines(indexes) + runner_base_lines(indexes) + n8n_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

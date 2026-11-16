@@ -9,7 +9,7 @@
       {
         "name": "./melange.rsa.pub",
         "url": "./melange.rsa.pub",
-        "content": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyvH42/nbTNRSGBEwD91O\nQpSCZCLDPLiKbesp+HezhKeJjGPwWkfq/EOKCtVCrRgEZ4tWbI5IAWDC4tbW8XsO\nvo4cI2+V/tudmCWi9TKGeo9uLi6AnX+MeSl4s2+Nx6aXQrvYAgTZkpfEV8Aekvwu\n9A/ZX6bMgoDw/K4vATmwOXwmywE+2bU8wEv+NSismKhHGKyL9yyK5Un9+ER+buJF\nEtEuqhmztLyd43w7oWJYyihs0G/RSP1C3gNmO9MfmDE+EPbyc5XBmyvdRUqoYinT\nx/sVcmV1CLY8JC4ojxG9EgEYSc3/72CirRvZFJn3P1H73QafsZrkOGv+G/Y88zmm\nhIcLpj+IRqqavTMp2gdGns+1uM7FPRHFCsfZ9efu2p2KLFzm23VWDny+vUYvkHEz\nYvoawXLXcMUZSKDKN0RWHwzk7E0J32rvy02w3MS4S3qo9ou0QJcge2ITzc2cLIMV\n41AkoJsB7nvziblgy1rHekBADSXs03iTzTxJMYv7CdExp7yS7djzjfqvrw0zgHCp\nZNKTYjHsdToFy2T6N0yeRIL5yKPI3iTBjaI+AFfHlVK9Q6JVl9Z5YQapZH6fXkC6\nmGwZauagqbs/ZsTqeaPPut4cprIXs1NA5Z6+xZ6HVo+gyRI36ZqGnpR0zSQU19fG\ndgQOEdu1RvNvFf54CCNqTHkCAwEAAQ==\n-----END PUBLIC KEY-----\n"
+        "content": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7KSxu+3ju3h1eCPiNWXd\nAurGOS3aTpLQwKhLn4zD/5xWCJWCKj9X31XrZhna87BxZGzDu4pdJe4MMXiPB815\n6TL5LY2ozhHCSOtYDmGLr/tzYzJp4dlOZUR39Loaj4nVedP8lb+XY+d/m0M4KXTq\nHMIa3wgPx8WMGmFcj28D9zBvwp5r95UFh7+z2FDaCYKghi9w0ffzCiRCW0iL4Vjw\nDawkkFF6xphwrN462/zzjjz0xCeQnljfecXsokTFC7ng2rRb+LcFJaYA03GbFKUx\nd9OrQFmxurIZBi7cii1tWsB53/qePIy89VjnzFGMCJRnTVu0YTmW2jSxKsogG+Bo\nIPeTwIDs0XhPn8qk11+fcap4yQf1HuGsLVgCdk0Ixv01hXFbX5/O/iANafG/wZzs\nYX2ACQyM3rVfCSjAfQPiWIkzDwcyEVi+zS7DS2vzP+2gK3Oi+Z37WZOhHHqClro1\nxkl+v8zJOI3wFtzNckjcV+7MXWknwwcgHXnaJc+jXnM4eX7LTmdd2g9jRXUDXdO5\nmyit23x6GnSYkJ3DV6cfO34sqq7WceBzAaXllb3wqiJAJD92UIwpy3g+0VtvOT/v\n2/JO3HvQwvVUF0KzKKA9n1UzoKeTjsP6D8td8nQErIpNQrnMfYD5gNtRbyS3vwOa\n96x9Oz4hrgkB0xeeLEN9t8ECAwEAAQ==\n-----END PUBLIC KEY-----\n"
       },
       {
         "name": "packages.wolfi.dev/os/wolfi-signing.rsa.pub",
@@ -86,18 +86,18 @@
         "version": "1.0.0-r0",
         "architecture": "x86_64",
         "signature": {
-          "range": "bytes=0-682",
-          "checksum": "sha1-zbe9p4gW9LyeMdYrKQwl6yjmtuY="
+          "range": "bytes=0-689",
+          "checksum": "sha1-Z3q2qoQn68V+5qCtV0mP9ctuJS0="
         },
         "control": {
-          "range": "bytes=683-1630",
-          "checksum": "sha1-Tyt7q6PIF5TEEp/DTqfPMO1BdtI="
+          "range": "bytes=690-1637",
+          "checksum": "sha1-a3EA3kOazDjtS1PLHtZinoFEKGE="
         },
         "data": {
-          "range": "bytes=1631-2709",
-          "checksum": "sha256-5PdmaIeHNvS9HQ8NVBhUJVFzTG1WSB9PXjLexyR15uc="
+          "range": "bytes=1638-2718",
+          "checksum": "sha256-gXpBhPfzrqV9ySC2HN7kmxRSTIedgG83sGKSnfv1iJo="
         },
-        "checksum": "Q1Tyt7q6PIF5TEEp/DTqfPMO1BdtI="
+        "checksum": "Q1a3EA3kOazDjtS1PLHtZinoFEKGE="
       },
       {
         "name": "ld-linux-2.44",
@@ -2291,17 +2291,17 @@
         "architecture": "aarch64",
         "signature": {
           "range": "bytes=0-686",
-          "checksum": "sha1-Jbi2vLTc3wIIxepjmSKdb88JHww="
+          "checksum": "sha1-ORc3fnenwCxr2MFiUODMLNqbli8="
         },
         "control": {
-          "range": "bytes=687-1632",
-          "checksum": "sha1-b1yIedp655UP74PL9SwQNwumYOs="
+          "range": "bytes=687-1630",
+          "checksum": "sha1-nvtp41Ok4nHPZGjoMRbQGmxI2Zc="
         },
         "data": {
-          "range": "bytes=1633-2710",
-          "checksum": "sha256-erM6FsYl9pU8h/H8mWUvOgmO4MzPIr2HMe/NBM4Nl3M="
+          "range": "bytes=1631-2709",
+          "checksum": "sha256-npyQoUGwpXrzm+MosSLV1oQxeLygPjWhbdKdnYobvxA="
         },
-        "checksum": "Q1b1yIedp655UP74PL9SwQNwumYOs="
+        "checksum": "Q1nvtp41Ok4nHPZGjoMRbQGmxI2Zc="
       },
       {
         "name": "libgcc",
