@@ -656,7 +656,7 @@ images:
       # dev: rebuilds n8n's native addons (isolated-vm, sqlite3, the Kafka client) for glibc against
       # this Node: node-gyp finds Node's headers under /usr/include/node.
       dev:
-        packages: ["{package}", "tini", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "librdkafka-dev", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
+        packages: ["{package}", "tini", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "libuv-dev", "librdkafka-dev", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
         entrypoint: "/usr/bin/tini"
     environment:
       HOME: /home/node

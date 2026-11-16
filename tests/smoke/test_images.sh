@@ -458,12 +458,14 @@ console.log(process.version.split(".")[0], ok, rt, require("node:os").homedir())
       has_file /bin/sh && fail "/bin/sh present in the runtime"
     else
       # dev: node-gyp builds a native addon against this Node's headers (what Dockerfile.n8n does).
+      # Wolfi's Node uses the shared libuv, so node.h and isolated-vm need uv.h from libuv-dev.
       out=$(docker run --rm --user 1000:1000 --entrypoint /bin/bash "$ref" -euc '
 cd /tmp && mkdir addon && cd addon
 printf "%s" "{\"targets\":[{\"target_name\":\"t\",\"sources\":[\"t.c\"]}]}" > binding.gyp
 cat > t.c <<C
 #include <node_api.h>
-static napi_value Init(napi_env env, napi_value exports) { napi_value v; napi_create_int32(env, 42, &v); return v; }
+#include <uv.h>
+static napi_value Init(napi_env env, napi_value exports) { napi_value v; napi_create_int32(env, uv_version() ? 42 : 0, &v); return v; }
 NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
 C
 node-gyp rebuild --nodedir=/usr >/dev/null 2>&1 || node-gyp rebuild --nodedir=/usr
