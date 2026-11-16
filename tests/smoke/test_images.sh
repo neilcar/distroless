@@ -458,10 +458,11 @@ console.log(process.version.split(".")[0], ok, rt, require("node:os").homedir())
       has_file /bin/sh && fail "/bin/sh present in the runtime"
     else
       # dev: node-gyp builds a native addon against this Node's headers (what Dockerfile.n8n does).
-      # Wolfi's Node uses the shared libuv, so node.h and isolated-vm need uv.h from libuv-dev.
+      # Wolfi's Node uses the shared libuv, c-ares and ICU, so node.h needs uv.h from libuv-dev and
+      # isolated-vm links -lcares -licui18n -licuuc from c-ares-dev and icu-dev.
       out=$(docker run --rm --user 1000:1000 --entrypoint /bin/bash "$ref" -euc '
 cd /tmp && mkdir addon && cd addon
-printf "%s" "{\"targets\":[{\"target_name\":\"t\",\"sources\":[\"t.c\"]}]}" > binding.gyp
+printf "%s" "{\"targets\":[{\"target_name\":\"t\",\"sources\":[\"t.c\"],\"libraries\":[\"-lcares\",\"-licui18n\",\"-licuuc\"]}]}" > binding.gyp
 cat > t.c <<C
 #include <node_api.h>
 #include <uv.h>

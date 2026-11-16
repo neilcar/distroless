@@ -23,6 +23,8 @@ contents:
   - npm
   - node-gyp
   - libuv-dev
+  - c-ares-dev
+  - icu-dev
   - librdkafka-dev
   - python-3.12=3.12.16-r3
   - build-base
