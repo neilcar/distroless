@@ -149,6 +149,12 @@
       "name": "latest",
       "package": "git",
       "version": "2.56.1-r1"
+    },
+    {
+      "image": "n8n-base",
+      "name": "latest",
+      "package": "nodejs-26",
+      "version": "26.13.1-r1"
     }
   ]
 }

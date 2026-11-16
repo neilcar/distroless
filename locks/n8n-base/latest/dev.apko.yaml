@@ -1,0 +1,71 @@
+contents:
+  repositories:
+  - https://packages.wolfi.dev/os
+  - ./packages
+  keyring:
+  - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  - ./melange.rsa.pub
+  packages:
+  - wolfi-baselayout
+  - ca-certificates-bundle
+  - tzdata
+  - nodejs-26=26.13.1-r1
+  - tini
+  - git
+  - openssh-client
+  - graphicsmagick
+  - fontconfig
+  - ttf-dejavu
+  - font-liberation
+  - librdkafka
+  - libstdc++
+  - libgcc
+  - busybox
+  - bash
+  - npm
+  - node-gyp
+  - librdkafka-dev
+  - python-3.12=3.12.16-r3
+  - build-base
+  - glibc-dev
+  - pkgconf
+  - coreutils
+  - findutils
+  - python-3.12-base=3.12.16-r3
+accounts:
+  groups:
+  - groupname: nonroot
+    gid: 65532
+  - groupname: node
+    gid: 1000
+  users:
+  - username: nonroot
+    uid: 65532
+    gid: 65532
+  - username: node
+    uid: 1000
+    gid: 1000
+    homedir: /home/node
+  run-as: '1000'
+archs:
+- x86_64
+- aarch64
+annotations:
+  org.opencontainers.image.source: https://github.com/neilcar/distroless
+  org.opencontainers.image.title: n8n-base:latest-dev
+entrypoint:
+  command: /usr/bin/tini
+environment:
+  HOME: /home/node
+  NODE_ENV: production
+paths:
+- path: /tmp
+  type: directory
+  permissions: 1023
+  uid: 0
+  gid: 0
+- path: /home/node
+  type: directory
+  permissions: 493
+  uid: 1000
+  gid: 1000
