@@ -2951,22 +2951,22 @@
       },
       {
         "name": "xtrans",
-        "url": "https://packages.wolfi.dev/os/x86_64/xtrans-1.6.0-r4.apk",
-        "version": "1.6.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/xtrans-1.6.0-r5.apk",
+        "version": "1.6.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-6986",
-          "checksum": "sha1-wCXel+KBc5nLmH0qAf9AP/DMtXE="
+          "range": "bytes=0-13397",
+          "checksum": "sha1-AWfjAN27016jt/A92RW+POz3kLI="
         },
         "data": {
-          "range": "bytes=6987-19118",
-          "checksum": "sha256-aIc3+v+9eHAmq3IvvYZSdVwqRj6EKVuKJT03G3HTVjM="
+          "range": "bytes=13398-25533",
+          "checksum": "sha256-rtgzdwlYtCbBw5VVCAVd57ZRrGh8F+O6rHQ2tNNVqnE="
         },
-        "checksum": "Q1wCXel+KBc5nLmH0qAf9AP/DMtXE="
+        "checksum": "Q1AWfjAN27016jt/A92RW+POz3kLI="
       },
       {
         "name": "libx11-dev",
@@ -8423,22 +8423,22 @@
       },
       {
         "name": "xtrans",
-        "url": "https://packages.wolfi.dev/os/aarch64/xtrans-1.6.0-r4.apk",
-        "version": "1.6.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/xtrans-1.6.0-r5.apk",
+        "version": "1.6.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-7021",
-          "checksum": "sha1-6mKEi7DRlnlxzE04qfLJDMmmfXo="
+          "range": "bytes=0-13436",
+          "checksum": "sha1-EdtzGGaXpJqokzTWjGTnjx37jiM="
         },
         "data": {
-          "range": "bytes=7022-19152",
-          "checksum": "sha256-Pto5zGZ87zoqRMYVAJ5yjX7AUkJ/wOyt4JOS6MDhBJ8="
+          "range": "bytes=13437-25570",
+          "checksum": "sha256-1NvuxCWhCDULkZ577UL0Xc1NCRQ5pbB9/sHSAw8vszs="
         },
-        "checksum": "Q16mKEi7DRlnlxzE04qfLJDMmmfXo="
+        "checksum": "Q1EdtzGGaXpJqokzTWjGTnjx37jiM="
       },
       {
         "name": "libx11-dev",
