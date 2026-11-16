@@ -143,6 +143,12 @@
       "name": "latest",
       "package": "postgresql-17",
       "version": "17.10-r1"
+    },
+    {
+      "image": "runner-base",
+      "name": "latest",
+      "package": "git",
+      "version": "2.56.1-r1"
     }
   ]
 }

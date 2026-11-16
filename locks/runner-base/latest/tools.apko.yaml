@@ -1,0 +1,83 @@
+contents:
+  repositories:
+  - https://packages.wolfi.dev/os
+  keyring:
+  - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  packages:
+  - wolfi-baselayout
+  - ca-certificates-bundle
+  - tzdata
+  - git=2.56.1-r1
+  - bash
+  - coreutils
+  - findutils
+  - grep
+  - sed
+  - gawk
+  - diffutils
+  - gnutar
+  - gzip
+  - xz
+  - zip
+  - unzip
+  - bzip2
+  - file
+  - debianutils
+  - procps
+  - openssh-client
+  - curl
+  - jq
+  - yq
+  - gh
+  - build-base
+  - pkgconf
+  - gettext-envsubst
+  - python-3.12=3.12.16-r3
+  - py3.12-pip
+  - sudo-rs
+  - apk-tools
+  - libicu79
+  - libssl3
+  - krb5-libs
+  - zlib
+  - libstdc++
+  - libgcc
+  - python-3.12-base=3.12.16-r3
+accounts:
+  groups:
+  - groupname: nonroot
+    gid: 65532
+  - groupname: runner
+    gid: 1001
+  - groupname: docker
+    gid: 123
+    members:
+    - runner
+  users:
+  - username: nonroot
+    uid: 65532
+    gid: 65532
+  - username: runner
+    uid: 1001
+    gid: 1001
+    homedir: /home/runner
+  run-as: '1001'
+archs:
+- x86_64
+- aarch64
+annotations:
+  org.opencontainers.image.source: https://github.com/neilcar/distroless
+  org.opencontainers.image.title: runner-base:latest-tools
+entrypoint:
+  command: /bin/bash
+paths:
+- path: /tmp
+  type: directory
+  permissions: 1023
+  uid: 0
+  gid: 0
+- path: /home/runner
+  type: directory
+  permissions: 493
+  uid: 1001
+  gid: 123
