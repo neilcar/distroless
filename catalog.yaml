@@ -594,7 +594,7 @@ images:
   runner-base:
     # Base for neilcar/actions-runner's Wolfi runner (ARC on lxdk8s), in place of the official
     # Ubuntu runner image. The tools jobs expect from a runner: bash and the usual coreutils,
-    # git, curl, jq, gh, a C toolchain (build-base) for cgo, shellcheck, envsubst (gettext), zip
+    # git, curl, jq, gh, a C toolchain (build-base) for cgo, shellcheck (vendored), envsubst, zip
     # and xz, Python 3.12 with pip, and sudo-rs plus apk-tools so a job can `sudo apk add` more.
     # The .NET runner itself loads ICU, OpenSSL, Kerberos, zlib and libstdc++. Versioned by git.
     # Runs as uid 1001 (`runner`, home /home/runner) in group `docker` (123), as the official
@@ -609,11 +609,26 @@ images:
     variants:
       tools:
         packages: ["{package}", "bash", "coreutils", "findutils", "grep", "sed", "gawk", "diffutils",
-                   "gnutar", "gzip", "xz", "zip", "unzip", "bzip2", "file", "which", "procps",
-                   "openssh-client", "curl", "jq", "yq", "gh", "build-base", "pkgconf", "shellcheck",
-                   "gettext", "python-3.12", "py3.12-pip", "sudo-rs", "apk-tools",
+                   "gnutar", "gzip", "xz", "zip", "unzip", "bzip2", "file", "debianutils", "procps",
+                   "openssh-client", "curl", "jq", "yq", "gh", "build-base", "pkgconf",
+                   "gettext-envsubst", "python-3.12", "py3.12-pip", "sudo-rs", "apk-tools",
                    "libicu79", "libssl3", "krb5-libs", "zlib", "libstdc++", "libgcc"]
         entrypoint: "/bin/bash"
     paths:
       - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
       - {path: /home/runner, type: directory, permissions: 0755, uid: 1001, gid: 123}
+    # Not a Wolfi package: ShellCheck's static release build, pinned by sha256.
+    vendor:
+      - name: shellcheck
+        version: 0.11.0
+        kind: tar-binary
+        prefix: /usr/bin
+        files:
+          x86_64:
+            url: https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
+            sha256: 8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198
+            member: shellcheck-v0.11.0/shellcheck
+          aarch64:
+            url: https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.xz
+            sha256: 12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588
+            member: shellcheck-v0.11.0/shellcheck
