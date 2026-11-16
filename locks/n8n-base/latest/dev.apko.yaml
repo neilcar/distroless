@@ -22,6 +22,7 @@ contents:
   - bash
   - npm
   - node-gyp
+  - libuv-dev
   - librdkafka-dev
   - python-3.12=3.12.16-r3
   - build-base
