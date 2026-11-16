@@ -22,7 +22,6 @@ contents:
   - bash
   - py3.12-pip
   - uv
-  - zlib=1.3.2-r7
 accounts:
   groups:
   - groupname: nonroot

@@ -19,9 +19,7 @@ contents:
   - bash
   - py3.11-pip
   - uv
-  - minizip=1.3.2-r7
   - python-3.13-base=3.13.15-r8
-  - zlib=1.3.2-r7
 accounts:
   groups:
   - groupname: nonroot

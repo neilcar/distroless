@@ -47,7 +47,6 @@ contents:
   - libcom_err
   - libusb
   - libuuid
-  - zlib=1.3.2-r7
 accounts:
   groups:
   - groupname: nonroot
