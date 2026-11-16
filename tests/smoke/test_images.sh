@@ -27,6 +27,8 @@ elif [[ "$image" == "postgres" ]]; then  # the lxdk8s Postgres pods run as 70:70
   [[ "$user" == "70" || "$user" == "postgres" || "$user" == "70:70" ]] || fail "user is '$user'"
 elif [[ "$image" == "runner-base" ]]; then  # the ARC runner runs as 1001, as the official runner image
   [[ "$user" == "1001" || "$user" == "runner" || "$user" == "1001:1001" ]] || fail "user is '$user'"
+elif [[ "$image" == "n8n-base" ]]; then  # n8n's pods run as 1000:1000 (upstream's node user)
+  [[ "$user" == "1000" || "$user" == "node" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "music-videos-base" ]]; then  # the music-video fetcher Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "mv" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 else
@@ -432,6 +434,46 @@ const tz = new Intl.DateTimeFormat("en", {timeZone: "Europe/London"}).resolvedOp
 console.log(process.version.split(".")[0], tz, tls.rootCertificates.length > 0, typeof fetch);') \
       || fail "node check"
     [[ "$out" == "v26 Europe/London true function" ]] || fail "node printed: $out"
+    ;;
+  n8n-base)
+    # Node 26 linked against Wolfi's libbrotli (>= 1.2.1: CVE-2026-111497), a Brotli round trip, tini,
+    # git, ssh and gm (Edit Image) as uid 1000 with a read-only root, and the fonts gm draws with.
+    run() { docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint "$1" "$ref" "${@:2}"; }
+    out=$(run /usr/bin/node -e '
+const zlib = require("node:zlib");
+const [maj, min, pat] = process.versions.brotli.split(".").map(Number);
+const ok = maj > 1 || (maj === 1 && (min > 2 || (min === 2 && pat >= 1)));
+const data = Buffer.from("n8n".repeat(1000));
+const rt = zlib.brotliDecompressSync(zlib.brotliCompressSync(data)).equals(data);
+console.log(process.version.split(".")[0], ok, rt, require("node:os").homedir());' 2>&1) || fail "node check: $out"
+    [[ "$out" == "v26 true true /home/node" ]] || fail "node printed: $out"
+    out=$(run tini --version 2>&1) || fail "tini --version: $out"
+    grep -q '^tini version' <<<"$out" || fail "tini printed: $out"
+    out=$(run git --version 2>&1) || fail "git --version: $out"
+    grep -q '^git version' <<<"$out" || fail "git printed: $out"
+    out=$(run ssh -V 2>&1) || fail "ssh -V: $out"
+    grep -q '^OpenSSH' <<<"$out" || fail "ssh printed: $out"
+    out=$(run gm convert -size 64x48 xc:red /tmp/x.png 2>&1) || fail "gm convert: $out"
+    for f in /usr/share/fonts/ttf-dejavu/DejaVuSans.ttf /usr/share/fonts/font-liberation/LiberationSans-Regular.ttf; do
+      has_file /usr/bin/node -e "require('fs').accessSync('$f')" || fail "font missing: $f"
+    done
+    if [[ "$variant" == "runtime" ]]; then
+      shebang_audit
+      has_file /bin/sh && fail "/bin/sh present in the runtime"
+    else
+      # dev: node-gyp builds a native addon against this Node's headers (what Dockerfile.n8n does).
+      out=$(docker run --rm --user 1000:1000 --entrypoint /bin/bash "$ref" -euc '
+cd /tmp && mkdir addon && cd addon
+printf "%s" "{\"targets\":[{\"target_name\":\"t\",\"sources\":[\"t.c\"]}]}" > binding.gyp
+cat > t.c <<C
+#include <node_api.h>
+static napi_value Init(napi_env env, napi_value exports) { napi_value v; napi_create_int32(env, 42, &v); return v; }
+NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+C
+node-gyp rebuild --nodedir=/usr >/dev/null 2>&1 || node-gyp rebuild --nodedir=/usr
+node -p "require(\"./build/Release/t.node\")"' 2>&1) || fail "node-gyp addon: $out"
+      [[ "$(tail -1 <<<"$out")" == "42" ]] || fail "addon printed: $out"
+    fi
     ;;
   music-videos-base)
     # The Job's path: stdlib Python as uid 1000 with a read-only root runs yt-dlp (which needs Node

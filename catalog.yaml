@@ -632,3 +632,33 @@ images:
             url: https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.xz
             sha256: 12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588
             member: shellcheck-v0.11.0/shellcheck
+
+  n8n-base:
+    # Base for neilcar/pyapps-image's n8n image, in place of upstream's Alpine one: Wolfi's Node 26
+    # (built with --shared-brotli, so it decodes Brotli with Wolfi's patched libbrotli rather than a
+    # bundled copy), tini as PID 1 (reaps the task-runner children), git and openssh-client (n8n's
+    # source control), GraphicsMagick's gm (melange/, for the Edit Image node; Wolfi has none) and
+    # fonts for it (DejaVu and Liberation, metric-compatible with the Microsoft core fonts upstream
+    # installs). Versioned by nodejs-26. Runs as uid/gid 1000 (`node`, home /home/node), as upstream.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: node, gid: 1000}]
+      users: [{username: node, uid: 1000, gid: 1000, homedir: /home/node}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      runtime:
+        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "libstdc++", "libgcc"]
+        entrypoint: "/usr/bin/tini"
+      # dev: rebuilds n8n's native addons (isolated-vm, sqlite3, the Kafka client) for glibc against
+      # this Node: node-gyp finds Node's headers under /usr/include/node.
+      dev:
+        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
+        entrypoint: "/usr/bin/tini"
+    environment:
+      HOME: /home/node
+      NODE_ENV: production
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /home/node, type: directory, permissions: 0755, uid: 1000, gid: 1000}
