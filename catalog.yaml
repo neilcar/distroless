@@ -639,7 +639,8 @@ images:
     # bundled copy), tini as PID 1 (reaps the task-runner children), git and openssh-client (n8n's
     # source control), GraphicsMagick's gm (melange/, for the Edit Image node; Wolfi has none) and
     # fonts for it (DejaVu and Liberation, metric-compatible with the Microsoft core fonts upstream
-    # installs) and librdkafka (the Kafka node's client links it). Versioned by nodejs-26. Runs as uid/gid 1000 (`node`, home /home/node), as upstream.
+    # installs) and librdkafka (the Kafka node's client links it). Versioned by nodejs-26. Runs as
+    # uid/gid 1000 (`node`, home /home/node), as upstream.
     run_as: "1000"
     lines: [latest]
     accounts:
