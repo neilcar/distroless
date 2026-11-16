@@ -636,11 +636,12 @@ images:
   n8n-base:
     # Base for neilcar/pyapps-image's n8n image, in place of upstream's Alpine one: Wolfi's Node 26
     # (built with --shared-brotli, so it decodes Brotli with Wolfi's patched libbrotli rather than a
-    # bundled copy), tini as PID 1 (reaps the task-runner children), git and openssh-client (n8n's
-    # source control), GraphicsMagick's gm (melange/, for the Edit Image node; Wolfi has none) and
+    # bundled copy), tini as PID 1 (reaps the task-runner children), GraphicsMagick's gm (melange/, for
+    # the Edit Image node; Wolfi has none) and
     # fonts for it (DejaVu and Liberation, metric-compatible with the Microsoft core fonts upstream
     # installs) and librdkafka (the Kafka node's client links it). Versioned by nodejs-26. Runs as
-    # uid/gid 1000 (`node`, home /home/node), as upstream.
+    # uid/gid 1000 (`node`, home /home/node), as upstream. Unlike upstream it has no git or ssh: only n8n's Git
+    # node and (licensed) source control run them, and git's sample hooks need perl.
     run_as: "1000"
     lines: [latest]
     accounts:
@@ -650,12 +651,12 @@ images:
     extra_keyring: ["./melange.rsa.pub"]
     variants:
       runtime:
-        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc"]
+        packages: ["{package}", "tini", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc"]
         entrypoint: "/usr/bin/tini"
       # dev: rebuilds n8n's native addons (isolated-vm, sqlite3, the Kafka client) for glibc against
       # this Node: node-gyp finds Node's headers under /usr/include/node.
       dev:
-        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "librdkafka-dev", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
+        packages: ["{package}", "tini", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "librdkafka-dev", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
         entrypoint: "/usr/bin/tini"
     environment:
       HOME: /home/node

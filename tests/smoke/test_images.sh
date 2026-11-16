@@ -436,8 +436,8 @@ console.log(process.version.split(".")[0], tz, tls.rootCertificates.length > 0, 
     [[ "$out" == "v26 Europe/London true function" ]] || fail "node printed: $out"
     ;;
   n8n-base)
-    # Node 26 linked against Wolfi's libbrotli (>= 1.2.1: CVE-2026-111497), a Brotli round trip, tini,
-    # git, ssh and gm (Edit Image) as uid 1000 with a read-only root, and the fonts gm draws with.
+    # Node 26 linked against Wolfi's libbrotli (>= 1.2.1: CVE-2026-111497), a Brotli round trip, tini
+    # and gm (Edit Image) as uid 1000 with a read-only root, and the fonts gm draws with.
     run() { docker run --rm --read-only --tmpfs /tmp --user 1000:1000 --cap-drop ALL --entrypoint "$1" "$ref" "${@:2}"; }
     out=$(run /usr/bin/node -e '
 const zlib = require("node:zlib");
@@ -449,10 +449,6 @@ console.log(process.version.split(".")[0], ok, rt, require("node:os").homedir())
     [[ "$out" == "v26 true true /home/node" ]] || fail "node printed: $out"
     out=$(run tini --version 2>&1) || fail "tini --version: $out"
     grep -q '^tini version' <<<"$out" || fail "tini printed: $out"
-    out=$(run git --version 2>&1) || fail "git --version: $out"
-    grep -q '^git version' <<<"$out" || fail "git printed: $out"
-    out=$(run ssh -V 2>&1) || fail "ssh -V: $out"
-    grep -q '^OpenSSH' <<<"$out" || fail "ssh printed: $out"
     out=$(run gm convert -size 64x48 xc:red /tmp/x.png 2>&1) || fail "gm convert: $out"
     for f in /usr/share/fonts/ttf-dejavu/DejaVuSans.ttf /usr/share/fonts/font-liberation/LiberationSans-Regular.ttf; do
       has_file /usr/bin/node -e "require('fs').accessSync('$f')" || fail "font missing: $f"
