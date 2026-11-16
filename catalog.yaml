@@ -639,7 +639,7 @@ images:
     # bundled copy), tini as PID 1 (reaps the task-runner children), git and openssh-client (n8n's
     # source control), GraphicsMagick's gm (melange/, for the Edit Image node; Wolfi has none) and
     # fonts for it (DejaVu and Liberation, metric-compatible with the Microsoft core fonts upstream
-    # installs). Versioned by nodejs-26. Runs as uid/gid 1000 (`node`, home /home/node), as upstream.
+    # installs) and librdkafka (the Kafka node's client links it). Versioned by nodejs-26. Runs as uid/gid 1000 (`node`, home /home/node), as upstream.
     run_as: "1000"
     lines: [latest]
     accounts:
@@ -649,12 +649,12 @@ images:
     extra_keyring: ["./melange.rsa.pub"]
     variants:
       runtime:
-        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "libstdc++", "libgcc"]
+        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc"]
         entrypoint: "/usr/bin/tini"
       # dev: rebuilds n8n's native addons (isolated-vm, sqlite3, the Kafka client) for glibc against
       # this Node: node-gyp finds Node's headers under /usr/include/node.
       dev:
-        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
+        packages: ["{package}", "tini", "git", "openssh-client", "graphicsmagick", "fontconfig", "ttf-dejavu", "font-liberation", "librdkafka", "libstdc++", "libgcc", "busybox", "bash", "npm", "node-gyp", "librdkafka-dev", "python-3.12", "build-base", "glibc-dev", "pkgconf", "coreutils", "findutils"]
         entrypoint: "/usr/bin/tini"
     environment:
       HOME: /home/node
