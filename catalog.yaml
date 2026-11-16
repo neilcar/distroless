@@ -597,8 +597,9 @@ images:
     # git, curl, jq, gh, a C toolchain (build-base) for cgo, shellcheck (vendored), envsubst, zip
     # and xz, Python 3.12 with pip, and sudo-rs plus apk-tools so a job can `sudo apk add` more.
     # The .NET runner itself loads ICU, OpenSSL, Kerberos, zlib and libstdc++. Versioned by git.
-    # Runs as uid 1001 (`runner`, home /home/runner) in group `docker` (123), as the official
-    # image; the dind sidecar's socket is group 123. It has a shell, so its only variant is
+    # Runs as uid 1001 (`runner`, home /home/runner) and is a member of gid 123, the dind
+    # sidecar's socket group, as the official image (wolfi-baselayout already names gid 123 `ntp`,
+    # so the docker entry below only adds the membership). It has a shell, so its only variant is
     # `tools`. The runner, the docker CLI and buildx are copied in by actions-runner's Dockerfile,
     # which also writes the sudoers rule.
     run_as: "1001"
