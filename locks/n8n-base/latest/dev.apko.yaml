@@ -11,8 +11,6 @@ contents:
   - tzdata
   - nodejs-26=26.13.1-r1
   - tini
-  - git
-  - openssh-client
   - graphicsmagick
   - fontconfig
   - ttf-dejavu
