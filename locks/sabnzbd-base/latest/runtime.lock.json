@@ -124,41 +124,41 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18583",
-          "checksum": "sha1-uf93VeRZi5Mqej3KEwRHfqddGG4="
+          "range": "bytes=0-19781",
+          "checksum": "sha1-u+PM7EtOrS8BQarHdsB57bgL/qo="
         },
         "data": {
-          "range": "bytes=18584-114174",
-          "checksum": "sha256-lwyu0jg9F8yT2ef6rEz0s7shdBF4we/0ohEp4BYb/8I="
+          "range": "bytes=19782-115368",
+          "checksum": "sha256-jXRFJoB9UfLQtTSXFzpksCukITQ9cKAIHgwkgEsFyJ8="
         },
-        "checksum": "Q1uf93VeRZi5Mqej3KEwRHfqddGG4="
+        "checksum": "Q1u+PM7EtOrS8BQarHdsB57bgL/qo="
       },
       {
         "name": "libstdc++",
-        "url": "https://packages.wolfi.dev/os/x86_64/libstdc++-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libstdc++-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18592",
-          "checksum": "sha1-+lS1l5++7H7B7rx+SJVabpszLXU="
+          "range": "bytes=0-19791",
+          "checksum": "sha1-wNvmDlIci7wQC7IqQABk22WJfmQ="
         },
         "data": {
-          "range": "bytes=18593-1268697",
-          "checksum": "sha256-2SvN813iAeg410NKcdHd0d/vGU/2GgYgu+pQNJ/FJHw="
+          "range": "bytes=19792-1269896",
+          "checksum": "sha256-d8Ec0jl6YBxSUegUzBxoAsES1EUf2dfFKmiircBI6Xk="
         },
-        "checksum": "Q1+lS1l5++7H7B7rx+SJVabpszLXU="
+        "checksum": "Q1wNvmDlIci7wQC7IqQABk22WJfmQ="
       },
       {
         "name": "7zip",
@@ -181,22 +181,22 @@
       },
       {
         "name": "libgomp",
-        "url": "https://packages.wolfi.dev/os/x86_64/libgomp-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libgomp-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18598",
-          "checksum": "sha1-bU1dR/F60DylPyUeD3KPTZHdGQc="
+          "range": "bytes=0-19776",
+          "checksum": "sha1-PGNoeO09OM/vQsp70dbbuMF2B0E="
         },
         "data": {
-          "range": "bytes=18599-216926",
-          "checksum": "sha256-IffHSS2eNDxivbeQo20qriJ1xu0Q+4a1VHiC5Dvm8RU="
+          "range": "bytes=19777-218108",
+          "checksum": "sha256-wNYWXCSbHY+KViAXw1BripF+iOZEdcwycNu09DFHUDk="
         },
-        "checksum": "Q1bU1dR/F60DylPyUeD3KPTZHdGQc="
+        "checksum": "Q1PGNoeO09OM/vQsp70dbbuMF2B0E="
       },
       {
         "name": "mpdecimal",
@@ -770,41 +770,41 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18618",
-          "checksum": "sha1-QYW66prLSRDfaN/s0vOKQ6nSmdY="
+          "range": "bytes=0-19799",
+          "checksum": "sha1-0K15B+liHs0BK45aBs5zGYbeKiA="
         },
         "data": {
-          "range": "bytes=18619-95158",
-          "checksum": "sha256-jjN1kVRT9HqXDVQW73jZ2On531csrmgKCtEzsjIjMKk="
+          "range": "bytes=19800-96334",
+          "checksum": "sha256-w76BqfXTQplh/UQ+H6sQPyTAWIDd2CFR/tWOl9ZuJmE="
         },
-        "checksum": "Q1QYW66prLSRDfaN/s0vOKQ6nSmdY="
+        "checksum": "Q10K15B+liHs0BK45aBs5zGYbeKiA="
       },
       {
         "name": "libstdc++",
-        "url": "https://packages.wolfi.dev/os/aarch64/libstdc++-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libstdc++-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18628",
-          "checksum": "sha1-c1WtcAO1J2jRtIp1tuu7YbY9KtU="
+          "range": "bytes=0-19814",
+          "checksum": "sha1-z3gqGofF9ceQR4n9JoOVdpfI2Oc="
         },
         "data": {
-          "range": "bytes=18629-1187457",
-          "checksum": "sha256-ekXZ388C0biN9QBLx9cFmrU7A+LVi9HFmrLTjgDgQvg="
+          "range": "bytes=19815-1188641",
+          "checksum": "sha256-Mdao8vquGoZ8ssboFEBMc2db2bTajFk8NO3ztFHZYwc="
         },
-        "checksum": "Q1c1WtcAO1J2jRtIp1tuu7YbY9KtU="
+        "checksum": "Q1z3gqGofF9ceQR4n9JoOVdpfI2Oc="
       },
       {
         "name": "7zip",
@@ -827,22 +827,22 @@
       },
       {
         "name": "libgomp",
-        "url": "https://packages.wolfi.dev/os/aarch64/libgomp-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libgomp-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18639",
-          "checksum": "sha1-yEfoCaxKE10vKh5W9hNKhuXuPd8="
+          "range": "bytes=0-19825",
+          "checksum": "sha1-nlXd4VM6gxpIEh4jJBOAr1aMKQI="
         },
         "data": {
-          "range": "bytes=18640-207244",
-          "checksum": "sha256-96rwNcrIhSphoW7vRJtcAIohw0M3n+Ymk8SjuFqxCR4="
+          "range": "bytes=19826-208432",
+          "checksum": "sha256-dH17S3OhEmxldPO+aCb8lHICOzu8cA65kGtRLCg4jAU="
         },
-        "checksum": "Q1yEfoCaxKE10vKh5W9hNKhuXuPd8="
+        "checksum": "Q1nlXd4VM6gxpIEh4jJBOAr1aMKQI="
       },
       {
         "name": "mpdecimal",

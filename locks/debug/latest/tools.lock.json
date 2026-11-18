@@ -86,22 +86,22 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18583",
-          "checksum": "sha1-uf93VeRZi5Mqej3KEwRHfqddGG4="
+          "range": "bytes=0-19781",
+          "checksum": "sha1-u+PM7EtOrS8BQarHdsB57bgL/qo="
         },
         "data": {
-          "range": "bytes=18584-114174",
-          "checksum": "sha256-lwyu0jg9F8yT2ef6rEz0s7shdBF4we/0ohEp4BYb/8I="
+          "range": "bytes=19782-115368",
+          "checksum": "sha256-jXRFJoB9UfLQtTSXFzpksCukITQ9cKAIHgwkgEsFyJ8="
         },
-        "checksum": "Q1uf93VeRZi5Mqej3KEwRHfqddGG4="
+        "checksum": "Q1u+PM7EtOrS8BQarHdsB57bgL/qo="
       },
       {
         "name": "glibc-2.44-locale-posix",
@@ -599,22 +599,22 @@
       },
       {
         "name": "libstdc++",
-        "url": "https://packages.wolfi.dev/os/x86_64/libstdc++-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libstdc++-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18592",
-          "checksum": "sha1-+lS1l5++7H7B7rx+SJVabpszLXU="
+          "range": "bytes=0-19791",
+          "checksum": "sha1-wNvmDlIci7wQC7IqQABk22WJfmQ="
         },
         "data": {
-          "range": "bytes=18593-1268697",
-          "checksum": "sha256-2SvN813iAeg410NKcdHd0d/vGU/2GgYgu+pQNJ/FJHw="
+          "range": "bytes=19792-1269896",
+          "checksum": "sha256-d8Ec0jl6YBxSUegUzBxoAsES1EUf2dfFKmiircBI6Xk="
         },
-        "checksum": "Q1+lS1l5++7H7B7rx+SJVabpszLXU="
+        "checksum": "Q1wNvmDlIci7wQC7IqQABk22WJfmQ="
       },
       {
         "name": "nghttp2",
@@ -808,22 +808,22 @@
       },
       {
         "name": "coreutils",
-        "url": "https://packages.wolfi.dev/os/x86_64/coreutils-9.12-r7.apk",
-        "version": "9.12-r7",
+        "url": "https://packages.wolfi.dev/os/x86_64/coreutils-9.12-r8.apk",
+        "version": "9.12-r8",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18980",
-          "checksum": "sha1-XNrZA062zO2gRS7FdpjILQ9uwYM="
+          "range": "bytes=0-20598",
+          "checksum": "sha1-tuOU3oIaqzParguTTvKiNlDrpCc="
         },
         "data": {
-          "range": "bytes=18981-828731",
-          "checksum": "sha256-nSBQubwrk1UpTrlps18lwC2C2p2xEd1Q/fA62TO9chE="
+          "range": "bytes=20599-830351",
+          "checksum": "sha256-+i4ZYU3yo2l09H89+XU6erFT2FV1pOpghRUyYAwY5SE="
         },
-        "checksum": "Q1XNrZA062zO2gRS7FdpjILQ9uwYM="
+        "checksum": "Q1tuOU3oIaqzParguTTvKiNlDrpCc="
       },
       {
         "name": "nghttp3",
@@ -2214,22 +2214,22 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18618",
-          "checksum": "sha1-QYW66prLSRDfaN/s0vOKQ6nSmdY="
+          "range": "bytes=0-19799",
+          "checksum": "sha1-0K15B+liHs0BK45aBs5zGYbeKiA="
         },
         "data": {
-          "range": "bytes=18619-95158",
-          "checksum": "sha256-jjN1kVRT9HqXDVQW73jZ2On531csrmgKCtEzsjIjMKk="
+          "range": "bytes=19800-96334",
+          "checksum": "sha256-w76BqfXTQplh/UQ+H6sQPyTAWIDd2CFR/tWOl9ZuJmE="
         },
-        "checksum": "Q1QYW66prLSRDfaN/s0vOKQ6nSmdY="
+        "checksum": "Q10K15B+liHs0BK45aBs5zGYbeKiA="
       },
       {
         "name": "glibc-2.44-locale-posix",
@@ -2727,22 +2727,22 @@
       },
       {
         "name": "libstdc++",
-        "url": "https://packages.wolfi.dev/os/aarch64/libstdc++-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libstdc++-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18628",
-          "checksum": "sha1-c1WtcAO1J2jRtIp1tuu7YbY9KtU="
+          "range": "bytes=0-19814",
+          "checksum": "sha1-z3gqGofF9ceQR4n9JoOVdpfI2Oc="
         },
         "data": {
-          "range": "bytes=18629-1187457",
-          "checksum": "sha256-ekXZ388C0biN9QBLx9cFmrU7A+LVi9HFmrLTjgDgQvg="
+          "range": "bytes=19815-1188641",
+          "checksum": "sha256-Mdao8vquGoZ8ssboFEBMc2db2bTajFk8NO3ztFHZYwc="
         },
-        "checksum": "Q1c1WtcAO1J2jRtIp1tuu7YbY9KtU="
+        "checksum": "Q1z3gqGofF9ceQR4n9JoOVdpfI2Oc="
       },
       {
         "name": "nghttp2",
@@ -2936,22 +2936,22 @@
       },
       {
         "name": "coreutils",
-        "url": "https://packages.wolfi.dev/os/aarch64/coreutils-9.12-r7.apk",
-        "version": "9.12-r7",
+        "url": "https://packages.wolfi.dev/os/aarch64/coreutils-9.12-r8.apk",
+        "version": "9.12-r8",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-19007",
-          "checksum": "sha1-vi1JFb6uTIUI7eEsHmGVs5l4Vpc="
+          "range": "bytes=0-20623",
+          "checksum": "sha1-H7kCEstiQ2T0jf6uzdvzzvZseJg="
         },
         "data": {
-          "range": "bytes=19008-792535",
-          "checksum": "sha256-dovDbAJSE/+Zp6S5zTtADw1+EtRMr+OvXKCVkixim3U="
+          "range": "bytes=20624-794148",
+          "checksum": "sha256-CxbJXsiOBiq5OROroCoknnMzE/6kn6dGOnggZ0+fHEM="
         },
-        "checksum": "Q1vi1JFb6uTIUI7eEsHmGVs5l4Vpc="
+        "checksum": "Q1H7kCEstiQ2T0jf6uzdvzzvZseJg="
       },
       {
         "name": "nghttp3",

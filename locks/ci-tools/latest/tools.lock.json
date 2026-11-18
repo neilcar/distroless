@@ -67,22 +67,22 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18583",
-          "checksum": "sha1-uf93VeRZi5Mqej3KEwRHfqddGG4="
+          "range": "bytes=0-19781",
+          "checksum": "sha1-u+PM7EtOrS8BQarHdsB57bgL/qo="
         },
         "data": {
-          "range": "bytes=18584-114174",
-          "checksum": "sha256-lwyu0jg9F8yT2ef6rEz0s7shdBF4we/0ohEp4BYb/8I="
+          "range": "bytes=19782-115368",
+          "checksum": "sha256-jXRFJoB9UfLQtTSXFzpksCukITQ9cKAIHgwkgEsFyJ8="
         },
-        "checksum": "Q1uf93VeRZi5Mqej3KEwRHfqddGG4="
+        "checksum": "Q1u+PM7EtOrS8BQarHdsB57bgL/qo="
       },
       {
         "name": "glibc-2.44-locale-posix",
@@ -808,22 +808,22 @@
       },
       {
         "name": "libgcc",
-        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r4.apk",
-        "version": "16.2.0-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/libgcc-16.2.0-r5.apk",
+        "version": "16.2.0-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18618",
-          "checksum": "sha1-QYW66prLSRDfaN/s0vOKQ6nSmdY="
+          "range": "bytes=0-19799",
+          "checksum": "sha1-0K15B+liHs0BK45aBs5zGYbeKiA="
         },
         "data": {
-          "range": "bytes=18619-95158",
-          "checksum": "sha256-jjN1kVRT9HqXDVQW73jZ2On531csrmgKCtEzsjIjMKk="
+          "range": "bytes=19800-96334",
+          "checksum": "sha256-w76BqfXTQplh/UQ+H6sQPyTAWIDd2CFR/tWOl9ZuJmE="
         },
-        "checksum": "Q1QYW66prLSRDfaN/s0vOKQ6nSmdY="
+        "checksum": "Q10K15B+liHs0BK45aBs5zGYbeKiA="
       },
       {
         "name": "glibc-2.44-locale-posix",
