@@ -3715,22 +3715,22 @@
       },
       {
         "name": "less",
-        "url": "https://packages.wolfi.dev/os/aarch64/less-712-r1.apk",
-        "version": "712-r1",
+        "url": "https://packages.wolfi.dev/os/aarch64/less-713-r0.apk",
+        "version": "713-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14989",
-          "checksum": "sha1-amzOOtlsDNAG7bodkXK1XYkxgLc="
+          "range": "bytes=0-14969",
+          "checksum": "sha1-Ci6UYPrpq7l5OUUf/MCHzfGuqS8="
         },
         "data": {
-          "range": "bytes=14990-181464",
-          "checksum": "sha256-IjjUMyzhc5zzCZ+NdTGkMII7g2jFFUVvctS0SIlQSsk="
+          "range": "bytes=14970-181815",
+          "checksum": "sha256-Ve1ZVVA7cszQuOGwo4n1fG8R34WgLoNd+u8yU+ngHUc="
         },
-        "checksum": "Q1amzOOtlsDNAG7bodkXK1XYkxgLc="
+        "checksum": "Q1Ci6UYPrpq7l5OUUf/MCHzfGuqS8="
       },
       {
         "name": "liblsof0",

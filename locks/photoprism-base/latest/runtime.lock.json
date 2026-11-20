@@ -2,7 +2,7 @@
   "version": "v1",
   "config": {
     "name": "locks/photoprism-base/latest/runtime.apko.yaml",
-    "checksum": "sha256-lz8mlBvruLb+Z4VnrMrQAWVgaLQVHMAO3ShB9bPV3TA="
+    "checksum": "sha256-GEd8CkRsOd3HpIJyN+Rkv7veHABOrqkSwRICjudIsMM="
   },
   "contents": {
     "keyring": [
@@ -2286,22 +2286,22 @@
       },
       {
         "name": "libjxl-tools",
-        "url": "https://packages.wolfi.dev/os/x86_64/libjxl-tools-0.13.0-r0.apk",
-        "version": "0.13.0-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/libjxl-tools-0.12.0-r3.apk",
+        "version": "0.12.0-r3",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17044",
-          "checksum": "sha1-iGsX0nRuf0Sq8Zw+luNtZSR9/9c="
+          "range": "bytes=0-9125",
+          "checksum": "sha1-r49fa5yHYH106A1756jnRSq/278="
         },
         "data": {
-          "range": "bytes=17045-1516202",
-          "checksum": "sha256-Vg1vCWw8j8ESQIOfE4ycNiYX/32RH4ujZ3xQuZUMemE="
+          "range": "bytes=9126-1505286",
+          "checksum": "sha256-iGIb9RHndeDoGUjG0VtOAA0IZUrCXpg1HtlgYPiS8Wc="
         },
-        "checksum": "Q1iGsX0nRuf0Sq8Zw+luNtZSR9/9c="
+        "checksum": "Q1r49fa5yHYH106A1756jnRSq/278="
       },
       {
         "name": "libusb",
@@ -4946,22 +4946,22 @@
       },
       {
         "name": "libjxl-tools",
-        "url": "https://packages.wolfi.dev/os/aarch64/libjxl-tools-0.13.0-r0.apk",
-        "version": "0.13.0-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/libjxl-tools-0.12.0-r3.apk",
+        "version": "0.12.0-r3",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17070",
-          "checksum": "sha1-soL7wqreQiOVj6lBlTDxf8UyV6k="
+          "range": "bytes=0-9152",
+          "checksum": "sha1-Jy/d+M9vlx0ND6eoLRjrAbmFjMU="
         },
         "data": {
-          "range": "bytes=17071-1453668",
-          "checksum": "sha256-G8AzaTxyAP4+pS8T2dMwXXZoznbDileA+CNnJ3wpZzw="
+          "range": "bytes=9153-1447440",
+          "checksum": "sha256-HNT9bHT5QMJ9+rmi1mUSIexlziVcD3MlKpnJgijFSTY="
         },
-        "checksum": "Q1soL7wqreQiOVj6lBlTDxf8UyV6k="
+        "checksum": "Q1Jy/d+M9vlx0ND6eoLRjrAbmFjMU="
       },
       {
         "name": "libusb",
