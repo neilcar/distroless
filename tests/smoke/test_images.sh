@@ -390,8 +390,10 @@ print(os.path.getsize("s.flac") > 0 and os.path.getsize("b.jpg") > 0)' 2>&1) || 
         command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }
       done
       [ "$(id -u):$(id -g)" = 1001:1001 ] || { echo "id $(id)"; exit 1; }
-      id -nG | grep -qw docker || { echo "not in docker: $(id)"; exit 1; }
-      grep -q "^docker:[^:]*:123:" /etc/group || { echo "docker gid: $(grep ^docker: /etc/group)"; exit 1; }
+      # The dind socket is checked by gid, not name. Wolfi baselayout already has ntp:x:123, which
+      # apko keeps ahead of the docker entry it appends, so `id -n` names 123 ntp.
+      id -G | tr " " "\n" | grep -qx 123 || { echo "not in gid 123: $(id)"; exit 1; }
+      grep -Eq "^docker:[^:]*:123:(.*,)?runner(,|$)" /etc/group || { echo "docker group: $(grep ^docker: /etc/group)"; exit 1; }
       [ -w /home/runner ] || { echo "/home/runner not writable"; exit 1; }
       printf "int main(void){return 0;}\n" > /tmp/t.c && cc -o /tmp/t /tmp/t.c && /tmp/t
       python3 -c "import ssl, sqlite3, venv, zoneinfo"
