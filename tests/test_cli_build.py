@@ -42,6 +42,17 @@ def test_matrix_vendor_json_change_builds_every_variant_of_the_line(locks, capsy
                    {"image": "python", "line": "3.12", "variant": "runtime"}]
 
 
+def test_matrix_launcher_change_builds_every_vendored_line(locks, capsys, tmp_path):
+    (locks / "python" / "3.12" / "vendor.json").write_text("{}")
+    out = matrix(locks, ["launcher/go.mod"], capsys, tmp_path)
+    assert out == [{"image": "python", "line": "3.12", "variant": "dev"},
+                   {"image": "python", "line": "3.12", "variant": "runtime"}]
+
+
+def test_matrix_launcher_change_without_vendored_lines_builds_nothing(locks, capsys, tmp_path):
+    assert matrix(locks, ["launcher/main.go"], capsys, tmp_path) == []
+
+
 def test_matrix_removed_line_not_built(locks, capsys, tmp_path):
     assert matrix(locks, ["locks/python/3.10/runtime.lock.json"], capsys, tmp_path) == []
 

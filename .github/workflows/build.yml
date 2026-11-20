@@ -3,7 +3,7 @@ name: Build and publish
 on:
   push:
     branches: [main]
-    paths: ["locks/**", "catalog.yaml", "packages/**", ".trivyignore", "melange.rsa.pub"]
+    paths: ["locks/**", "catalog.yaml", "packages/**", ".trivyignore", "melange.rsa.pub", "launcher/**"]
   workflow_dispatch:
     inputs:
       filter:
