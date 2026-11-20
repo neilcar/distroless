@@ -15,7 +15,7 @@ contents:
   - perl
   - libheif
   - imagemagick-7
-  - libjxl-tools
+  - libjxl-tools~0.12
   - librsvg
   - rsvg-convert
   - mariadb-13.1-client
