@@ -3179,22 +3179,22 @@
       },
       {
         "name": "py3.12-soupsieve",
-        "url": "https://packages.wolfi.dev/os/x86_64/py3.12-soupsieve-4.1.2-r0.apk",
-        "version": "4.1.2-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/py3.12-soupsieve-4.1.3-r0.apk",
+        "version": "4.1.3-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14702",
-          "checksum": "sha1-PaEgoIR8nEb95OTpiFmiXjVlqs4="
+          "range": "bytes=0-14704",
+          "checksum": "sha1-Z7PP53iJqUJ2jJ4XxVAaTdTAL2c="
         },
         "data": {
-          "range": "bytes=14703-176451",
-          "checksum": "sha256-NmljPY/yZD0e9D/SXuX2xEj9LIOkdpJcMO6cBl5zc+g="
+          "range": "bytes=14705-177286",
+          "checksum": "sha256-pgXOawoWxkgHrZ3u3tYKlXJxK8fKKrRmdI3m51KAoHQ="
         },
-        "checksum": "Q1PaEgoIR8nEb95OTpiFmiXjVlqs4="
+        "checksum": "Q1Z7PP53iJqUJ2jJ4XxVAaTdTAL2c="
       },
       {
         "name": "py3.12-beautifulsoup4",
@@ -6732,22 +6732,22 @@
       },
       {
         "name": "py3.12-soupsieve",
-        "url": "https://packages.wolfi.dev/os/aarch64/py3.12-soupsieve-4.1.2-r0.apk",
-        "version": "4.1.2-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/py3.12-soupsieve-4.1.3-r0.apk",
+        "version": "4.1.3-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-14728",
-          "checksum": "sha1-zINQ5JXDYNeQPdDvkN9l8jlme5s="
+          "range": "bytes=0-14729",
+          "checksum": "sha1-1VidpfTctYLSq9aSzt8jnGz44zM="
         },
         "data": {
-          "range": "bytes=14729-176478",
-          "checksum": "sha256-NaHmsKCLOpTQowwITwuLSKNUlCfymbERHkzdEnrJc/o="
+          "range": "bytes=14730-177313",
+          "checksum": "sha256-1ZxhYx7KHJ6gOgrO/h6q0BH4pqXG48uhuNXKi2yFA0Y="
         },
-        "checksum": "Q1zINQ5JXDYNeQPdDvkN9l8jlme5s="
+        "checksum": "Q11VidpfTctYLSq9aSzt8jnGz44zM="
       },
       {
         "name": "py3.12-beautifulsoup4",
