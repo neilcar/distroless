@@ -202,6 +202,8 @@ def cmd_libvips_check(args) -> int:
 RESYNC_INPUTS = ("catalog.yaml", "melange/", "packages/", "melange.rsa.pub")
 # Inputs that only change how existing locks are judged: rebuild everything.
 REBUILD_INPUTS = (".trivyignore",)
+# The Go launcher is compiled into every line that has a vendor layer (vendor.json): rebuild those.
+LAUNCHER_INPUTS = ("launcher/",)
 
 
 def _lock_entries(locks: Path) -> list[tuple[str, str, str]]:
@@ -243,8 +245,10 @@ def cmd_matrix(args) -> int:
         selected = entries
     else:
         wanted = _changed_locks(changed)
+        launcher = any(c.startswith(LAUNCHER_INPUTS) for c in changed)
         # vendor.json is shared by every variant of its line.
-        selected = [e for e in entries if e in wanted or (e[0], e[1], "vendor") in wanted]
+        selected = [e for e in entries if e in wanted or (e[0], e[1], "vendor") in wanted
+                    or (launcher and (Path(args.locks) / e[0] / e[1] / "vendor.json").exists())]
     selected = [e for e in selected if _filter_matches(e, args.filter)]
     include = [{"image": i, "line": ln, "variant": v} for i, ln, v in selected]
     print(json.dumps({"include": include, "resync": False}))
