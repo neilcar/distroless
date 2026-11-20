@@ -405,60 +405,60 @@
       },
       {
         "name": "libLLVM-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/libLLVM-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/libLLVM-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26341",
-          "checksum": "sha1-/EfrQ7hoJDaqBMDIgOTkUAefP6c="
+          "range": "bytes=0-27421",
+          "checksum": "sha1-CPxjdhpieyAnnp9xoLAcl08JMyQ="
         },
         "data": {
-          "range": "bytes=26342-65404486",
-          "checksum": "sha256-OjKUasDfO7FSKEEd2pKIre7xSfj3k4tzohI9/1KRSkw="
+          "range": "bytes=27422-65405564",
+          "checksum": "sha256-B9LZCBHtaXeFqYSJDZTBXRmyyIB7bjIEc96BvvmFZQE="
         },
-        "checksum": "Q1/EfrQ7hoJDaqBMDIgOTkUAefP6c="
+        "checksum": "Q1CPxjdhpieyAnnp9xoLAcl08JMyQ="
       },
       {
         "name": "libclang-cpp-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/libclang-cpp-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/libclang-cpp-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26338",
-          "checksum": "sha1-3I/dsFM2ZRZENnSukgWR4PvC1+A="
+          "range": "bytes=0-27414",
+          "checksum": "sha1-lTCc1YgXptoYMMpmWkigrJOt5c8="
         },
         "data": {
-          "range": "bytes=26339-31965655",
-          "checksum": "sha256-0/ZW8R8MaGuw//fpj1ylnPhhcw/Q97nAsf26Wi4no/U="
+          "range": "bytes=27415-31966732",
+          "checksum": "sha256-TNSyE06JFuRRC/SnICbxjq0a5rW3UYAeZ3gOuKjH+sg="
         },
-        "checksum": "Q13I/dsFM2ZRZENnSukgWR4PvC1+A="
+        "checksum": "Q1lTCc1YgXptoYMMpmWkigrJOt5c8="
       },
       {
         "name": "llvm-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/llvm-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/llvm-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26340",
-          "checksum": "sha1-KA5hKvwMA3d9EowcLYN4DR64L38="
+          "range": "bytes=0-27419",
+          "checksum": "sha1-KLuNEVZT7FkHu04BumIJc7qY59w="
         },
         "data": {
-          "range": "bytes=26341-45212585",
-          "checksum": "sha256-0jo0e3HdFPSfi0KMFnDMNNWvMN8H0iMNGXWTRXcxPjQ="
+          "range": "bytes=27420-45255649",
+          "checksum": "sha256-JGxseVCkgWQ2jukJeu1x0eIbauWzq2DcyY8WVNzlcd8="
         },
-        "checksum": "Q1KA5hKvwMA3d9EowcLYN4DR64L38="
+        "checksum": "Q1KLuNEVZT7FkHu04BumIJc7qY59w="
       },
       {
         "name": "openssf-compiler-options",
@@ -709,22 +709,22 @@
       },
       {
         "name": "clang-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/clang-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/clang-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26394",
-          "checksum": "sha1-XtLZFYWSaKjNGnXphjKZrsSb4cg="
+          "range": "bytes=0-27476",
+          "checksum": "sha1-3aO58Fgu+3xEOTzJaggsYXp30KU="
         },
         "data": {
-          "range": "bytes=26395-160416733",
-          "checksum": "sha256-XiRKVixHDEjqu6nOCnI8YRT903vOeneChkHT1tmrp1w="
+          "range": "bytes=27477-160418001",
+          "checksum": "sha256-gI5dAu/k6mrQL0EoWvKIzrhYb88P43GEjTOezHDLvT0="
         },
-        "checksum": "Q1XtLZFYWSaKjNGnXphjKZrsSb4cg="
+        "checksum": "Q13aO58Fgu+3xEOTzJaggsYXp30KU="
       },
       {
         "name": "libsepol",
@@ -1412,22 +1412,22 @@
       },
       {
         "name": "harfbuzz",
-        "url": "https://packages.wolfi.dev/os/x86_64/harfbuzz-15.1.0-r0.apk",
-        "version": "15.1.0-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/harfbuzz-15.2.0-r0.apk",
+        "version": "15.2.0-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18465",
-          "checksum": "sha1-BwvAsXARKtZ+VFEgpYDdBwqnw1M="
+          "range": "bytes=0-18508",
+          "checksum": "sha1-wcpXJAGhoTmghDWgewDhE6RxslI="
         },
         "data": {
-          "range": "bytes=18466-1949748",
-          "checksum": "sha256-fcAJgqDUZYcQAYB43g/Mog/05iPnd7xFwSthyOBsDxk="
+          "range": "bytes=18509-2012405",
+          "checksum": "sha256-eSqQ50mIwbU8A0HFkmSQ0dn0++AAXupoKNM2oMKwsfI="
         },
-        "checksum": "Q1BwvAsXARKtZ+VFEgpYDdBwqnw1M="
+        "checksum": "Q1wcpXJAGhoTmghDWgewDhE6RxslI="
       },
       {
         "name": "pango",
@@ -1583,22 +1583,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r4.apk",
-        "version": "1.7.3-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r5.apk",
+        "version": "1.7.3-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15672",
-          "checksum": "sha1-X+ekQYPv9NmKQ2Xe9EicQ3lrErk="
+          "range": "bytes=0-17803",
+          "checksum": "sha1-FmwWYghKgQyXvFQ7BTGTEDc13+E="
         },
         "data": {
-          "range": "bytes=15673-551837",
-          "checksum": "sha256-6JriRVtKxbHzg8eL+p/HC3B0uILK4PDXuJk8Dqwt1kc="
+          "range": "bytes=17804-553909",
+          "checksum": "sha256-LZWrLz4Ujn7t9FH4H+3Qwl+DqfkDOo/MN0rISzgJuTI="
         },
-        "checksum": "Q1X+ekQYPv9NmKQ2Xe9EicQ3lrErk="
+        "checksum": "Q1FmwWYghKgQyXvFQ7BTGTEDc13+E="
       },
       {
         "name": "libcap",
@@ -2913,22 +2913,22 @@
       },
       {
         "name": "lld-23",
-        "url": "https://packages.wolfi.dev/os/x86_64/lld-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/lld-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26317",
-          "checksum": "sha1-fOUKt5mQilyKmxIVM2ZMI5TpA4U="
+          "range": "bytes=0-27399",
+          "checksum": "sha1-4YVDq1TYBGvwYAkdw75EVh8Ei/g="
         },
         "data": {
-          "range": "bytes=26318-3152851",
-          "checksum": "sha256-T9ryvUnhn5HwWqow1dSy1AM9TTHLW0unAJKk8Rw6siQ="
+          "range": "bytes=27400-3153931",
+          "checksum": "sha256-SDY3SoEnoK+j8obohznF+6FaC5klHpaEFg2JdAhJNf0="
         },
-        "checksum": "Q1fOUKt5mQilyKmxIVM2ZMI5TpA4U="
+        "checksum": "Q14YVDq1TYBGvwYAkdw75EVh8Ei/g="
       },
       {
         "name": "make",
@@ -3958,60 +3958,60 @@
       },
       {
         "name": "libLLVM-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/libLLVM-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/libLLVM-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26368",
-          "checksum": "sha1-+uIJ2pVCqWgg86bVQoLIvcSjt+k="
+          "range": "bytes=0-27451",
+          "checksum": "sha1-TEMemzFwFdbIHfpvD8qptL+1VI0="
         },
         "data": {
-          "range": "bytes=26369-62504929",
-          "checksum": "sha256-DNHJeMgh0xDROSlo5Dv5nNxMgZR7g1bH1xgMLe2L10A="
+          "range": "bytes=27452-62506012",
+          "checksum": "sha256-Ii5c95p1gYpLhWYmPuNBWJBxGbjZT3+AV4z/8IzjmLc="
         },
-        "checksum": "Q1+uIJ2pVCqWgg86bVQoLIvcSjt+k="
+        "checksum": "Q1TEMemzFwFdbIHfpvD8qptL+1VI0="
       },
       {
         "name": "libclang-cpp-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/libclang-cpp-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/libclang-cpp-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26370",
-          "checksum": "sha1-GQBR4rPVOYNHnd0KaHVUvT1gYrg="
+          "range": "bytes=0-27453",
+          "checksum": "sha1-Xw3Lza0kJ1lIwKZ9rlK3agYrWVo="
         },
         "data": {
-          "range": "bytes=26371-30057470",
-          "checksum": "sha256-kh5yamkPtpiI/8IetKVCswfnMjU8GSXXnnrRoYGeYms="
+          "range": "bytes=27454-30058554",
+          "checksum": "sha256-A5OwK8eHyiZA4sD2pJhPfpfF3x9h+qE3nKa/Kq9fLX4="
         },
-        "checksum": "Q1GQBR4rPVOYNHnd0KaHVUvT1gYrg="
+        "checksum": "Q1Xw3Lza0kJ1lIwKZ9rlK3agYrWVo="
       },
       {
         "name": "llvm-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/llvm-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/llvm-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26367",
-          "checksum": "sha1-FMCrFPRx+QygBVjcCzZWdFXVEVw="
+          "range": "bytes=0-27450",
+          "checksum": "sha1-NCenB9prPw1N3WkkifT8RagmK6c="
         },
         "data": {
-          "range": "bytes=26368-42753460",
-          "checksum": "sha256-eNh22CED3pI8T18R5ZBIGPotHISMekSWafi3nS8Slwc="
+          "range": "bytes=27451-42747233",
+          "checksum": "sha256-R4MlDrc9cZ3nKJAP9df+cjK7oF/CAZlZWa1o5gI4PvU="
         },
-        "checksum": "Q1FMCrFPRx+QygBVjcCzZWdFXVEVw="
+        "checksum": "Q1NCenB9prPw1N3WkkifT8RagmK6c="
       },
       {
         "name": "openssf-compiler-options",
@@ -4262,22 +4262,22 @@
       },
       {
         "name": "clang-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/clang-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/clang-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26422",
-          "checksum": "sha1-8/HsnJm6n+Cvu7NHGu1jDo6ikQM="
+          "range": "bytes=0-27505",
+          "checksum": "sha1-nMJ/F15MDaYOVf9VbDNqbOzGk3U="
         },
         "data": {
-          "range": "bytes=26423-163800452",
-          "checksum": "sha256-fdYJnNQ+UaYSj0Vc9NxBnIKae+KH+4ioyr6Qlha953o="
+          "range": "bytes=27506-163801745",
+          "checksum": "sha256-6yWtavaJ8lju76FwHgFjIVHFmxQ90IbLxGjmyxs6GY4="
         },
-        "checksum": "Q18/HsnJm6n+Cvu7NHGu1jDo6ikQM="
+        "checksum": "Q1nMJ/F15MDaYOVf9VbDNqbOzGk3U="
       },
       {
         "name": "libsepol",
@@ -4965,22 +4965,22 @@
       },
       {
         "name": "harfbuzz",
-        "url": "https://packages.wolfi.dev/os/aarch64/harfbuzz-15.1.0-r0.apk",
-        "version": "15.1.0-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/harfbuzz-15.2.0-r0.apk",
+        "version": "15.2.0-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18504",
-          "checksum": "sha1-1ohBqZ6XReAkQIynDepojT2qryA="
+          "range": "bytes=0-18546",
+          "checksum": "sha1-HQWGhfuNtZQqHKtatYuSwj07wNA="
         },
         "data": {
-          "range": "bytes=18505-1877255",
-          "checksum": "sha256-jXJv7abOtBVrhNY2Sn5/MrEoyDE+iMMq5VPsyIo/N30="
+          "range": "bytes=18547-1938997",
+          "checksum": "sha256-8rZjC6/jsWjjRQfgYd5VTCquOhc7VuMKuo4pzRbOZgY="
         },
-        "checksum": "Q11ohBqZ6XReAkQIynDepojT2qryA="
+        "checksum": "Q1HQWGhfuNtZQqHKtatYuSwj07wNA="
       },
       {
         "name": "pango",
@@ -5136,22 +5136,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r4.apk",
-        "version": "1.7.3-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r5.apk",
+        "version": "1.7.3-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15693",
-          "checksum": "sha1-bwoiIUr1ISzqvFpQVy45ruXzVlU="
+          "range": "bytes=0-17823",
+          "checksum": "sha1-pz4m3dzRFXbJCWnRtvwXiywt3j0="
         },
         "data": {
-          "range": "bytes=15694-653502",
-          "checksum": "sha256-JiTivaotycgnkU3JOG/UmbbZWnEPi9lln4F4vT4qlmk="
+          "range": "bytes=17824-655602",
+          "checksum": "sha256-CbHevYN5ZHtd+hhAartJq84zi4YHfq1x8vceOIo+xYI="
         },
-        "checksum": "Q1bwoiIUr1ISzqvFpQVy45ruXzVlU="
+        "checksum": "Q1pz4m3dzRFXbJCWnRtvwXiywt3j0="
       },
       {
         "name": "libcap",
@@ -6466,22 +6466,22 @@
       },
       {
         "name": "lld-23",
-        "url": "https://packages.wolfi.dev/os/aarch64/lld-23-23.1.6-r0.apk",
-        "version": "23.1.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/lld-23-23.1.6-r1.apk",
+        "version": "23.1.6-r1",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-26345",
-          "checksum": "sha1-nfXhrCCBARKwioQP5ZiXNGGPah0="
+          "range": "bytes=0-27425",
+          "checksum": "sha1-+J23HWmm/ghR5uUpJ+uITXpM43w="
         },
         "data": {
-          "range": "bytes=26346-2928634",
-          "checksum": "sha256-QgBHlwV7vc2BZwbsLIBnJm61p4w7dI2JcPEsPMDywbw="
+          "range": "bytes=27426-2929593",
+          "checksum": "sha256-6VX2TjSrwMyU6DLZtTTccpXL8bTGwdXf3vh0ARARrfU="
         },
-        "checksum": "Q1nfXhrCCBARKwioQP5ZiXNGGPah0="
+        "checksum": "Q1+J23HWmm/ghR5uUpJ+uITXpM43w="
       },
       {
         "name": "make",

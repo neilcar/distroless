@@ -1397,22 +1397,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r4.apk",
-        "version": "1.7.3-r4",
+        "url": "https://packages.wolfi.dev/os/x86_64/linux-pam-1.7.3-r5.apk",
+        "version": "1.7.3-r5",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15672",
-          "checksum": "sha1-X+ekQYPv9NmKQ2Xe9EicQ3lrErk="
+          "range": "bytes=0-17803",
+          "checksum": "sha1-FmwWYghKgQyXvFQ7BTGTEDc13+E="
         },
         "data": {
-          "range": "bytes=15673-551837",
-          "checksum": "sha256-6JriRVtKxbHzg8eL+p/HC3B0uILK4PDXuJk8Dqwt1kc="
+          "range": "bytes=17804-553909",
+          "checksum": "sha256-LZWrLz4Ujn7t9FH4H+3Qwl+DqfkDOo/MN0rISzgJuTI="
         },
-        "checksum": "Q1X+ekQYPv9NmKQ2Xe9EicQ3lrErk="
+        "checksum": "Q1FmwWYghKgQyXvFQ7BTGTEDc13+E="
       },
       {
         "name": "libcap",
@@ -1454,22 +1454,22 @@
       },
       {
         "name": "iptables",
-        "url": "https://packages.wolfi.dev/os/x86_64/iptables-1.8.13-r5.apk",
-        "version": "1.8.13-r5",
+        "url": "https://packages.wolfi.dev/os/x86_64/iptables-1.8.13-r6.apk",
+        "version": "1.8.13-r6",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10570",
-          "checksum": "sha1-Rlhzp/FjoMMrI5krJrEZpybkcME="
+          "range": "bytes=0-17614",
+          "checksum": "sha1-66J1YeTODJRFmpXXSfx4Zq1xXvo="
         },
         "data": {
-          "range": "bytes=10571-632488",
-          "checksum": "sha256-kKuKdeU/IPH89HE7M6NXD70VGGGzAXWKKhi9DNFe+Pk="
+          "range": "bytes=17615-639498",
+          "checksum": "sha256-+ViOMBw9G77jz8ew4c6NY4wZw3FSWyTJDl+wYyzJiBk="
         },
-        "checksum": "Q1Rlhzp/FjoMMrI5krJrEZpybkcME="
+        "checksum": "Q166J1YeTODJRFmpXXSfx4Zq1xXvo="
       },
       {
         "name": "libtirpc",
@@ -3525,22 +3525,22 @@
       },
       {
         "name": "linux-pam",
-        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r4.apk",
-        "version": "1.7.3-r4",
+        "url": "https://packages.wolfi.dev/os/aarch64/linux-pam-1.7.3-r5.apk",
+        "version": "1.7.3-r5",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-15693",
-          "checksum": "sha1-bwoiIUr1ISzqvFpQVy45ruXzVlU="
+          "range": "bytes=0-17823",
+          "checksum": "sha1-pz4m3dzRFXbJCWnRtvwXiywt3j0="
         },
         "data": {
-          "range": "bytes=15694-653502",
-          "checksum": "sha256-JiTivaotycgnkU3JOG/UmbbZWnEPi9lln4F4vT4qlmk="
+          "range": "bytes=17824-655602",
+          "checksum": "sha256-CbHevYN5ZHtd+hhAartJq84zi4YHfq1x8vceOIo+xYI="
         },
-        "checksum": "Q1bwoiIUr1ISzqvFpQVy45ruXzVlU="
+        "checksum": "Q1pz4m3dzRFXbJCWnRtvwXiywt3j0="
       },
       {
         "name": "libcap",
@@ -3582,22 +3582,22 @@
       },
       {
         "name": "iptables",
-        "url": "https://packages.wolfi.dev/os/aarch64/iptables-1.8.13-r5.apk",
-        "version": "1.8.13-r5",
+        "url": "https://packages.wolfi.dev/os/aarch64/iptables-1.8.13-r6.apk",
+        "version": "1.8.13-r6",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-10638",
-          "checksum": "sha1-XpjdTkx9ESKVzy9oaCWedbP3lAU="
+          "range": "bytes=0-17672",
+          "checksum": "sha1-a/LGIcs93AW/l+hzN+eI5yQDVt4="
         },
         "data": {
-          "range": "bytes=10639-878478",
-          "checksum": "sha256-p/JhXfVxI3v2g6kXz4Jebh9cjqXnOLRNIJdV1e4EOf0="
+          "range": "bytes=17673-885391",
+          "checksum": "sha256-78KCcPG/yxPl2MrdGhIVJnQBY+1Odhu6ssoYYPFnhe8="
         },
-        "checksum": "Q1XpjdTkx9ESKVzy9oaCWedbP3lAU="
+        "checksum": "Q1a/LGIcs93AW/l+hzN+eI5yQDVt4="
       },
       {
         "name": "libtirpc",
