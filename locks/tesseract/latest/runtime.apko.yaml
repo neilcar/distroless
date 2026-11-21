@@ -10,6 +10,11 @@ contents:
   - tesseract=5.5.2-r8
   - tesseract-eng
   - python-3.12=3.12.16-r3
+  - py3.12-numpy-2.5
+  - py3.12-pillow
+  - py3.12-pyyaml
+  - py3.12-six
+  - py3.12-tqdm
   - python-3.12-base=3.12.16-r3
 accounts:
   groups:

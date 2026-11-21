@@ -271,23 +271,23 @@
         "checksum": "Q1W9piTcgyubhrducJCMM7+qErDxo="
       },
       {
-        "name": "ffmpeg-9.0-libavutil61",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libavutil61-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavutil61",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libavutil61-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17938",
-          "checksum": "sha1-UppXK0gvmI9DaxG1rYe2NMGSM2M="
+          "range": "bytes=0-17215",
+          "checksum": "sha1-CFICJ8K/mOCLGoRFFaJFpeDMofE="
         },
         "data": {
-          "range": "bytes=17939-439359",
-          "checksum": "sha256-IgmjILWFnVPzapShiemzUU5/Fh9o9KdgUhKRAHyb7UA="
+          "range": "bytes=17216-443559",
+          "checksum": "sha256-H25fhm056g8gtVnqjRsuMTO9I2CrO6BRufiHOczufJM="
         },
-        "checksum": "Q1UppXK0gvmI9DaxG1rYe2NMGSM2M="
+        "checksum": "Q1CFICJ8K/mOCLGoRFFaJFpeDMofE="
       },
       {
         "name": "libgomp",
@@ -328,23 +328,23 @@
         "checksum": "Q1nl74oEj5TzNuPFM04QEXQh18aUg="
       },
       {
-        "name": "ffmpeg-9.0-libswresample7",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libswresample7-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libswresample7",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libswresample7-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17939",
-          "checksum": "sha1-KAndpSs0BI0crjTzSV8PId5lj+g="
+          "range": "bytes=0-17217",
+          "checksum": "sha1-xw4MhV+/V2WtXdKLUiTiFxF5kr0="
         },
         "data": {
-          "range": "bytes=17940-83665",
-          "checksum": "sha256-cX/x108jeL17PXpBElb6Glz4aVkMGqlzZmAtruUKPRQ="
+          "range": "bytes=17218-86715",
+          "checksum": "sha256-74quyK7OfANCo87TGzE3BZtzFVi716FivZFmCMv4v+I="
         },
-        "checksum": "Q1KAndpSs0BI0crjTzSV8PId5lj+g="
+        "checksum": "Q1xw4MhV+/V2WtXdKLUiTiFxF5kr0="
       },
       {
         "name": "libstdc++",
@@ -708,23 +708,23 @@
         "checksum": "Q1qVwTiCkkizmeQd8KP04a2CqR+38="
       },
       {
-        "name": "ffmpeg-9.0-libavcodec63",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libavcodec63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavcodec63",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libavcodec63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18046",
-          "checksum": "sha1-xjwIvavTqc4oaxmX6b/LZFPr3OI="
+          "range": "bytes=0-17338",
+          "checksum": "sha1-Fn8Z9MmevJhshk/aFd9ehCUZu0M="
         },
         "data": {
-          "range": "bytes=18047-8787700",
-          "checksum": "sha256-bRWptXyAq3mB+MI8SHoXsnzTvfDCElb682T4hro+ZNc="
+          "range": "bytes=17339-8934308",
+          "checksum": "sha256-LEsQ5O0UyN5mV/vMFpuDea6NJAJwMqRXU09OSJNtj0Q="
         },
-        "checksum": "Q1xjwIvavTqc4oaxmX6b/LZFPr3OI="
+        "checksum": "Q1Fn8Z9MmevJhshk/aFd9ehCUZu0M="
       },
       {
         "name": "libsodium",
@@ -917,42 +917,42 @@
         "checksum": "Q1k4nsk7gkxVNpwdXHfgFU3nzdFRA="
       },
       {
-        "name": "ffmpeg-9.0-libavformat63",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libavformat63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavformat63",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libavformat63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17980",
-          "checksum": "sha1-jxmwy5STcgpYz43qglRrIY7Kpvk="
+          "range": "bytes=0-17260",
+          "checksum": "sha1-+urrIqNyNlIWDGqGNzh1bTAcyvk="
         },
         "data": {
-          "range": "bytes=17981-1678213",
-          "checksum": "sha256-hvdBbqQfF7N1LUDh9fydQLjB3R1X6jvQBc0RVEWgBkI="
+          "range": "bytes=17261-1713716",
+          "checksum": "sha256-XuPXyIm/wJJJjFOs34T1FANqv0QJicgOva5oPLKiQIc="
         },
-        "checksum": "Q1jxmwy5STcgpYz43qglRrIY7Kpvk="
+        "checksum": "Q1+urrIqNyNlIWDGqGNzh1bTAcyvk="
       },
       {
-        "name": "ffmpeg-9.0-libswscale10",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libswscale10-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libswscale10",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libswscale10-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17935",
-          "checksum": "sha1-XsY8WW1CVdemyrKJHuwNjVEi8xM="
+          "range": "bytes=0-17211",
+          "checksum": "sha1-nSBZ8JmQic4FYXp7/UMyc/BkNjc="
         },
         "data": {
-          "range": "bytes=17936-731772",
-          "checksum": "sha256-IxVnuK6jfr/FZxiLYexetqr+ueLhh7tL28g8hlV8Q5w="
+          "range": "bytes=17212-752894",
+          "checksum": "sha256-CFx80ub8gXbJa8+aw1oqrXp62uF1xYz9eLZgZc/CvWs="
         },
-        "checksum": "Q1XsY8WW1CVdemyrKJHuwNjVEi8xM="
+        "checksum": "Q1nSBZ8JmQic4FYXp7/UMyc/BkNjc="
       },
       {
         "name": "libpng16-16",
@@ -1392,42 +1392,42 @@
         "checksum": "Q1wcpXJAGhoTmghDWgewDhE6RxslI="
       },
       {
-        "name": "ffmpeg-9.0-libavfilter12",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libavfilter12-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavfilter12",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libavfilter12-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17980",
-          "checksum": "sha1-6akQSssKb2b4B6CJ6wVoYq3vJKM="
+          "range": "bytes=0-17255",
+          "checksum": "sha1-Vdj554R6fEyWb5NK74FvHgPthug="
         },
         "data": {
-          "range": "bytes=17981-2499040",
-          "checksum": "sha256-eXuxKizKi6xkHe+B0Ef9g1HwN43M1RkH2RYmYkfGBro="
+          "range": "bytes=17256-2555852",
+          "checksum": "sha256-tyhBuZdRcBdVcf3OZaomy05UIlOtit9agg+hkz+8QNY="
         },
-        "checksum": "Q16akQSssKb2b4B6CJ6wVoYq3vJKM="
+        "checksum": "Q1Vdj554R6fEyWb5NK74FvHgPthug="
       },
       {
-        "name": "ffmpeg-9.0-libavdevice63",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-libavdevice63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavdevice63",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-libavdevice63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17972",
-          "checksum": "sha1-cOwsstPfe/ksNhbTmZX2030GhI4="
+          "range": "bytes=0-17245",
+          "checksum": "sha1-jmV7rQQXXOtnk/fz2+LeGcQrj44="
         },
         "data": {
-          "range": "bytes=17973-52214",
-          "checksum": "sha256-OC1Wies34X5UPaVbHQLB16mg1y82FFmvlbmkcyANdfE="
+          "range": "bytes=17246-51598",
+          "checksum": "sha256-VID8HppOeUAX3Jj92Pudburpq8/zno7f8qZI9stMPxA="
         },
-        "checksum": "Q1cOwsstPfe/ksNhbTmZX2030GhI4="
+        "checksum": "Q1jmV7rQQXXOtnk/fz2+LeGcQrj44="
       },
       {
         "name": "libsdl2",
@@ -1449,23 +1449,23 @@
         "checksum": "Q1vE92U6Hdm22EYy5rUpEpxs8xEDQ="
       },
       {
-        "name": "ffmpeg-9.0",
-        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.0-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1",
+        "url": "https://packages.wolfi.dev/os/x86_64/ffmpeg-9.1-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17998",
-          "checksum": "sha1-VqGkQSWF1NfJd6mBwfkU3GnUg2o="
+          "range": "bytes=0-17286",
+          "checksum": "sha1-RD2lOWxTU565gikFu8HmovbNMQ8="
         },
         "data": {
-          "range": "bytes=17999-412640",
-          "checksum": "sha256-TbZJ0u9tkkncS/1b4NmBsRQcqz7kGEE4Em78PvBM7BM="
+          "range": "bytes=17287-445608",
+          "checksum": "sha256-3k51GJ4agl7HQdFLJUMo0CJfbH7Zz+4pSopce6JlIDA="
         },
-        "checksum": "Q1VqGkQSWF1NfJd6mBwfkU3GnUg2o="
+        "checksum": "Q1RD2lOWxTU565gikFu8HmovbNMQ8="
       },
       {
         "name": "libflac",
@@ -1735,41 +1735,41 @@
       },
       {
         "name": "libseccomp",
-        "url": "https://packages.wolfi.dev/os/x86_64/libseccomp-2.6.1-r5.apk",
-        "version": "2.6.1-r5",
+        "url": "https://packages.wolfi.dev/os/x86_64/libseccomp-2.6.2-r0.apk",
+        "version": "2.6.2-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18848",
-          "checksum": "sha1-3smejqRDsgBx/FhQdxdzNLTAfVc="
+          "range": "bytes=0-18840",
+          "checksum": "sha1-idEATFUipql1gZGqdFm81V8pD6Q="
         },
         "data": {
-          "range": "bytes=18849-86692",
-          "checksum": "sha256-/abO4FeYFh0nUa8qIbhc5igoi5SmQr7QCfRSPCDvvAI="
+          "range": "bytes=18841-87548",
+          "checksum": "sha256-bbz1I1J3hupW8yQ2Ck93y3DdfygMCLWTn/wE9ds1xEs="
         },
-        "checksum": "Q13smejqRDsgBx/FhQdxdzNLTAfVc="
+        "checksum": "Q1idEATFUipql1gZGqdFm81V8pD6Q="
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16134",
-          "checksum": "sha1-+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
+          "range": "bytes=0-16719",
+          "checksum": "sha1-FO5MoClsVxvyVPh/74KDE8O4CUc="
         },
         "data": {
-          "range": "bytes=16135-2461771",
-          "checksum": "sha256-JD1d6dYgL2Xh5Zn+CImvi1EHDUjmAFTCZAHmn0vbeEE="
+          "range": "bytes=16720-2462178",
+          "checksum": "sha256-fEL0SolP1+Hg7NPkL9exwR3LkvVmYUry5jpigeD28Ww="
         },
-        "checksum": "Q1+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
+        "checksum": "Q1FO5MoClsVxvyVPh/74KDE8O4CUc="
       },
       {
         "name": "libxcrypt",
@@ -1944,22 +1944,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16143",
-          "checksum": "sha1-nlitpjV/w78nnuGXLr903iwVcNI="
+          "range": "bytes=0-16732",
+          "checksum": "sha1-JaaQ/0cLEYOg4MKGNyagD2AY2mo="
         },
         "data": {
-          "range": "bytes=16144-7587463",
-          "checksum": "sha256-3uQIRmYo75n4wQCGD3IJWg3TMMAMsuV58fPGKadDYmQ="
+          "range": "bytes=16733-7620960",
+          "checksum": "sha256-tgEESxnHIApHi6HXA4PkB46FMG72tjhHBV7IHTfGhfM="
         },
-        "checksum": "Q1nlitpjV/w78nnuGXLr903iwVcNI="
+        "checksum": "Q1JaaQ/0cLEYOg4MKGNyagD2AY2mo="
       },
       {
         "name": "gdk-pixbuf",
@@ -2475,23 +2475,23 @@
         "checksum": "Q1xsqc7PMrIo4Ax/LEKUWoPaHKkzk="
       },
       {
-        "name": "ffmpeg-9.0-libavutil61",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libavutil61-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavutil61",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libavutil61-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17956",
-          "checksum": "sha1-TCKe7ldrJjxNL9hJ1OOKuaITHng="
+          "range": "bytes=0-17256",
+          "checksum": "sha1-gjKX5d3fK0GTPz/zmodUZaQPFqI="
         },
         "data": {
-          "range": "bytes=17957-420735",
-          "checksum": "sha256-FFwsQ+MDL/oQRibmWeWssOm8wWbE8ecxmFw2Pb/12Pk="
+          "range": "bytes=17257-430307",
+          "checksum": "sha256-oBUEfwnrbv32I4TrL9GmHfOZvS+c7Zoev7pMtmDMSZo="
         },
-        "checksum": "Q1TCKe7ldrJjxNL9hJ1OOKuaITHng="
+        "checksum": "Q1gjKX5d3fK0GTPz/zmodUZaQPFqI="
       },
       {
         "name": "libgomp",
@@ -2532,23 +2532,23 @@
         "checksum": "Q1psS/QBfVMafylCl9bKa+Q7ZBklk="
       },
       {
-        "name": "ffmpeg-9.0-libswresample7",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libswresample7-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libswresample7",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libswresample7-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17961",
-          "checksum": "sha1-/mcI3FbwNxQfp7h3FOCmGAeqfsw="
+          "range": "bytes=0-17254",
+          "checksum": "sha1-zH55IlNMRaU5AGZPC6H9rMcKOEE="
         },
         "data": {
-          "range": "bytes=17962-77550",
-          "checksum": "sha256-OOAW5FLD0B0VReCEcqaGditc7ol+mwyelx20aUeYipU="
+          "range": "bytes=17255-80619",
+          "checksum": "sha256-ZGMFPpfO9W9Mjr2nlSPqArzxiEO/zf4y14aQK6a+Q2Y="
         },
-        "checksum": "Q1/mcI3FbwNxQfp7h3FOCmGAeqfsw="
+        "checksum": "Q1zH55IlNMRaU5AGZPC6H9rMcKOEE="
       },
       {
         "name": "libstdc++",
@@ -2912,23 +2912,23 @@
         "checksum": "Q1WpQ7drOHLheIjK3ZkGHXioNlrKg="
       },
       {
-        "name": "ffmpeg-9.0-libavcodec63",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libavcodec63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavcodec63",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libavcodec63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18078",
-          "checksum": "sha1-0u+L82Ycz3NSM0Qgl+Xes91rgls="
+          "range": "bytes=0-17381",
+          "checksum": "sha1-9WdivhJCE1oiagIV0YjVMn7WBOo="
         },
         "data": {
-          "range": "bytes=18079-8341583",
-          "checksum": "sha256-zeu7kMyL/MAYba1en5k8eGsR3iGiZY/FNUKDBvm/2CU="
+          "range": "bytes=17382-8441607",
+          "checksum": "sha256-HWFygCfbhRO4WY1GLZ4kXSxcYiCHJqm89q4hTIa4N1A="
         },
-        "checksum": "Q10u+L82Ycz3NSM0Qgl+Xes91rgls="
+        "checksum": "Q19WdivhJCE1oiagIV0YjVMn7WBOo="
       },
       {
         "name": "libsodium",
@@ -3121,42 +3121,42 @@
         "checksum": "Q16tJcOOwhxJwJHrVqkzGIOw439V4="
       },
       {
-        "name": "ffmpeg-9.0-libavformat63",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libavformat63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavformat63",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libavformat63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18003",
-          "checksum": "sha1-vew3BHeKhIQ7ojruScbHrnt2cIY="
+          "range": "bytes=0-17299",
+          "checksum": "sha1-tlZ7SaLRiU4dCq3TklclRgXeAmc="
         },
         "data": {
-          "range": "bytes=18004-1613512",
-          "checksum": "sha256-hF/hUJtPu4+N++Kkf5fqmMimsi1GENSw7SxaahoT0UI="
+          "range": "bytes=17300-1652682",
+          "checksum": "sha256-5jP+QdOXlNEuAUfqNWKMHDnDervV4lhp2ZxxtL+j3mU="
         },
-        "checksum": "Q1vew3BHeKhIQ7ojruScbHrnt2cIY="
+        "checksum": "Q1tlZ7SaLRiU4dCq3TklclRgXeAmc="
       },
       {
-        "name": "ffmpeg-9.0-libswscale10",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libswscale10-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libswscale10",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libswscale10-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17951",
-          "checksum": "sha1-NcOOmfjg+pYzvcopgsRq2qVBhpE="
+          "range": "bytes=0-17247",
+          "checksum": "sha1-2WHfBFgswSO/yyHI3DZ/GP/VCg8="
         },
         "data": {
-          "range": "bytes=17952-585660",
-          "checksum": "sha256-wNsgwxifncgx/Ga4yRauR4FT8xSEVkb5eQ2JlCCLrIg="
+          "range": "bytes=17248-592897",
+          "checksum": "sha256-BSATHCEBbmNI7ouBoq1MY6CnZvI+PUXqkHOrdVXqzwU="
         },
-        "checksum": "Q1NcOOmfjg+pYzvcopgsRq2qVBhpE="
+        "checksum": "Q12WHfBFgswSO/yyHI3DZ/GP/VCg8="
       },
       {
         "name": "libpng16-16",
@@ -3596,42 +3596,42 @@
         "checksum": "Q1HQWGhfuNtZQqHKtatYuSwj07wNA="
       },
       {
-        "name": "ffmpeg-9.0-libavfilter12",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libavfilter12-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavfilter12",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libavfilter12-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17997",
-          "checksum": "sha1-cvqYpk5r9mNntrUf2IyxVjtp/og="
+          "range": "bytes=0-17292",
+          "checksum": "sha1-QrdtloudvCcSdS1s1YHE00E6Nnw="
         },
         "data": {
-          "range": "bytes=17998-2244332",
-          "checksum": "sha256-ICYPDLRYvKPhIA2I8HfvPpt5TmLg41HRGJyM7aY0yEE="
+          "range": "bytes=17293-2294789",
+          "checksum": "sha256-osF60ZCvRDoEwBEO8ewWBF6WmDkWVirfNJNxeloF5h8="
         },
-        "checksum": "Q1cvqYpk5r9mNntrUf2IyxVjtp/og="
+        "checksum": "Q1QrdtloudvCcSdS1s1YHE00E6Nnw="
       },
       {
-        "name": "ffmpeg-9.0-libavdevice63",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-libavdevice63-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1-libavdevice63",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-libavdevice63-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-17992",
-          "checksum": "sha1-6Qb0gNaXeJpv+AXPSqQVKQL5BO0="
+          "range": "bytes=0-17287",
+          "checksum": "sha1-xCf9LpTua7jCXZe3uKc+E2LXTFg="
         },
         "data": {
-          "range": "bytes=17993-51371",
-          "checksum": "sha256-NMiONKs9zCwlWONSKxRWtBIvjI8EPLEwY7Ach/i4sK8="
+          "range": "bytes=17288-50750",
+          "checksum": "sha256-R9mLEC6yl+O3Qt/QfpaGhrsZefprg5KHg0eGxLsTY3s="
         },
-        "checksum": "Q16Qb0gNaXeJpv+AXPSqQVKQL5BO0="
+        "checksum": "Q1xCf9LpTua7jCXZe3uKc+E2LXTFg="
       },
       {
         "name": "libsdl2",
@@ -3653,23 +3653,23 @@
         "checksum": "Q18ZhAsLBEus9uixMdWDTW5ZVbbVs="
       },
       {
-        "name": "ffmpeg-9.0",
-        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.0-9.0.2-r10.apk",
-        "version": "9.0.2-r10",
+        "name": "ffmpeg-9.1",
+        "url": "https://packages.wolfi.dev/os/aarch64/ffmpeg-9.1-9.1-r0.apk",
+        "version": "9.1-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18023",
-          "checksum": "sha1-tD80zC29/1c9MlsAZ8XkdjpO2I4="
+          "range": "bytes=0-17319",
+          "checksum": "sha1-+SFureL8tHJuEWdZ9oJeIUAUnoA="
         },
         "data": {
-          "range": "bytes=18024-392345",
-          "checksum": "sha256-pZB4VPwmZDibjRfa03G9DdxjzjDzjRIIKPOAViDBy5c="
+          "range": "bytes=17320-423584",
+          "checksum": "sha256-tEGxoBEcwGlqlru7bD8cRhGx/0jw0xKK2mUhSCFGEiI="
         },
-        "checksum": "Q1tD80zC29/1c9MlsAZ8XkdjpO2I4="
+        "checksum": "Q1+SFureL8tHJuEWdZ9oJeIUAUnoA="
       },
       {
         "name": "libflac",
@@ -3939,41 +3939,41 @@
       },
       {
         "name": "libseccomp",
-        "url": "https://packages.wolfi.dev/os/aarch64/libseccomp-2.6.1-r5.apk",
-        "version": "2.6.1-r5",
+        "url": "https://packages.wolfi.dev/os/aarch64/libseccomp-2.6.2-r0.apk",
+        "version": "2.6.2-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18877",
-          "checksum": "sha1-qPW1lo3IEEp8JIi2L7ynnUXKnGg="
+          "range": "bytes=0-18869",
+          "checksum": "sha1-tXafTDgSmx0fH0IPzSy2/8FOerQ="
         },
         "data": {
-          "range": "bytes=18878-86239",
-          "checksum": "sha256-FZn35yOQqGtyHkFdyT7SvrouSitezyF4Ag6VLdTzpQ8="
+          "range": "bytes=18870-86928",
+          "checksum": "sha256-GSqgdsr1LpTtvT3Vkqhd5iD6eBjhhC0ETt6c6TXM+fg="
         },
-        "checksum": "Q1qPW1lo3IEEp8JIi2L7ynnUXKnGg="
+        "checksum": "Q1tXafTDgSmx0fH0IPzSy2/8FOerQ="
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16151",
-          "checksum": "sha1-sUU13W8GOT14sKKfMhPG1SamZPw="
+          "range": "bytes=0-16732",
+          "checksum": "sha1-/ptvgrMDa09Q72A1/j4HBWSd4vQ="
         },
         "data": {
-          "range": "bytes=16152-2409989",
-          "checksum": "sha256-KaasP2rOAvDVmOw4Bb2cLO8IuAfXKoAyzEAjDno5IGQ="
+          "range": "bytes=16733-2419883",
+          "checksum": "sha256-mrnQgDhX/DQ4V30g8RHQYMc6ufWEuemKqfnx6bZqrcg="
         },
-        "checksum": "Q1sUU13W8GOT14sKKfMhPG1SamZPw="
+        "checksum": "Q1/ptvgrMDa09Q72A1/j4HBWSd4vQ="
       },
       {
         "name": "libxcrypt",
@@ -4148,22 +4148,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16163",
-          "checksum": "sha1-foiTn5WrZHelfMOFlMupBHAoTaM="
+          "range": "bytes=0-16748",
+          "checksum": "sha1-NoZlCSGiehZBysQb/jJSA4/0QRg="
         },
         "data": {
-          "range": "bytes=16164-7415905",
-          "checksum": "sha256-5AFgt78xEe+T6AwG7xDqtZ8HVIwl+NcZsePXz1loCs4="
+          "range": "bytes=16749-7424208",
+          "checksum": "sha256-0v6GtgJdBs/qc1UiHHusgGSiqPjCnXTKolDCv/eECQY="
         },
-        "checksum": "Q1foiTn5WrZHelfMOFlMupBHAoTaM="
+        "checksum": "Q1NoZlCSGiehZBysQb/jJSA4/0QRg="
       },
       {
         "name": "gdk-pixbuf",

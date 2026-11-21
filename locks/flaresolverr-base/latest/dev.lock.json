@@ -1792,41 +1792,41 @@
       },
       {
         "name": "libseccomp",
-        "url": "https://packages.wolfi.dev/os/x86_64/libseccomp-2.6.1-r5.apk",
-        "version": "2.6.1-r5",
+        "url": "https://packages.wolfi.dev/os/x86_64/libseccomp-2.6.2-r0.apk",
+        "version": "2.6.2-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18848",
-          "checksum": "sha1-3smejqRDsgBx/FhQdxdzNLTAfVc="
+          "range": "bytes=0-18840",
+          "checksum": "sha1-idEATFUipql1gZGqdFm81V8pD6Q="
         },
         "data": {
-          "range": "bytes=18849-86692",
-          "checksum": "sha256-/abO4FeYFh0nUa8qIbhc5igoi5SmQr7QCfRSPCDvvAI="
+          "range": "bytes=18841-87548",
+          "checksum": "sha256-bbz1I1J3hupW8yQ2Ck93y3DdfygMCLWTn/wE9ds1xEs="
         },
-        "checksum": "Q13smejqRDsgBx/FhQdxdzNLTAfVc="
+        "checksum": "Q1idEATFUipql1gZGqdFm81V8pD6Q="
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-libs-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16134",
-          "checksum": "sha1-+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
+          "range": "bytes=0-16719",
+          "checksum": "sha1-FO5MoClsVxvyVPh/74KDE8O4CUc="
         },
         "data": {
-          "range": "bytes=16135-2461771",
-          "checksum": "sha256-JD1d6dYgL2Xh5Zn+CImvi1EHDUjmAFTCZAHmn0vbeEE="
+          "range": "bytes=16720-2462178",
+          "checksum": "sha256-fEL0SolP1+Hg7NPkL9exwR3LkvVmYUry5jpigeD28Ww="
         },
-        "checksum": "Q1+IMAxrDyFVlZmgh5BJ/gCHf9Yt0="
+        "checksum": "Q1FO5MoClsVxvyVPh/74KDE8O4CUc="
       },
       {
         "name": "linux-pam",
@@ -2305,22 +2305,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/glycin-2-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16143",
-          "checksum": "sha1-nlitpjV/w78nnuGXLr903iwVcNI="
+          "range": "bytes=0-16732",
+          "checksum": "sha1-JaaQ/0cLEYOg4MKGNyagD2AY2mo="
         },
         "data": {
-          "range": "bytes=16144-7587463",
-          "checksum": "sha256-3uQIRmYo75n4wQCGD3IJWg3TMMAMsuV58fPGKadDYmQ="
+          "range": "bytes=16733-7620960",
+          "checksum": "sha256-tgEESxnHIApHi6HXA4PkB46FMG72tjhHBV7IHTfGhfM="
         },
-        "checksum": "Q1nlitpjV/w78nnuGXLr903iwVcNI="
+        "checksum": "Q1JaaQ/0cLEYOg4MKGNyagD2AY2mo="
       },
       {
         "name": "gdk-pixbuf",
@@ -5630,41 +5630,41 @@
       },
       {
         "name": "libseccomp",
-        "url": "https://packages.wolfi.dev/os/aarch64/libseccomp-2.6.1-r5.apk",
-        "version": "2.6.1-r5",
+        "url": "https://packages.wolfi.dev/os/aarch64/libseccomp-2.6.2-r0.apk",
+        "version": "2.6.2-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18877",
-          "checksum": "sha1-qPW1lo3IEEp8JIi2L7ynnUXKnGg="
+          "range": "bytes=0-18869",
+          "checksum": "sha1-tXafTDgSmx0fH0IPzSy2/8FOerQ="
         },
         "data": {
-          "range": "bytes=18878-86239",
-          "checksum": "sha256-FZn35yOQqGtyHkFdyT7SvrouSitezyF4Ag6VLdTzpQ8="
+          "range": "bytes=18870-86928",
+          "checksum": "sha256-GSqgdsr1LpTtvT3Vkqhd5iD6eBjhhC0ETt6c6TXM+fg="
         },
-        "checksum": "Q1qPW1lo3IEEp8JIi2L7ynnUXKnGg="
+        "checksum": "Q1tXafTDgSmx0fH0IPzSy2/8FOerQ="
       },
       {
         "name": "glycin-2-libs",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-libs-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16151",
-          "checksum": "sha1-sUU13W8GOT14sKKfMhPG1SamZPw="
+          "range": "bytes=0-16732",
+          "checksum": "sha1-/ptvgrMDa09Q72A1/j4HBWSd4vQ="
         },
         "data": {
-          "range": "bytes=16152-2409989",
-          "checksum": "sha256-KaasP2rOAvDVmOw4Bb2cLO8IuAfXKoAyzEAjDno5IGQ="
+          "range": "bytes=16733-2419883",
+          "checksum": "sha256-mrnQgDhX/DQ4V30g8RHQYMc6ufWEuemKqfnx6bZqrcg="
         },
-        "checksum": "Q1sUU13W8GOT14sKKfMhPG1SamZPw="
+        "checksum": "Q1/ptvgrMDa09Q72A1/j4HBWSd4vQ="
       },
       {
         "name": "linux-pam",
@@ -6143,22 +6143,22 @@
       },
       {
         "name": "glycin-2",
-        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r0.apk",
-        "version": "2.2.6-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/glycin-2-2.2.6-r2.apk",
+        "version": "2.2.6-r2",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-16163",
-          "checksum": "sha1-foiTn5WrZHelfMOFlMupBHAoTaM="
+          "range": "bytes=0-16748",
+          "checksum": "sha1-NoZlCSGiehZBysQb/jJSA4/0QRg="
         },
         "data": {
-          "range": "bytes=16164-7415905",
-          "checksum": "sha256-5AFgt78xEe+T6AwG7xDqtZ8HVIwl+NcZsePXz1loCs4="
+          "range": "bytes=16749-7424208",
+          "checksum": "sha256-0v6GtgJdBs/qc1UiHHusgGSiqPjCnXTKolDCv/eECQY="
         },
-        "checksum": "Q1foiTn5WrZHelfMOFlMupBHAoTaM="
+        "checksum": "Q1NoZlCSGiehZBysQb/jJSA4/0QRg="
       },
       {
         "name": "gdk-pixbuf",
