@@ -261,6 +261,42 @@ def test_wheel_rejects_non_pure_tags(tmp_path, launcher, name):
                     launcher, env=False)
 
 
+@pytest.mark.parametrize("name,arch", [
+    ("pkg-1.0-cp312-cp312-manylinux_2_28_x86_64.whl", "x86_64"),
+    ("pkg-1.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", "aarch64"),
+    ("pkg-1.0-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", "x86_64"),
+])
+def test_wheel_accepts_binary_wheel_under_its_arch(tmp_path, launcher, name, arch):
+    wheel = make_wheel(tmp_path / name)
+    out = tmp_path / "out.tar.gz"
+    manifest = build_layer(wheel_vendor(wheel, files_key=arch), arch, tmp_path / "cache", out,
+                           launcher, env=False)
+    assert f"{SITE}/pkg/__init__.py" in members(out)[1]
+    assert manifest["vendor"][0]["arch"] == arch
+
+
+@pytest.mark.parametrize("name,arch", [
+    ("pkg-1.0-cp312-cp312-manylinux_2_28_aarch64.whl", "x86_64"),   # other arch
+    ("pkg-1.0-cp313-cp313-manylinux_2_28_x86_64.whl", "x86_64"),   # other Python
+    ("pkg-1.0-cp313-abi3-manylinux_2_28_x86_64.whl", "x86_64"),    # abi3 from a newer Python
+    ("pkg-1.0-cp312-cp312-musllinux_1_2_x86_64.whl", "x86_64"),    # not glibc
+    ("pkg-1.0-cp312-cp312-linux_x86_64.whl", "x86_64"),            # not manylinux
+    ("pkg-1.0-cp312-none-manylinux_2_28_x86_64.whl", "x86_64"),    # no ABI
+])
+def test_wheel_rejects_binary_wheel_that_does_not_fit(tmp_path, launcher, name, arch):
+    wheel = make_wheel(tmp_path / name)
+    with pytest.raises(ValueError, match="pure-Python"):
+        build_layer(wheel_vendor(wheel, files_key=arch), arch, tmp_path / "cache",
+                    tmp_path / "o.tar.gz", launcher, env=False)
+
+
+def test_binary_wheel_needs_an_entry_for_each_arch(tmp_path, launcher):
+    wheel = make_wheel(tmp_path / "pkg-1.0-cp312-cp312-manylinux_2_28_x86_64.whl")
+    with pytest.raises(KeyError):
+        build_layer(wheel_vendor(wheel, files_key="x86_64"), "aarch64", tmp_path / "cache",
+                    tmp_path / "o.tar.gz", launcher, env=False)
+
+
 def test_tar_binary_installs_one_member(tmp_path, launcher, launch_dir):
     """kind tar-binary: one executable taken out of a pinned release tarball (e.g. fpcalc)."""
     src = tmp_path / "fpcalc-src"

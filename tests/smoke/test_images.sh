@@ -551,6 +551,18 @@ r = subprocess.run(["tesseract", "/tmp/b.pgm", "stdout", "--tessdata-dir", "/usr
 assert r.stdout.startswith("level"), r.stdout[:80]
 print("fast ok")') || fail "fast model tsv: $out"
     [[ "$out" == "fast ok" ]] || fail "fast model check printed: $out"
+    # The second engine: RapidOCR (vendored wheels on Wolfi's numpy/Pillow/PyYAML) reads a line it
+    # is shown, with its bundled models, as the image's user on its read-only site-packages.
+    out=$(docker run --rm --read-only --tmpfs /tmp "$ref" -c '
+import numpy as np, cv2
+from rapidocr_onnxruntime import RapidOCR
+img = np.full((120, 600, 3), 255, np.uint8)
+cv2.putText(img, "OnlyFans.com/test_name", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 0), 2)
+res, _ = RapidOCR(intra_op_num_threads=1)(img)
+texts = [r[1] for r in res or []]
+assert texts == ["OnlyFans.com/test_name"], texts
+print("rapid ok")' 2>&1) || fail "rapidocr: $out"
+    [[ "$(tail -1 <<<"$out")" == "rapid ok" ]] || fail "rapidocr check printed: $out"
     ;;
   sabnzbd-base)
     # SABnzbd's Python: 3.14 as python3, with the stdlib modules it needs.

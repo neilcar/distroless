@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import io
 import os
+import re
 import shutil
 import stat
 import struct
@@ -97,6 +98,29 @@ def is_pure_wheel(filename: str) -> bool:
     return "py3" in python.split(".") and abi == "none" and platform == "any"
 
 
+def fits_arch(filename: str, arch: str, prefix: str) -> bool:
+    """True for a CPython binary wheel that runs on `arch` with the Python the entry's prefix
+    names (`/usr/lib/python3.12/site-packages` -> cp312): every platform tag a manylinux tag
+    for `arch`, and the ABI that Python's (`cp312`) or the stable ABI (`abi3`) from a CPython
+    no newer than it (`cp37-abi3`)."""
+    m = re.search(r"python3\.(\d+)", prefix)
+    if not m or not filename.endswith(".whl"):
+        return False
+    parts = filename[: -len(".whl")].split("-")
+    if len(parts) < 5:
+        return False
+    python, abi, platform = parts[-3:]
+    if not all(p.startswith("manylinux") and p.endswith(f"_{arch}") for p in platform.split(".")):
+        return False
+    minor = int(m.group(1))
+    tags = python.split(".")
+    if abi == f"cp3{minor}":
+        return f"cp3{minor}" in tags
+    if abi == "abi3":
+        return any(re.fullmatch(r"cp3(\d+)", t) and int(t[3:]) <= minor for t in tags)
+    return False
+
+
 def _install_wheel(entry: dict, wheel: Path, layer: _Layer, tmp: Path) -> None:
     """Add exactly the wheel's members under the entry prefix (RECORD stays as shipped)."""
     name, prefix = entry["name"], entry["prefix"]
@@ -180,9 +204,13 @@ def build_layer(vendor: dict, arch: str, cache_dir: Path, out: Path, launcher_bi
     entries = vendor["vendor"]
     chosen = [_pick_file(e, arch) for e in entries]
     for e, f in zip(entries, chosen):
-        if e["kind"] == "wheel" and not is_pure_wheel(PurePosixPath(f["url"]).name):
-            raise ValueError(f"{e['name']}: only pure-Python wheels (py3[...]-none-any) "
-                             "are supported")
+        if e["kind"] != "wheel":
+            continue
+        name = PurePosixPath(f["url"]).name
+        # A binary wheel only under its own arch's key (never `any`), and only one that fits it.
+        if not (is_pure_wheel(name) or (arch in e["files"] and fits_arch(name, arch, e["prefix"]))):
+            raise ValueError(f"{e['name']}: only pure-Python wheels (py3[...]-none-any), or a "
+                             f"CPython manylinux wheel for {arch} listed under {arch}, are supported")
     # Download and verify everything before unpacking any of it.
     fetched = [(e, fetch(f["url"], f["sha256"], cache_dir)) for e, f in zip(entries, chosen)]
 
