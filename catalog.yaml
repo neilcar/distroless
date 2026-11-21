@@ -389,10 +389,16 @@ images:
     # Also the fast English model (tessdata_fast) in /usr/share/tessdata-fast: on video
     # watermarks it read 18 of 25 test scenes against 14 for Wolfi's standard model.
     # OMP_THREAD_LIMIT=1: one thread per page; the service runs pages in parallel instead.
+    # And RapidOCR (PaddleOCR's PP-OCRv4 models on onnxruntime, CPU) as the service's second
+    # engine: on 59 hand-labelled scenes (2026-11-21) it read 76% of on-screen addresses against
+    # Tesseract's 30%. Its wheels are vendored below; numpy, Pillow, PyYAML, six and tqdm (its
+    # other imports) are Wolfi's. OMP_THREAD_LIMIT doesn't bind onnxruntime: the service sets
+    # its intra-op threads itself.
     lines: [latest]
     variants:
       runtime:
-        packages: ["{package}", "tesseract-eng", "python-3.12"]
+        packages: ["{package}", "tesseract-eng", "python-3.12", "py3.12-numpy-2.5", "py3.12-pillow",
+                   "py3.12-pyyaml", "py3.12-six", "py3.12-tqdm"]
         entrypoint: "/usr/bin/python3.12"
     environment:
       PYTHONUNBUFFERED: "1"
@@ -414,6 +420,61 @@ images:
           aarch64:
             url: https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata
             sha256: 7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2
+      # RapidOCR: the PP-OCRv4 det/rec and mobile cls models (16 MB) ship inside the wheel.
+      - name: rapidocr-onnxruntime
+        version: 1.4.4
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          any:
+            url: https://files.pythonhosted.org/packages/ba/12/1e5497183bdbe782dbb91bad1d0d2297dba4d2831b2652657f7517bfc6df/rapidocr_onnxruntime-1.4.4-py3-none-any.whl
+            sha256: 971d7d5f223a7a808662229df1ef69893809d8457d834e6373d3854bc1782cbf
+      # CPU onnxruntime; imports without its flatbuffers/packaging/protobuf/sympy extras.
+      - name: onnxruntime
+        version: 1.32.0
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          x86_64:
+            url: https://files.pythonhosted.org/packages/a3/81/55845186c20cba59f614991f4065dea148e48eeb9749893768c85ce64327/onnxruntime-1.32.0-cp312-cp312-manylinux_2_28_x86_64.whl
+            sha256: 99e1074c4b2197accd5073052a465361be17b89c093b8ffb6e6bd8f986c52df8
+          aarch64:
+            url: https://files.pythonhosted.org/packages/4a/8f/1e43fb994513c7c7a9c6965272ef89d963c1bd4080993a6267bf913701d1/onnxruntime-1.32.0-cp312-cp312-manylinux_2_28_aarch64.whl
+            sha256: e36c187006e7a7c8b8d6d57f1a209dd63f52430dca6c282b177718ad6b841054
+      # RapidOCR's image code (resize, contours, perspective warps); Wolfi has no Python OpenCV.
+      - name: opencv-python-headless
+        version: 5.1.0.95
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          x86_64:
+            url: https://files.pythonhosted.org/packages/c2/be/cdf44e32b580af6c0e8f237665c538e6a5a37872f865e92e08fb854d5fd9/opencv_python_headless-5.1.0.95-cp37-abi3-manylinux_2_28_x86_64.whl
+            sha256: 7d387d4a64abe0c737440d38b5a90822f9bbcc10c8ce06a35904d6ecf7a2fb30
+          aarch64:
+            url: https://files.pythonhosted.org/packages/26/db/73313673e5c07eb4023c929022e6ef5f7cfd7885f7ea14019b1e1f74540a/opencv_python_headless-5.1.0.95-cp37-abi3-manylinux_2_28_aarch64.whl
+            sha256: 11d9753e15b8b3c56e6aa765139f722ca19ff26016d43bc81035f5d122731a81
+      - name: shapely
+        version: 2.2.0
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          x86_64:
+            url: https://files.pythonhosted.org/packages/ad/87/6842e4c996914a47b6bfd3ef14a543e67e993f86a9ea5679c34efc9314ab/shapely-2.2.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+            sha256: 650a5f4d8a8e3c96982079d8c99b6ddbe6602bbd1e34c75c2b95dbc0d28ac997
+          aarch64:
+            url: https://files.pythonhosted.org/packages/ae/34/b90723043091161f636fde302e850583dcebd610e798f9edd6e3245f5a2a/shapely-2.2.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl
+            sha256: a9a380624cdd7a7e661bf15a4d1625082766f07ccd2540cb0a9e0df1ad4f6c11
+      - name: pyclipper
+        version: 1.4.0
+        kind: wheel
+        prefix: /usr/lib/python3.12/site-packages
+        files:
+          x86_64:
+            url: https://files.pythonhosted.org/packages/7a/06/6e3e241882bf7d6ab23d9c69ba4e85f1ec47397cbbeee948a16cf75e21ed/pyclipper-1.4.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+            sha256: d1f807e2b4760a8e5c6d6b4e8c1d71ef52b7fe1946ff088f4fa41e16a881a5ca
+          aarch64:
+            url: https://files.pythonhosted.org/packages/cf/f4/3418c1cd5eea640a9fa2501d4bc0b3655fa8d40145d1a4f484b987990a75/pyclipper-1.4.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl
+            sha256: ce1f83c9a4e10ea3de1959f0ae79e9a5bd41346dff648fee6228ba9eaf8b3872
 
   python-ssh:
     # Python 3.12 and the OpenSSH client, for small stdlib scripts that shell out to `ssh`
