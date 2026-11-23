@@ -4,7 +4,7 @@
       "image": "static",
       "name": "latest",
       "package": "ca-certificates-bundle",
-      "version": "20261020-r0"
+      "version": "20261020-r1"
     },
     {
       "image": "python",
@@ -82,7 +82,7 @@
       "image": "debug",
       "name": "latest",
       "package": "bash",
-      "version": "5.3-r14"
+      "version": "5.3-r15"
     },
     {
       "image": "python-ssh",

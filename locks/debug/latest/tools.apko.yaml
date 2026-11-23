@@ -7,7 +7,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - bash=5.3-r14
+  - bash=5.3-r15
   - coreutils
   - findutils
   - grep
