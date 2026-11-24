@@ -40,7 +40,7 @@
       "image": "nginx",
       "name": "mainline",
       "package": "nginx-mainline",
-      "version": "1.31.9-r0"
+      "version": "1.31.10-r0"
     },
     {
       "image": "photoprism-base",
