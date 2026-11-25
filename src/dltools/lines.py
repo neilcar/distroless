@@ -27,6 +27,8 @@ TESSERACT_PACKAGE = "tesseract"
 SABNZBD_BASE_PACKAGE = "python-3.14"
 # servarr-base is versioned by the ICU its .NET apps load (Lidarr, Radarr, Prowlarr, Sonarr, Whisparr).
 SERVARR_BASE_PACKAGE = "libicu79"
+# roon-base (Roon Server, also self-contained .NET) is versioned by the same ICU.
+ROON_BASE_PACKAGE = SERVARR_BASE_PACKAGE
 # beets-base is versioned by its Python (beets and its plugins are Python).
 BEETS_BASE_PACKAGE = "python-3.12"
 # debug (the break-glass toolbox for kubectl debug) is versioned by its shell.
@@ -230,6 +232,12 @@ def n8n_base_lines(indexes) -> list[Line]:
     return [Line("n8n-base", "latest", N8N_BASE_PACKAGE, v)] if v else []
 
 
+def roon_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by libicu79's newest released version (as servarr-base)."""
+    v = newest_released_all_arches(indexes, ROON_BASE_PACKAGE)
+    return [Line("roon-base", "latest", ROON_BASE_PACKAGE, v)] if v else []
+
+
 def music_videos_base_lines(indexes) -> list[Line]:
     """The single `latest` line, headed by Python 3.12's newest released version."""
     v = newest_released_all_arches(indexes, MUSIC_VIDEOS_BASE_PACKAGE)
@@ -290,7 +298,7 @@ def _order(line: Line) -> tuple:
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
             "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17,
             "music-videos-base": 18, "postgres": 19, "runner-base": 20,
-            "n8n-base": 21}.get(line.image, 22)
+            "n8n-base": 21, "roon-base": 22}.get(line.image, 23)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -323,6 +331,7 @@ def discover(
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
         + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
         + music_videos_base_lines(indexes) + postgres_lines(indexes) + runner_base_lines(indexes) + n8n_base_lines(indexes)
+        + roon_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

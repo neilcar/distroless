@@ -66,11 +66,12 @@ def test_cli_sync_writes_state_and_configs(tmp_path, offline, capsys):
         "runner-base/latest/tools.apko.yaml",
         "n8n-base/latest/runtime.apko.yaml",
         "n8n-base/latest/dev.apko.yaml",
+        "roon-base/latest/runtime.apko.yaml",
     ]:
         assert (locks / rel).is_file(), rel
     assert not (locks / "python/3.10").exists()
     assert not (locks / "nginx/stable").exists()  # not in the catalog's nginx lines
-    assert sum(e["kind"] == "line_added" for e in events) == 26  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base + beets-base + debug + python-ssh + ci-tools + valkey + rust + cc + flaresolverr-base + jdownloader-base + nodejs + music-videos-base + postgres + runner-base + n8n-base
+    assert sum(e["kind"] == "line_added" for e in events) == 27  # static + 5 python + mainline + photoprism-base + stash-base + tesseract + sabnzbd-base + servarr-base + beets-base + debug + python-ssh + ci-tools + valkey + rust + cc + flaresolverr-base + jdownloader-base + nodejs + music-videos-base + postgres + runner-base + n8n-base + roon-base
 
 
 def test_cli_sync_second_run_is_a_no_op(tmp_path, offline, capsys):
