@@ -11,6 +11,10 @@
 # Wolfi's libcrypto3 (OpenSSL security releases): the daily sync's `dl openssl-legacy-check` opens a
 # "distroless-openssl-legacy <version>" PR that bumps version and expected-sha256 (the release's own
 # .sha256 file, checked against the tarball) and dispatches packages.yml on its branch.
+# Scope: Wolfi's /etc/ssl/openssl.cnf activates `legacy` for every OpenSSL process, and this upstream
+# module ignores Chainguard's `enable-legacy-allowed`/`enable-des=0` settings, so in roon-base the full
+# legacy set (RC2, RC4, DES, MD4, MDC2, Blowfish, CAST, SEED, IDEA) is available process-wide. TLS
+# stays bounded by Wolfi's crypto policy (TLS >= 1.2, SECLEVEL 2, AEAD suites) and libssl.
 package:
   name: distroless-openssl-legacy
   version: "3.6.5"
@@ -57,6 +61,10 @@ pipeline:
 
   - name: Check the module links nothing but libc
     runs: |
-      ! readelf -d "${{targets.destdir}}/usr/lib/ossl-modules-legacy/legacy.so" | grep NEEDED | grep -v -E 'libc\.so\.6|ld-linux'
+      readelf -d "${{targets.destdir}}/usr/lib/ossl-modules-legacy/legacy.so" > /tmp/legacy.dynamic
+      grep -q NEEDED /tmp/legacy.dynamic || { echo "readelf shows no NEEDED entries"; exit 1; }
+      if grep NEEDED /tmp/legacy.dynamic | grep -v -E 'libc\.so\.6|ld-linux'; then
+        echo "legacy.so links more than libc"; exit 1
+      fi
 
   - uses: strip

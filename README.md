@@ -185,7 +185,12 @@ Packages built here live in `melange/`:
   and sets `OPENSSL_MODULES`. It is built static (Wolfi's libcrypto lacks the low-level legacy
   ciphers), so it carries its own copy of OpenSSL: sync's `dl openssl-legacy-check` opens a PR
   "distroless-openssl-legacy <version>" (version + verified sha256, package build dispatched on its
-  branch) whenever Wolfi's `openssl-3.N-libcrypto` moves to a newer release.
+  branch) whenever Wolfi's `openssl-3.N-libcrypto` moves to a newer upstream release. Wolfi `-rN`
+  rebuilds and backports don't trigger it, by design: the module is rebuilt from upstream releases
+  only. Scope: Wolfi's `openssl.cnf` activates `legacy` for every process, and this module ignores
+  Chainguard's `enable-legacy-allowed`/`enable-des=0`, so the full legacy set (RC2, RC4, DES, MD4,
+  MDC2, Blowfish, CAST, SEED, IDEA) is available process-wide in roon-base; TLS stays bounded by
+  Wolfi's crypto policy (TLS ≥ 1.2, SECLEVEL 2, AEAD suites) and libssl.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

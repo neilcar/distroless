@@ -272,6 +272,11 @@ images:
     #   It is static, so it doesn't get Wolfi's OpenSSL fixes by itself: the daily sync's
     #   `dl openssl-legacy-check` opens a "distroless-openssl-legacy <version>" PR whenever Wolfi's
     #   libcrypto3 moves to a newer OpenSSL release.
+    #   Scope: Wolfi's /etc/ssl/openssl.cnf activates `legacy` for every OpenSSL process in the image,
+    #   and this upstream module ignores Chainguard's `enable-legacy-allowed`/`enable-des=0`, so the
+    #   full legacy set (RC2, RC4, DES, MD4, MDC2, Blowfish, CAST, SEED, IDEA) is available
+    #   process-wide in roon-base (and only here). TLS stays bounded by Wolfi's crypto policy
+    #   (TLS >= 1.2, SECLEVEL 2, AEAD suites) and libssl.
     # Versioned by libicu79, as servarr-base. Runs as uid/gid 1000 (`roon`, home /var/roon, the data
     # volume). Runtime only: roon-image downloads the tarball in its own build stage.
     run_as: "1000"
