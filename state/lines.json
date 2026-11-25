@@ -124,7 +124,7 @@
       "image": "jdownloader-base",
       "name": "latest",
       "package": "openjdk-21-jre",
-      "version": "21.0.13.1-r0"
+      "version": "21.0.13.1-r1"
     },
     {
       "image": "nodejs",

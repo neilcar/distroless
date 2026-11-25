@@ -751,22 +751,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.9-r0.apk",
-        "version": "0.13.9-r0",
+        "url": "https://packages.wolfi.dev/os/x86_64/uv-0.13.10-r0.apk",
+        "version": "0.13.10-r0",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18257",
-          "checksum": "sha1-cRcGUXHD2cdzRJR0JkvIN0qpDNc="
+          "range": "bytes=0-18371",
+          "checksum": "sha1-fdkslMFHhCztIsOFzsIZ4Pt2rDA="
         },
         "data": {
-          "range": "bytes=18258-19849246",
-          "checksum": "sha256-IPZy+Q870gHiBB1idev3GvJqbR7OGE0A38L7+wligQ4="
+          "range": "bytes=18372-20204863",
+          "checksum": "sha256-ljdW5CZb69WcFG17MPqSveO6u9mVhKXrskhcO/chhR0="
         },
-        "checksum": "Q1cRcGUXHD2cdzRJR0JkvIN0qpDNc="
+        "checksum": "Q1fdkslMFHhCztIsOFzsIZ4Pt2rDA="
       },
       {
         "name": "wolfi-baselayout",
@@ -1492,22 +1492,22 @@
       },
       {
         "name": "uv",
-        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.9-r0.apk",
-        "version": "0.13.9-r0",
+        "url": "https://packages.wolfi.dev/os/aarch64/uv-0.13.10-r0.apk",
+        "version": "0.13.10-r0",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-18288",
-          "checksum": "sha1-XYbs35lW9wNl1drwPasrXGUlH2k="
+          "range": "bytes=0-18399",
+          "checksum": "sha1-Q8WMD7a0x7TrSaQqU4/6Nc7pN/4="
         },
         "data": {
-          "range": "bytes=18289-18628837",
-          "checksum": "sha256-RJKbDxcMpCKX4Mm/TIyab8ISPx4GC77GDdH3xRIBLGY="
+          "range": "bytes=18400-18990966",
+          "checksum": "sha256-bSqZA2VUmpWGJqpFUCXpbyCerpYVj/KNRYLnLyFCtf4="
         },
-        "checksum": "Q1XYbs35lW9wNl1drwPasrXGUlH2k="
+        "checksum": "Q1Q8WMD7a0x7TrSaQqU4/6Nc7pN/4="
       }
     ]
   }

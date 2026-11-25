@@ -466,22 +466,22 @@
       },
       {
         "name": "gmp",
-        "url": "https://packages.wolfi.dev/os/x86_64/gmp-6.3.0-r13.apk",
-        "version": "6.3.0-r13",
+        "url": "https://packages.wolfi.dev/os/x86_64/gmp-6.3.0-r14.apk",
+        "version": "6.3.0-r14",
         "architecture": "x86_64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-7630",
-          "checksum": "sha1-I5PhFkydFaxlbDT+IcDQ/suW8N8="
+          "range": "bytes=0-7625",
+          "checksum": "sha1-LW9+Z0kz6mcrVh59hWhxqNL8bS8="
         },
         "data": {
-          "range": "bytes=7631-317018",
-          "checksum": "sha256-nSsl2Wp2XClp9gVBkVoelMVN+UrCQqJjTq8OLZQKl6k="
+          "range": "bytes=7626-317020",
+          "checksum": "sha256-GMwr/r7KsewDEJdSdGuTplA76cZRdRuLgWxBZxIi38o="
         },
-        "checksum": "Q1I5PhFkydFaxlbDT+IcDQ/suW8N8="
+        "checksum": "Q1LW9+Z0kz6mcrVh59hWhxqNL8bS8="
       },
       {
         "name": "mpfr",
@@ -2575,22 +2575,22 @@
       },
       {
         "name": "gmp",
-        "url": "https://packages.wolfi.dev/os/aarch64/gmp-6.3.0-r13.apk",
-        "version": "6.3.0-r13",
+        "url": "https://packages.wolfi.dev/os/aarch64/gmp-6.3.0-r14.apk",
+        "version": "6.3.0-r14",
         "architecture": "aarch64",
         "signature": {
           "range": "",
           "checksum": ""
         },
         "control": {
-          "range": "bytes=0-7671",
-          "checksum": "sha1-IEXk+GW+pTHFiKoHBA0r7gYK2Mc="
+          "range": "bytes=0-7660",
+          "checksum": "sha1-txDsHwmj5pILNiy3dMx+9pI1buQ="
         },
         "data": {
-          "range": "bytes=7672-309614",
-          "checksum": "sha256-pxMbTo+TRYPCqpotjI56JrsDuSoOqxTxF/5RUyLOdQk="
+          "range": "bytes=7661-309614",
+          "checksum": "sha256-K0ahtCqQdOrjOeT0IDXKRFG99qGoIEj5RW0tJ0oLAho="
         },
-        "checksum": "Q1IEXk+GW+pTHFiKoHBA0r7gYK2Mc="
+        "checksum": "Q1txDsHwmj5pILNiy3dMx+9pI1buQ="
       },
       {
         "name": "mpfr",
