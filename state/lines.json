@@ -40,7 +40,7 @@
       "image": "nginx",
       "name": "mainline",
       "package": "nginx-mainline",
-      "version": "1.31.10-r0"
+      "version": "1.31.10-r1"
     },
     {
       "image": "photoprism-base",
@@ -148,7 +148,7 @@
       "image": "runner-base",
       "name": "latest",
       "package": "git",
-      "version": "2.56.1-r1"
+      "version": "2.56.1-r2"
     },
     {
       "image": "n8n-base",

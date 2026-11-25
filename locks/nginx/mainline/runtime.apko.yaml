@@ -9,7 +9,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - nginx-mainline=1.31.10-r0
+  - nginx-mainline=1.31.10-r1
   - nginx-mainline-mime-types
   - distroless-nginx-config
 accounts:
