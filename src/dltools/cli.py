@@ -16,11 +16,15 @@ import yaml
 from dltools.gate import BLOCKING, evaluate, findings, load_ignore, summary_markdown
 from dltools.lines import (
     LIBVIPS_MELANGE,
+    OPENSSL_LEGACY_MELANGE,
     Line,
+    bump_melange,
     discover,
     fetch_eol,
     libvips_behind,
     melange_version,
+    openssl_legacy_behind,
+    openssl_release_sha256,
 )
 from dltools.lockcheck import (
     RUNTIME_FORBIDDEN,
@@ -194,6 +198,24 @@ def cmd_libvips_check(args) -> int:
         upsert_issue(title, body, dedupe=True)
     except (OSError, subprocess.CalledProcessError) as exc:
         print(f"warning: libvips check could not notify: {exc}", file=sys.stderr)
+    return 0
+
+
+def cmd_openssl_legacy_check(args) -> int:
+    """Print "distroless-openssl-legacy <version>" when Wolfi's libcrypto3 is newer than the module;
+    with --apply, also bump the melange config to it (source sha256 fetched and verified)."""
+    local = melange_version(args.melange)
+    if local is None:
+        print(f"warning: {args.melange} not found", file=sys.stderr)
+        return 0
+    wolfi = openssl_legacy_behind(load_indexes(args.index_dir), local)
+    if wolfi is None:
+        print(f"distroless-openssl-legacy {local} is up to date with Wolfi libcrypto3", file=sys.stderr)
+        return 0
+    if args.apply:
+        path = Path(args.melange)
+        path.write_text(bump_melange(path.read_text(), wolfi, openssl_release_sha256(wolfi)))
+    print(f"distroless-openssl-legacy {wolfi}")
     return 0
 
 
@@ -395,6 +417,13 @@ def build_parser() -> argparse.ArgumentParser:
     vips.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
     vips.add_argument("--dry-run", action="store_true", help="print, never notify")
     vips.set_defaults(func=cmd_libvips_check)
+
+    ossl = sub.add_parser("openssl-legacy-check",
+                          help="print (and with --apply, make) the distroless-openssl-legacy bump to Wolfi's libcrypto3")
+    ossl.add_argument("--melange", default=OPENSSL_LEGACY_MELANGE)
+    ossl.add_argument("--index-dir", help="read APKINDEX.<arch> from here (dl fetch-index)")
+    ossl.add_argument("--apply", action="store_true", help="rewrite the melange config's version and sha256")
+    ossl.set_defaults(func=cmd_openssl_legacy_check)
 
     matrix = sub.add_parser("matrix", help="GitHub Actions build matrix for changed files")
     matrix.add_argument("--locks", default="locks")

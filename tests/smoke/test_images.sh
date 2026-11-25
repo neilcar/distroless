@@ -13,6 +13,8 @@ elif [[ "$image" == "sabnzbd-base" ]]; then  # SABnzbd's pod runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "sabnzbd" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "servarr-base" ]]; then  # the Servarr pods run as 1000:1000
   [[ "$user" == "1000" || "$user" == "servarr" || "$user" == "1000:1000" ]] || fail "user is '$user'"
+elif [[ "$image" == "roon-base" ]]; then  # Roon's pod runs as 1000:1000
+  [[ "$user" == "1000" || "$user" == "roon" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "python-ssh" ]]; then  # the feral-janitor Job runs as 1000:1000
   [[ "$user" == "1000" || "$user" == "janitor" || "$user" == "1000:1000" ]] || fail "user is '$user'"
 elif [[ "$image" == "valkey" ]]; then  # photoprism-index-redis's pod runs as 999:999
@@ -270,6 +272,30 @@ print("title", title)' 2>&1) || fail "chrome render check: $out"
     else
       out=$(tool curl --version 2>&1) || fail "curl: $out"
     fi
+    ;;
+  roon-base)
+    # What Roon's self-contained .NET build loads, looked for from outside (no shell or Python in the
+    # image): servarr-base's set plus libasound (RAATServer), libfreetype (Roon's harfbuzz) and the
+    # full legacy provider with RC2 (broker-cert.pfx, ARC's HTTPS server) where OPENSSL_MODULES points.
+    root=$(mktemp -d)
+    cid=$(docker create --entrypoint /none "$ref")
+    docker export "$cid" | tar -x -C "$root" --exclude='dev' --exclude='dev/*'
+    docker rm "$cid" >/dev/null
+    for f in usr/lib/libicuuc.so.79 usr/lib/libicui18n.so.79 usr/lib/libicudata.so.79 usr/lib/libssl.so.3 \
+             usr/lib/libcrypto.so.3 usr/lib/libz.so.1 usr/lib/libstdc++.so.6 usr/lib/libgcc_s.so.1 \
+             usr/lib/libasound.so.2 usr/lib/libfreetype.so.6 usr/lib/ossl-modules-legacy/legacy.so \
+             usr/share/zoneinfo/Europe/London etc/ssl/certs/ca-certificates.crt; do
+      [[ -e "$root/$f" ]] || fail "missing /$f"
+    done
+    grep -a -q 'RC2-CBC' "$root/usr/lib/ossl-modules-legacy/legacy.so" || fail "legacy.so has no RC2-CBC"
+    [[ -e "$root/bin/sh" || -e "$root/usr/bin/sh" ]] && fail "/bin/sh present"
+    rm -rf "$root"
+    env=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$ref")
+    grep -qx 'OPENSSL_MODULES=/usr/lib/ossl-modules-legacy' <<<"$env" || fail "OPENSSL_MODULES not set: $env"
+    cid=$(docker create --entrypoint /none "$ref")
+    owner=$(docker export "$cid" | tar -tv --numeric-owner | awk '$NF == "var/roon/" {print $2}')
+    docker rm "$cid" >/dev/null
+    [[ "$owner" == "1000/1000" ]] || fail "/var/roon owner is '$owner'"
     ;;
   beets-base)
     # beets' Python: 3.12 as /usr/bin/python3 (the auto-import entry points' shebang), with the stdlib

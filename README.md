@@ -18,6 +18,7 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/tesseract` | `latest` (versioned by Wolfi's tesseract) | Tesseract 5 OCR with English traineddata (Wolfi's standard model, plus the vendored `tessdata_fast` 4.1.0 English model in `/usr/share/tessdata-fast`), and Python 3.12 (the entrypoint) for a small OCR service; `OMP_THREAD_LIMIT=1`. Also RapidOCR (`rapidocr_onnxruntime`: PaddleOCR's PP-OCRv4 models on onnxruntime, CPU) as a second engine, from vendored wheels (rapidocr-onnxruntime, and binary wheels of onnxruntime, opencv-python-headless, shapely and pyclipper) on Wolfi's numpy, Pillow, PyYAML, six and tqdm. Runtime only. |
 | `ghcr.io/neilcar/distroless/sabnzbd-base` | `latest` (versioned by Python 3.14) | Base for the shell-free SABnzbd build ([neilcar/sabnzbd-image](https://github.com/neilcar/sabnzbd-image)): Python 3.14 as `python3`, 7-Zip (`7zz`), and libstdc++, libgcc and libgomp for the unrar and par2cmdline-turbo that image builds from source. Runs as **1000** (`sabnzbd`, home `/config`). `-dev` adds busybox, bash, gcc/g++, make, glibc headers, pip, `uv` and xz. |
 | `ghcr.io/neilcar/distroless/servarr-base` | `latest` (versioned by libicu79) | Base for the shell-free Servarr apps ([neilcar/servarr-image](https://github.com/neilcar/servarr-image)): Prowlarr, Radarr, Sonarr, Whisparr and Lidarr's self-contained .NET builds. Only what they load: ICU 79, OpenSSL, zlib, SQLite, libstdc++/libgcc, the CA bundle and tzdata, plus chromaprint's static `fpcalc` 1.6.2 (vendored, for Lidarr). Runs as **1000** (`servarr`, home `/config`). Runtime only. |
+| `ghcr.io/neilcar/distroless/roon-base` | `latest` (versioned by libicu79) | Base for the shell-free Roon Server image ([neilcar/roon-image](https://github.com/neilcar/roon-image)): servarr-base's libraries (ICU 79, OpenSSL, zlib, SQLite, libstdc++/libgcc, the CA bundle and tzdata) plus alsa-lib (RAATServer), freetype (Roon's bundled harfbuzz) and `distroless-openssl-legacy`, upstream OpenSSL's full legacy provider in `/usr/lib/ossl-modules-legacy` (`OPENSSL_MODULES` points there), because Roon's RC2-encrypted `broker-cert.pfx` backs the HTTPS server Roon ARC uses and Wolfi's legacy provider has no RC2. Runs as **1000** (`roon`, home `/var/roon`). Runtime only. |
 | `ghcr.io/neilcar/distroless/beets-base` | `latest` (versioned by python-3.12), `latest-dev` | Base for the shell-free beets image ([neilcar/pyapps-image](https://github.com/neilcar/pyapps-image)): Python 3.12, tini (PID 1, reaps the auto-import workers), Wolfi ffmpeg/ffprobe, flac/metaflac, ImageMagick 7 (`magick`), the CA bundle and tzdata, plus chromaprint's static `fpcalc` 1.6.2 (vendored, as servarr-base). Runs as **1000** (`beets`, home `/config`). The dev variant adds pip, uv, busybox and bash for pyapps-image's build stage. |
 | `ghcr.io/neilcar/distroless/flaresolverr-base` | `latest` (versioned by chromium), `latest-dev` | Base for the shell-free FlareSolverr image ([neilcar/pyapps-image](https://github.com/neilcar/pyapps-image)): Python 3.11, Wolfi Chromium with its chromedriver (start `/usr/lib/chromium/chrome` directly: `/usr/bin/chromium` is a shell launcher), dumb-init and DejaVu fonts (no Xvfb: it compiles keymaps through `/bin/sh`, and FlareSolverr runs Chromium headless anyway). The only image allowed two unreleased packages, because Wolfi has never released them (`avahi-libs`, `font-opensans`; see `IMAGE_UNRELEASED_ALLOWED`). Runs as **1000** (`flaresolverr`, home `/config`). The dev variant adds pip, uv, busybox and bash. |
 | `ghcr.io/neilcar/distroless/jdownloader-base` | `latest` (versioned by openjdk-21-jre), `latest-dev` | Base for the shell-free headless JDownloader image ([neilcar/jdownloader-image](https://github.com/neilcar/jdownloader-image)): OpenJDK 21's JRE (`/usr/bin/java`, `JAVA_HOME`), tini, Wolfi ffmpeg/ffprobe, libstdc++/libgcc. Runs as **1000** (`jdownloader`, home `/config`). The dev variant adds busybox, bash and curl. |
@@ -34,7 +35,7 @@ built for `linux/amd64` and `linux/arm64`, scanned, signed, and published to
 | `ghcr.io/neilcar/distroless/n8n-base` | `latest` (versioned by nodejs-26), runtime and dev | Base for neilcar/pyapps-image's n8n image, in place of upstream's Alpine one: Wolfi's Node 26 (linked against Wolfi's libbrotli, not a bundled copy), tini, GraphicsMagick's `gm` (built here in `melange/`, since Wolfi has none) for the Edit Image node, and DejaVu and Liberation fonts. The dev variant adds node-gyp, Python and build-base to rebuild n8n's native addons for glibc. Runs as **1000** (`node`, home /home/node), as upstream. |
 
 Runtime images have no shell and no package manager and run as uid **65532**
-(`photoprism-base`: uid **0**, the owner's decision; `debug`: uid **0**, to reach a debug target's files; `stash-base`, `sabnzbd-base`, `servarr-base`, `beets-base`, `flaresolverr-base`, `jdownloader-base`, `python-ssh`, `music-videos-base` and `n8n-base`: uid **1000**, as their apps' pods; `valkey`: uid **999**, as photoprism-index-redis's pod; `postgres`: uid **70**, as the lxdk8s Postgres pods; `runner-base`: uid **1001**, as the official runner image).
+(`photoprism-base`: uid **0**, the owner's decision; `debug`: uid **0**, to reach a debug target's files; `stash-base`, `sabnzbd-base`, `servarr-base`, `roon-base`, `beets-base`, `flaresolverr-base`, `jdownloader-base`, `python-ssh`, `music-videos-base` and `n8n-base`: uid **1000**, as their apps' pods; `valkey`: uid **999**, as photoprism-index-redis's pod; `postgres`: uid **70**, as the lxdk8s Postgres pods; `runner-base`: uid **1001**, as the official runner image).
 
 `stash-base` also has a vendor layer: five pure-Python wheels from PyPI (pinned by
 version and sha256 in `catalog.yaml`) unpacked into `/usr/lib/python3.12/site-packages`,
@@ -161,7 +162,7 @@ Exceptions go in [`.trivyignore`](.trivyignore), which only the owner edits.
 
 ### Local melange packages
 
-Three packages live in `melange/`:
+Packages built here live in `melange/`:
 
 - `distroless-nginx-config` replaces Wolfi's port-80 nginx config.
 - `distroless-no-shell` is an empty package that provides `cmd:bash`. ffmpeg's
@@ -177,6 +178,19 @@ Three packages live in `melange/`:
   libvips is newer; bump `version` and `expected-sha256` in the melange file to follow.
   `dl lock-check` fails any photoprism-base or stash-base lock that contains Wolfi's
   `libvips` or `libvips-dev`. stash-base installs distroless-libvips too.
+- `distroless-openssl-legacy` is upstream OpenSSL's legacy provider module (RC2, RC4 and the
+  other legacy ciphers), built from the release tarball (pinned by sha256) and installed as
+  `/usr/lib/ossl-modules-legacy/legacy.so` only. Wolfi's `openssl-provider-legacy` is now a meta
+  package for `openssl-provider-legacy-allowed`, which drops RC2 and RC4. roon-base installs it
+  and sets `OPENSSL_MODULES`. It is built static (Wolfi's libcrypto lacks the low-level legacy
+  ciphers), so it carries its own copy of OpenSSL: sync's `dl openssl-legacy-check` opens a PR
+  "distroless-openssl-legacy <version>" (version + verified sha256, package build dispatched on its
+  branch) whenever Wolfi's `openssl-3.N-libcrypto` moves to a newer upstream release. Wolfi `-rN`
+  rebuilds and backports don't trigger it, by design: the module is rebuilt from upstream releases
+  only. Scope: Wolfi's `openssl.cnf` activates `legacy` for every process, and this module ignores
+  Chainguard's `enable-legacy-allowed`/`enable-des=0`, so the full legacy set (RC2, RC4, DES, MD4,
+  MDC2, Blowfish, CAST, SEED, IDEA) is available process-wide in roon-base; TLS stays bounded by
+  Wolfi's crypto policy (TLS ≥ 1.2, SECLEVEL 2, AEAD suites) and libssl.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

@@ -257,6 +257,49 @@ images:
             sha256: 3aa1498126ed272d805bc9d081c77965c9e1e1a0891bb112c13b56ef2ad47bad
             member: chromaprint-fpcalc-1.6.2-linux-arm64/fpcalc
 
+  roon-base:
+    # Base for the shell-free Roon Server image (neilcar/roon-image): Roon's linux x64 tarball is a
+    # self-contained .NET build, so this is servarr-base's library set (ICU, OpenSSL, zlib, SQLite,
+    # libstdc++/libgcc, CA bundle, tzdata) plus what Roon loads on top:
+    # - alsa-lib: RAATServer's libraatmanager.so links libasound.so.2 (and RAATServer reports "no
+    #   ALSA support" without it);
+    # - freetype: Roon's FontagooFreetype renders text into images through its bundled libharfbuzz,
+    #   which needs libfreetype.so.6;
+    # - distroless-openssl-legacy (melange/): Roon's broker-cert.pfx, the certificate of the HTTPS
+    #   server Roon ARC uses (port 55000), is RC2-encrypted PKCS12. Wolfi's legacy provider
+    #   (openssl-provider-legacy-allowed, already pulled in by libcrypto3) has no RC2, so this ships
+    #   upstream's full legacy module in its own directory and OPENSSL_MODULES points OpenSSL there.
+    #   It is static, so it doesn't get Wolfi's OpenSSL fixes by itself: the daily sync's
+    #   `dl openssl-legacy-check` opens a "distroless-openssl-legacy <version>" PR whenever Wolfi's
+    #   libcrypto3 moves to a newer OpenSSL release.
+    #   Scope: Wolfi's /etc/ssl/openssl.cnf activates `legacy` for every OpenSSL process in the image,
+    #   and this upstream module ignores Chainguard's `enable-legacy-allowed`/`enable-des=0`, so the
+    #   full legacy set (RC2, RC4, DES, MD4, MDC2, Blowfish, CAST, SEED, IDEA) is available
+    #   process-wide in roon-base (and only here). TLS stays bounded by Wolfi's crypto policy
+    #   (TLS >= 1.2, SECLEVEL 2, AEAD suites) and libssl.
+    # Versioned by libicu79, as servarr-base. Runs as uid/gid 1000 (`roon`, home /var/roon, the data
+    # volume). Runtime only: roon-image downloads the tarball in its own build stage.
+    run_as: "1000"
+    lines: [latest]
+    accounts:
+      groups: [{groupname: roon, gid: 1000}]
+      users: [{username: roon, uid: 1000, gid: 1000, homedir: /var/roon}]
+    extra_repositories: ["./packages"]
+    extra_keyring: ["./melange.rsa.pub"]
+    variants:
+      runtime:
+        packages: ["{package}", "libssl3", "libcrypto3", "zlib", "sqlite-libs", "libstdc++", "libgcc", "ca-certificates-bundle", "tzdata", "alsa-lib", "freetype", "distroless-openssl-legacy"]
+    environment:
+      # .NET uses the system ICU (never invariant mode), as servarr-base.
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "false"
+      # Where OpenSSL loads provider modules from: only "legacy" is loaded from disk (default and base
+      # are built into libcrypto), so this swaps Wolfi's RC2-less legacy module for ours.
+      OPENSSL_MODULES: /usr/lib/ossl-modules-legacy
+    paths:
+      - {path: /tmp, type: directory, permissions: 01777, uid: 0, gid: 0}
+      - {path: /var/roon, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+      - {path: /run, type: directory, permissions: 0755, uid: 1000, gid: 1000}
+
   beets-base:
     # Base for the shell-free beets build (neilcar/pyapps-image): Python 3.12 (beets 2.14.1 runs on it),
     # tini as PID 1 (reaps the auto-import workers that `kubectl exec` leaves behind), Wolfi ffmpeg

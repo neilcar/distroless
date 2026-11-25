@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import urllib.request
@@ -19,6 +20,11 @@ NGINX_LINES = {"stable": "nginx-stable", "mainline": "nginx-mainline"}
 PHOTOPRISM_BASE_PACKAGE = "distroless-libvips"
 LIBVIPS_MELANGE = "melange/distroless-libvips.yaml"  # relative to the repository root
 WOLFI_LIBVIPS = "libvips"
+# distroless-openssl-legacy (roon-base's RC2-capable legacy provider) follows Wolfi's libcrypto3,
+# which comes from one openssl-3.N-libcrypto package per OpenSSL minor.
+OPENSSL_LEGACY_MELANGE = "melange/distroless-openssl-legacy.yaml"  # relative to the repository root
+WOLFI_LIBCRYPTO3 = re.compile(r"openssl-3\.(\d+)-libcrypto")
+OPENSSL_RELEASES = "https://github.com/openssl/openssl/releases/download"
 # stash-base is versioned by its Python (plugins and scrapers run on it).
 STASH_BASE_PACKAGE = "python-3.12"
 # tesseract is versioned by Wolfi's tesseract (the OCR engine is what callers depend on).
@@ -27,6 +33,8 @@ TESSERACT_PACKAGE = "tesseract"
 SABNZBD_BASE_PACKAGE = "python-3.14"
 # servarr-base is versioned by the ICU its .NET apps load (Lidarr, Radarr, Prowlarr, Sonarr, Whisparr).
 SERVARR_BASE_PACKAGE = "libicu79"
+# roon-base (Roon Server, also self-contained .NET) is versioned by the same ICU.
+ROON_BASE_PACKAGE = SERVARR_BASE_PACKAGE
 # beets-base is versioned by its Python (beets and its plugins are Python).
 BEETS_BASE_PACKAGE = "python-3.12"
 # debug (the break-glass toolbox for kubectl debug) is versioned by its shell.
@@ -230,6 +238,12 @@ def n8n_base_lines(indexes) -> list[Line]:
     return [Line("n8n-base", "latest", N8N_BASE_PACKAGE, v)] if v else []
 
 
+def roon_base_lines(indexes) -> list[Line]:
+    """The single `latest` line, headed by libicu79's newest released version (as servarr-base)."""
+    v = newest_released_all_arches(indexes, ROON_BASE_PACKAGE)
+    return [Line("roon-base", "latest", ROON_BASE_PACKAGE, v)] if v else []
+
+
 def music_videos_base_lines(indexes) -> list[Line]:
     """The single `latest` line, headed by Python 3.12's newest released version."""
     v = newest_released_all_arches(indexes, MUSIC_VIDEOS_BASE_PACKAGE)
@@ -256,6 +270,47 @@ def libvips_behind(indexes, local_version: str) -> str | None:
     if version_key(wolfi_upstream) > version_key(upstream_version(local_version)):
         return wolfi_upstream
     return None
+
+
+def openssl_legacy_behind(indexes, local_version: str) -> str | None:
+    """Wolfi's newest released OpenSSL 3 libcrypto upstream version (the highest openssl-3.N-libcrypto
+    released on every arch) when it is newer than distroless-openssl-legacy's; None otherwise.
+    Epochs are ignored, as for libvips."""
+    minors = {int(m.group(1)): name for index in indexes.values() for name in index
+              if (m := WOLFI_LIBCRYPTO3.fullmatch(name))}
+    for minor in sorted(minors, reverse=True):
+        if wolfi := newest_released_all_arches(indexes, minors[minor]):
+            wolfi_upstream = upstream_version(wolfi)
+            if version_key(wolfi_upstream) > version_key(upstream_version(local_version)):
+                return wolfi_upstream
+            return None
+    return None
+
+
+def bump_melange(text: str, version: str, sha256: str) -> str:
+    """A melange config's text with package version, epoch 0 and the fetch's expected-sha256 replaced
+    (comments and layout kept). Raises ValueError unless each appears exactly once."""
+    for pattern, repl in ((r'(?m)^(  version: )"?[^"\n]+"?$', rf'\g<1>"{version}"'),
+                          (r"(?m)^(  epoch: )\d+$", r"\g<1>0"),
+                          (r"(?m)^(\s+expected-sha256: )[0-9a-f]{64}$", rf"\g<1>{sha256}")):
+        text, n = re.subn(pattern, repl, text)
+        if n != 1:
+            raise ValueError(f"{pattern!r} matched {n} times")
+    return text
+
+
+def openssl_release_sha256(version: str, base: str = OPENSSL_RELEASES, timeout: int = 120) -> str:
+    """SHA-256 of openssl-<version>.tar.gz: the release's .sha256 file, checked against the tarball."""
+    url = f"{base}/openssl-{version}/openssl-{version}.tar.gz"
+    with urllib.request.urlopen(url + ".sha256", timeout=timeout) as resp:
+        published = resp.read().decode().split()[0].lower()
+    digest = hashlib.sha256()
+    with urllib.request.urlopen(url, timeout=timeout) as resp:
+        while chunk := resp.read(1 << 20):
+            digest.update(chunk)
+    if digest.hexdigest() != published:
+        raise ValueError(f"{url}: sha256 {digest.hexdigest()} != published {published}")
+    return published
 
 
 def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:
@@ -290,7 +345,7 @@ def _order(line: Line) -> tuple:
             "sabnzbd-base": 6, "servarr-base": 7, "beets-base": 8, "debug": 9, "python-ssh": 10, "ci-tools": 11, "valkey": 12,
             "rust": 13, "cc": 14, "flaresolverr-base": 15, "jdownloader-base": 16, "nodejs": 17,
             "music-videos-base": 18, "postgres": 19, "runner-base": 20,
-            "n8n-base": 21}.get(line.image, 22)
+            "n8n-base": 21, "roon-base": 22}.get(line.image, 23)
     sub = version_key(line.name) if line.image == "python" else list(NGINX_LINES).index(
         line.name
     ) if line.name in NGINX_LINES else 0
@@ -323,6 +378,7 @@ def discover(
         + ci_tools_lines(indexes) + valkey_lines(indexes) + rust_lines(indexes) + cc_lines(indexes)
         + flaresolverr_base_lines(indexes) + jdownloader_base_lines(indexes) + nodejs_lines(indexes)
         + music_videos_base_lines(indexes) + postgres_lines(indexes) + runner_base_lines(indexes) + n8n_base_lines(indexes)
+        + roon_base_lines(indexes)
     )
     present = {(ln.image, ln.name) for ln in lines}
     cycles = {c.get("cycle"): c for c in eol or []}

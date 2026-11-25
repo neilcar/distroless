@@ -1,0 +1,70 @@
+# OpenSSL's full legacy provider (legacy.so) for roon-base. Roon's broker-cert.pfx (the certificate of
+# the HTTPS server Roon ARC uses, port 55000) is a PKCS12 encrypted with RC2, and .NET decrypts it
+# through OpenSSL. Wolfi's openssl-provider-legacy is now only a meta package for
+# openssl-provider-legacy-allowed, which drops RC2 and RC4, so nothing in Wolfi can load that file.
+# This builds the upstream release's legacy provider and nothing else, into its own directory
+# (/usr/lib/ossl-modules-legacy, so it never replaces Wolfi's module); roon-base points
+# OPENSSL_MODULES at it. Built no-shared, so the module carries the low-level cipher code it needs
+# (libcrypto.a) and depends only on libc: Wolfi's libcrypto.so.3 is built without MDC2, RC2 and the
+# like, so a module linked against it does not load ("undefined symbol: MDC2_Update"). Providers talk
+# to libcrypto only through the provider dispatch ABI, as the FIPS module does. The version follows
+# Wolfi's libcrypto3 (OpenSSL security releases): the daily sync's `dl openssl-legacy-check` opens a
+# "distroless-openssl-legacy <version>" PR that bumps version and expected-sha256 (the release's own
+# .sha256 file, checked against the tarball) and dispatches packages.yml on its branch.
+# Scope: Wolfi's /etc/ssl/openssl.cnf activates `legacy` for every OpenSSL process, and this upstream
+# module ignores Chainguard's `enable-legacy-allowed`/`enable-des=0` settings, so in roon-base the full
+# legacy set (RC2, RC4, DES, MD4, MDC2, Blowfish, CAST, SEED, IDEA) is available process-wide. TLS
+# stays bounded by Wolfi's crypto policy (TLS >= 1.2, SECLEVEL 2, AEAD suites) and libssl.
+package:
+  name: distroless-openssl-legacy
+  version: "3.6.5"
+  epoch: 0
+  description: OpenSSL legacy provider module with RC2, RC4 and the other legacy ciphers
+  copyright:
+    - license: Apache-2.0
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - build-base
+      - busybox
+      - glibc-2.44-dev
+      - linux-headers
+      - perl
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/openssl/openssl/releases/download/openssl-${{package.version}}/openssl-${{package.version}}.tar.gz
+      expected-sha256: a2157c2830efdec3788939b00c9b0638306d3f0bbb76dc4832ee503bb397df98
+
+  - name: Configure
+    runs: |
+      ./Configure linux-${{build.arch}} --prefix=/usr --libdir=lib enable-legacy no-shared no-fips no-tests no-docs
+
+  - name: Build the legacy module (and the openssl app, only to check it)
+    runs: |
+      make -j$(nproc) build_generated
+      make -j$(nproc) providers/legacy.so apps/openssl
+
+  - name: Check RC2 is in it
+    runs: |
+      LD_LIBRARY_PATH=. OPENSSL_MODULES=providers apps/openssl list -cipher-algorithms -provider legacy \
+        | grep -i -E '^ *\{?.*RC2-CBC' || { echo "no RC2-CBC in legacy.so"; exit 1; }
+
+  - runs: |
+      install -Dm755 providers/legacy.so "${{targets.destdir}}/usr/lib/ossl-modules-legacy/legacy.so"
+
+  - name: Check the module links nothing but libc
+    runs: |
+      readelf -d "${{targets.destdir}}/usr/lib/ossl-modules-legacy/legacy.so" > /tmp/legacy.dynamic
+      grep -q NEEDED /tmp/legacy.dynamic || { echo "readelf shows no NEEDED entries"; exit 1; }
+      if grep NEEDED /tmp/legacy.dynamic | grep -v -E 'libc\.so\.6|ld-linux'; then
+        echo "legacy.so links more than libc"; exit 1
+      fi
+
+  - uses: strip
