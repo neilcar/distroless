@@ -182,8 +182,10 @@ Packages built here live in `melange/`:
   other legacy ciphers), built from the release tarball (pinned by sha256) and installed as
   `/usr/lib/ossl-modules-legacy/legacy.so` only. Wolfi's `openssl-provider-legacy` is now a meta
   package for `openssl-provider-legacy-allowed`, which drops RC2 and RC4. roon-base installs it
-  and sets `OPENSSL_MODULES`. Keep its version on the `openssl-3.6-libcrypto` release (the
-  module links `libcrypto.so.3`).
+  and sets `OPENSSL_MODULES`. It is built static (Wolfi's libcrypto lacks the low-level legacy
+  ciphers), so it carries its own copy of OpenSSL: sync's `dl openssl-legacy-check` opens a PR
+  "distroless-openssl-legacy <version>" (version + verified sha256, package build dispatched on its
+  branch) whenever Wolfi's `openssl-3.N-libcrypto` moves to a newer release.
 
 The `packages.yml` workflow builds every `melange/*.yaml` with a throwaway signing
 key and commits the signed packages (`packages/`) and public key

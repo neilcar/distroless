@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import urllib.request
@@ -19,6 +20,11 @@ NGINX_LINES = {"stable": "nginx-stable", "mainline": "nginx-mainline"}
 PHOTOPRISM_BASE_PACKAGE = "distroless-libvips"
 LIBVIPS_MELANGE = "melange/distroless-libvips.yaml"  # relative to the repository root
 WOLFI_LIBVIPS = "libvips"
+# distroless-openssl-legacy (roon-base's RC2-capable legacy provider) follows Wolfi's libcrypto3,
+# which comes from one openssl-3.N-libcrypto package per OpenSSL minor.
+OPENSSL_LEGACY_MELANGE = "melange/distroless-openssl-legacy.yaml"  # relative to the repository root
+WOLFI_LIBCRYPTO3 = re.compile(r"openssl-3\.(\d+)-libcrypto")
+OPENSSL_RELEASES = "https://github.com/openssl/openssl/releases/download"
 # stash-base is versioned by its Python (plugins and scrapers run on it).
 STASH_BASE_PACKAGE = "python-3.12"
 # tesseract is versioned by Wolfi's tesseract (the OCR engine is what callers depend on).
@@ -264,6 +270,47 @@ def libvips_behind(indexes, local_version: str) -> str | None:
     if version_key(wolfi_upstream) > version_key(upstream_version(local_version)):
         return wolfi_upstream
     return None
+
+
+def openssl_legacy_behind(indexes, local_version: str) -> str | None:
+    """Wolfi's newest released OpenSSL 3 libcrypto upstream version (the highest openssl-3.N-libcrypto
+    released on every arch) when it is newer than distroless-openssl-legacy's; None otherwise.
+    Epochs are ignored, as for libvips."""
+    minors = {int(m.group(1)): name for index in indexes.values() for name in index
+              if (m := WOLFI_LIBCRYPTO3.fullmatch(name))}
+    for minor in sorted(minors, reverse=True):
+        if wolfi := newest_released_all_arches(indexes, minors[minor]):
+            wolfi_upstream = upstream_version(wolfi)
+            if version_key(wolfi_upstream) > version_key(upstream_version(local_version)):
+                return wolfi_upstream
+            return None
+    return None
+
+
+def bump_melange(text: str, version: str, sha256: str) -> str:
+    """A melange config's text with package version, epoch 0 and the fetch's expected-sha256 replaced
+    (comments and layout kept). Raises ValueError unless each appears exactly once."""
+    for pattern, repl in ((r'(?m)^(  version: )"?[^"\n]+"?$', rf'\g<1>"{version}"'),
+                          (r"(?m)^(  epoch: )\d+$", r"\g<1>0"),
+                          (r"(?m)^(\s+expected-sha256: )[0-9a-f]{64}$", rf"\g<1>{sha256}")):
+        text, n = re.subn(pattern, repl, text)
+        if n != 1:
+            raise ValueError(f"{pattern!r} matched {n} times")
+    return text
+
+
+def openssl_release_sha256(version: str, base: str = OPENSSL_RELEASES, timeout: int = 120) -> str:
+    """SHA-256 of openssl-<version>.tar.gz: the release's .sha256 file, checked against the tarball."""
+    url = f"{base}/openssl-{version}/openssl-{version}.tar.gz"
+    with urllib.request.urlopen(url + ".sha256", timeout=timeout) as resp:
+        published = resp.read().decode().split()[0].lower()
+    digest = hashlib.sha256()
+    with urllib.request.urlopen(url, timeout=timeout) as resp:
+        while chunk := resp.read(1 << 20):
+            digest.update(chunk)
+    if digest.hexdigest() != published:
+        raise ValueError(f"{url}: sha256 {digest.hexdigest()} != published {published}")
+    return published
 
 
 def fetch_eol(url: str = EOL_URL, timeout: int = 30) -> list[dict] | None:

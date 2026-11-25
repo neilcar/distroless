@@ -15,7 +15,9 @@ on:
 permissions:
   contents: write
   issues: write
+  # Pushes made with GITHUB_TOKEN start no workflows: the OpenSSL legacy PR's package build is dispatched.
   actions: write
+  pull-requests: write
 
 concurrency:
   group: repo-writes-${{ github.ref }}
@@ -108,6 +110,40 @@ jobs:
           # One deduped issue per Wolfi version; a branch run only prints what it would file.
           dry=(); [[ "$GITHUB_REF" == refs/heads/main ]] || dry=(--dry-run)
           uv run dl libvips-check --index-dir "$RUNNER_TEMP/index" "${dry[@]}"
+      - name: Open a PR when Wolfi's libcrypto3 is newer than distroless-openssl-legacy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          # roon-base's static legacy provider follows Wolfi's OpenSSL security releases: one PR per
+          # version ("distroless-openssl-legacy <version>") bumping the melange version and the verified
+          # source sha256. A PR for that version in any state (open, merged, closed: declined) is done.
+          out=$(uv run dl openssl-legacy-check --index-dir "$RUNNER_TEMP/index")
+          [[ -n "$out" ]] || exit 0
+          read -r name version <<<"$out"
+          branch="watch/openssl-legacy-$version"
+          if [[ -n $(gh pr list --head "$branch" --state all --json number --jq '.[].number') ]]; then
+            echo "$name $version: already has a PR"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # A branch without a PR is an earlier run that pushed but couldn't open it: open it now.
+          if ! git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            git fetch -q origin main
+            git checkout -q -B "$branch" origin/main
+            uv run dl openssl-legacy-check --index-dir "$RUNNER_TEMP/index" --apply >/dev/null
+            git commit -qam "$name $version
+
+          Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+            git push -q origin "$branch"
+          fi
+          # packages.yml builds and commits the package on the branch, then syncs it.
+          gh workflow run packages.yml --ref "$branch"
+          gh pr create --base main --head "$branch" --title "$name $version" \
+            --body "Wolfi's libcrypto3 moved to OpenSSL $version, so roon-base's static legacy provider (\`melange/distroless-openssl-legacy.yaml\`) follows it: version and source sha256 (the release's .sha256, checked against the tarball). The package build is dispatched on this branch; merging rebuilds it on main and roon-base with it."
+          # Older versions still waiting are superseded by this one.
+          gh pr list --state open --json number,headRefName \
+            --jq ".[] | select(.headRefName | startswith(\"watch/openssl-legacy-\")) | select(.headRefName != \"$branch\") | .number" |
+            while read -r old; do gh pr close "$old" --delete-branch --comment "Superseded by $name $version."; done
       - name: Report failure
         if: failure() && github.ref == 'refs/heads/main'   # branch runs don't file issues
         run: uv run dl notify --title "Sync failed" --body "$RUN_URL"

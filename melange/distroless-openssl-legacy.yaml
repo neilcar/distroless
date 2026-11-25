@@ -7,8 +7,10 @@
 # OPENSSL_MODULES at it. Built no-shared, so the module carries the low-level cipher code it needs
 # (libcrypto.a) and depends only on libc: Wolfi's libcrypto.so.3 is built without MDC2, RC2 and the
 # like, so a module linked against it does not load ("undefined symbol: MDC2_Update"). Providers talk
-# to libcrypto only through the provider dispatch ABI, as the FIPS module does. Keep the version on the
-# openssl-3.6-libcrypto release roon-base installs. The sha256 is the release's own .sha256 file.
+# to libcrypto only through the provider dispatch ABI, as the FIPS module does. The version follows
+# Wolfi's libcrypto3 (OpenSSL security releases): the daily sync's `dl openssl-legacy-check` opens a
+# "distroless-openssl-legacy <version>" PR that bumps version and expected-sha256 (the release's own
+# .sha256 file, checked against the tarball) and dispatches packages.yml on its branch.
 package:
   name: distroless-openssl-legacy
   version: "3.6.5"

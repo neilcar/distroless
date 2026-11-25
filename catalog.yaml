@@ -269,6 +269,9 @@ images:
     #   server Roon ARC uses (port 55000), is RC2-encrypted PKCS12. Wolfi's legacy provider
     #   (openssl-provider-legacy-allowed, already pulled in by libcrypto3) has no RC2, so this ships
     #   upstream's full legacy module in its own directory and OPENSSL_MODULES points OpenSSL there.
+    #   It is static, so it doesn't get Wolfi's OpenSSL fixes by itself: the daily sync's
+    #   `dl openssl-legacy-check` opens a "distroless-openssl-legacy <version>" PR whenever Wolfi's
+    #   libcrypto3 moves to a newer OpenSSL release.
     # Versioned by libicu79, as servarr-base. Runs as uid/gid 1000 (`roon`, home /var/roon, the data
     # volume). Runtime only: roon-image downloads the tarball in its own build stage.
     run_as: "1000"
