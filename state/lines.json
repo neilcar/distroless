@@ -106,7 +106,7 @@
       "image": "rust",
       "name": "latest",
       "package": "rust-1.100",
-      "version": "1.100.0-r0"
+      "version": "1.100.1-r0"
     },
     {
       "image": "cc",
@@ -148,7 +148,7 @@
       "image": "runner-base",
       "name": "latest",
       "package": "git",
-      "version": "2.56.1-r2"
+      "version": "2.56.1-r3"
     },
     {
       "image": "n8n-base",

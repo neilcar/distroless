@@ -7,7 +7,7 @@ contents:
   - wolfi-baselayout
   - ca-certificates-bundle
   - tzdata
-  - git=2.56.1-r2
+  - git=2.56.1-r3
   - bash
   - coreutils
   - findutils
